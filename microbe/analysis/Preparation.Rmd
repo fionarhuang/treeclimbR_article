@@ -1,0 +1,101 @@
+---
+title: "Preparation"
+author: "fionarhuang"
+date: "2020-04-23"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+```{r}
+
+suppressPackageStartupMessages({
+    library(curatedMetagenomicData)
+    library(phyloseq)
+    library(dplyr)
+    library(ggplot2)
+    library(ape)
+})
+
+
+```
+
+# Download data
+
+```{r}
+stool_0 <- BackhedF_2015.metaphlan_bugs_list.stool()
+stool <- ExpressionSet2phyloseq(stool_0, phylogenetictree = TRUE)
+```
+
+
+# Data preparation
+
+Only samples from babies are used.
+```{r}
+# sample variables: group (Infant (B1D, B4M, B12M, M)), 
+# born_method(vaginal, c_section)
+samp <- data.frame(sample_data(stool), check.names = FALSE)
+samp_data <- samp %>% 
+    mutate(sample_id = rownames(samp),
+           group_id = gsub("..*_", "", sample_id),
+         group_id = ifelse(group_id == "B", "Baby_1d",
+                           ifelse(group_id == "M", "Mother",
+                                  paste0("Baby_", tolower(group_id))
+                           )),
+         period = ifelse(grepl("_1d", group_id), "0 M",
+                         ifelse(grepl("_4m", group_id), "4 M", 
+                                      ifelse(grepl("_12m", group_id), 
+                                             "12 M", "Mother")))) %>%
+    filter(family_role != "mother") %>%
+  select(group_id, born_method, feeding_practice, born_method,
+         period, number_reads, sample_id)
+
+head(samp_data)  
+table(samp_data$group_id, samp_data$born_method)
+```
+
+The count table
+```{r}
+# raw counts
+otu_count <- as.matrix(data.frame(otu_table(stool)))[, samp_data$sample_id]
+reads <- samp_data$number_reads
+new_count <- round((otu_count/100) %*% diag(reads), digits = 0)
+colnames(new_count) <- colnames(otu_count)
+
+```
+
+Taxonomic table and phylogenetic tree are updated after the removement of some OTUs.
+```{r}
+# taxonomic table
+new_tax <- data.frame(tax_table(stool)@.Data, check.names = FALSE)
+
+# phylogenetic tree
+new_phy <- phy_tree(stool)
+
+```
+
+# Sequencing depths
+
+Sequencing depths are quite different among samples but quite similar between groups.
+```{r}
+ggplot(data = samp_data) +
+  geom_density(aes(x = number_reads, y = ..density..,
+                     fill = born_method, group = born_method),
+               alpha = 0.4) +
+    facet_grid(rows = vars(group_id)) +
+  scale_x_continuous(breaks = scales::pretty_breaks(n = 10)) +
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 10))
+```
+
+
+# Save outputs
+
+Average samples are prepared for later visualization (e.g., heatmap) to avoid display so many samples in a figure.
+Samples, with the same born method and the same time point, are randomly assigned into 5 categories, and an average sample is generated for each category by taking the average counts of OTUs. 
+
+```{r}
+save(new_count, otu_count, samp_data, new_phy, new_tax,
+     file = "output/Preparation.RData")
+```
+
+

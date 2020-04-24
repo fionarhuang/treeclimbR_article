@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="fionarhuang" />
+
+<meta name="date" content="2020-04-23" />
+
+<title>Visualization</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">microbe</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="Preparation.html">Preparation</a>
+</li>
+<li>
+  <a href="Analysis.html">Analysis</a>
+</li>
+<li>
+  <a href="Visualization.html">Visualization</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://robinsonlabuzh.github.io">Robinson Lab</a>
+</li>
+<li>
+  <a href="https://github.com/fionarhuang/treeclimbR_article">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Visualization</h1>
+<h4 class="author">fionarhuang</h4>
+<h4 class="date">2020-04-23</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2020-04-24
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>microbe/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.5.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20200423code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20200423)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20200423code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20200423)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomfionarhuangtreeclimbRarticletreea7019b5aa2818ffb5d76b1d80e8d58dbb450097ftargetblanka7019b5a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/fionarhuang/treeclimbR_article/tree/a7019b5aa2818ffb5d76b1d80e8d58dbb450097f" target="_blank">a7019b5</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomfionarhuangtreeclimbRarticletreea7019b5aa2818ffb5d76b1d80e8d58dbb450097ftargetblanka7019b5a" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+
+Untracked files:
+    Untracked:  .gitignore
+    Untracked:  microbe/
+    Untracked:  treeclimbR_article.Rproj
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+There are no past versions. Publish this analysis with <code>wflow_publish()</code> to start tracking its development.
+</p>
+<hr>
+</div>
+</div>
+</div>
+<pre class="r"><code>suppressPackageStartupMessages({
+  library(TreeSummarizedExperiment)
+  library(dplyr)
+  library(treeclimbR)
+  library(ggtree)
+  library(TreeHeatmap)
+  library(ggplot2)
+  library(viridis)
+  library(ggnewscale)
+})</code></pre>
+<p>Load data</p>
+<pre class="r"><code>load(&quot;output/Analysis.RData&quot;)</code></pre>
+<div id="plot-tree" class="section level1">
+<h1>Plot tree</h1>
+<pre class="r"><code>new_phy &lt;- rowTree(bse[[1]])
+
+# tree
+fig_0 &lt;- ggtree(new_phy, layout = &quot;fan&quot;, size = 0.5,
+                branch.length = &quot;none&quot;, 
+                open.angle = 50) %&gt;% 
+  rotate_tree(140)</code></pre>
+<pre><code>Scale for &#39;y&#39; is already present. Adding another scale for &#39;y&#39;, which will
+replace the existing scale.</code></pre>
+<pre><code>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</code></pre>
+<pre class="r"><code>fig_0</code></pre>
+<p><img src="figure/Visualization.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="color-branches-and-nodes" class="section level1">
+<h1>Color branches and nodes</h1>
+<p>Branches that are detected in at least one time point are colored. The detected nodes in period <code>0 M</code> are labeled as red points.</p>
+<pre class="r"><code># tree: color branches that are detected in at least one period
+uloc &lt;- unique(unlist(loc))
+ubr &lt;- findOS(tree = new_phy, node = uloc, 
+              only.leaf = FALSE, self.include = TRUE)
+ubr &lt;- unlist(ubr)
+
+all_node &lt;- showNode(tree = new_phy, only.leaf = FALSE)
+df_br &lt;- data.frame(node = all_node, Detected = &quot;F&quot;) %&gt;%
+  mutate(Detected = ifelse(node %in% ubr, &quot;Yes&quot;, &quot;No&quot;))
+
+
+# tree (colored branch) + result
+fig_0 &lt;- fig_0 %&lt;+% df_br + aes(color = Detected)+
+    geom_point2(aes(subset = (node %in% loc[[1]])), 
+                      color = &quot;red&quot;, size = 2, alpha = 0.8) +
+  scale_color_manual(values = c(&quot;Yes&quot; = &quot;orange&quot;, &quot;No&quot; = &quot;grey&quot;)) +
+  guides(color = guide_legend(override.aes = list(size = 2)),
+         fill = guide_legend(order = 1))
+
+
+fig_0</code></pre>
+<p><img src="figure/Visualization.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="black-bars" class="section level1">
+<h1>Black bars</h1>
+<p>Below add bars to indicate branches detected in different periods.</p>
+<pre class="r"><code># the alias labels of leaves on detected branches.
+loc_leaf_alias &lt;- lapply(loc, FUN = function(x) {
+  lx &lt;- findOS(tree = new_phy, node = x, 
+               only.leaf = TRUE, self.include = TRUE)
+  lx &lt;- unlist(lx)
+  transNode(tree = new_phy, node = lx, use.alias = TRUE)
+})
+
+# A binary matrix: Yes (DA) &amp; No (non-DA)
+leaf &lt;- showNode(tree = new_phy, only.leaf = TRUE)
+leaf_alias &lt;- transNode(tree = new_phy, node = leaf, use.alias = TRUE)
+mat_result &lt;- matrix(NA, nrow = length(leaf), ncol = 3)
+rownames(mat_result) &lt;- leaf_alias
+colnames(mat_result) &lt;- c(&quot;0 M&quot;, &quot;4 M&quot;, &quot;12 M&quot;)
+
+for (i in seq_along(loc_leaf_alias)) {
+  mat_result[, i] &lt;- ifelse(leaf_alias %in% loc_leaf_alias[[i]], &quot;Yes&quot;, &quot;No&quot;)
+}
+
+head(mat_result)</code></pre>
+<pre><code>        0 M  4 M  12 M
+alias_1 &quot;No&quot; &quot;No&quot; &quot;No&quot;
+alias_2 &quot;No&quot; &quot;No&quot; &quot;No&quot;
+alias_3 &quot;No&quot; &quot;No&quot; &quot;No&quot;
+alias_4 &quot;No&quot; &quot;No&quot; &quot;No&quot;
+alias_5 &quot;No&quot; &quot;No&quot; &quot;No&quot;
+alias_6 &quot;No&quot; &quot;No&quot; &quot;No&quot;</code></pre>
+<pre class="r"><code># tree + bar (identified by treeclimbR)
+col_sp &lt;- colnames(mat_result)
+names(col_sp) &lt;- col_sp
+fig_1 &lt;- TreeHeatmap(tree = new_phy, 
+                     tree_fig = fig_0, 
+                     hm_data = mat_result, 
+                     rel_width = 0.2,
+                     tree_hm_gap = 0.3,
+                     column_split = col_sp,
+                     column_split_gap = 0.1,
+                     show_colnames = TRUE,
+                     colnames_position = &quot;top&quot;,
+                     colnames_size = 2, 
+                     colnames_angle = 10, 
+                     colnames_hjust = 0.5,
+                     colnames_offset_y = 20,
+                     colnames_offset_x = 0.25) +
+  scale_fill_manual(values = c(&quot;Yes&quot; = &quot;black&quot;, 
+                               &quot;NO&quot; = &quot;white&quot;), guide = FALSE) +
+  new_scale_fill()</code></pre>
+<pre><code>Scale for &#39;fill&#39; is already present. Adding another scale for &#39;fill&#39;, which
+will replace the existing scale.</code></pre>
+<pre class="r"><code>fig_1</code></pre>
+<p><img src="figure/Visualization.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="add-heatmaps" class="section level1">
+<h1>Add heatmaps</h1>
+<p>Average samples that are generated by randomly assigning samples that have the born method and at the same time point to five categories for each category.</p>
+<pre class="r"><code># observed data: count (in cpm)
+lse &lt;- lapply(bse, FUN = function(x) {
+  x[rowLinks(x)$isLeaf, ]
+  })
+count &lt;- lapply(lse, FUN = function(x) {
+  edgeR::cpm(assays(x)[[1]])
+})
+
+# Average samples: samples that have the born method and at the same time point are randomly assigned to five categories and an average sample is generated for each category.  
+set.seed(1)
+ind &lt;- lapply(bse, FUN = function(x) {
+  xx &lt;- as.character(colData(x)$born_method)
+  sx &lt;- split(seq_along(xx), f = xx)
+  lx &lt;- lapply(sx, FUN = function(y) {
+    y &lt;- sample(y)
+    nx &lt;- length(y)/5
+    split(y, ceiling(seq_along(y)/nx))
+  })
+})
+
+# scale count: log transform + scale
+ave_count &lt;- ind
+for (i in seq_along(ave_count)) {
+  ind.i &lt;- ind[[i]]
+  lx &lt;- lapply(seq_along(ind.i), FUN = function(x) {
+    xx &lt;- ind.i[[x]]
+    xxx &lt;- lapply(xx, FUN = function(y) {
+    yy &lt;- apply(count[[i]][, y], 1, mean)
+    return(yy)
+  })
+  xc &lt;- do.call(cbind, xxx)
+  colnames(xc) &lt;- paste(names(ind.i)[x], seq_len(ncol(xc)), sep = &quot;_&quot;)
+  return(xc)
+  })
+  ave_count[[i]] &lt;- do.call(cbind, lx)
+}
+
+obs_ave &lt;- lapply(seq_along(ave_count), FUN = function(x) {
+  xx &lt;- ave_count[[x]]
+  lx &lt;- log10(xx + 1) 
+  ax &lt;- apply(lx, 1, FUN = function(y) {
+  #if (length(unique(y))) {y} else {scale(y)}
+    ly &lt;- length(unique(y))
+    if (ly == 1) {
+      ifelse(y &gt; 0 , 1, 0)
+    } else{
+      sy &lt;- scale(y)
+      (sy - min(sy))/(max(sy) - min(sy))}
+    })
+
+  tx &lt;- t(ax)
+  rx &lt;- rownames(xx)
+  cx &lt;- colnames(xx)
+  nx &lt;- names(ave_count)[x]
+  colnames(tx) &lt;- paste(nx, cx, sep = &quot;:&quot;)
+  return(tx)
+ })
+obs_ave &lt;- do.call(cbind, obs_ave)
+
+dim(obs_ave)</code></pre>
+<pre><code>[1] 464  30</code></pre>
+<pre class="r"><code>head(obs_ave)</code></pre>
+<pre><code>        0 M:c_section_1 0 M:c_section_2 0 M:c_section_3 0 M:c_section_4
+alias_1               0               0               0               0
+alias_2               0               0               0               0
+alias_3               0               0               0               0
+alias_4               0               0               0               0
+alias_5               0               0               0               0
+alias_6               0               0               0               0
+        0 M:c_section_5 0 M:vaginal_1 0 M:vaginal_2 0 M:vaginal_3 0 M:vaginal_4
+alias_1               0             0             0             0             0
+alias_2               0             0             0             0             0
+alias_3               0             0             0             0             0
+alias_4               0             0             0             0             0
+alias_5               0             0             0             0             0
+alias_6               0             0             0             0             0
+        0 M:vaginal_5 4 M:c_section_1 4 M:c_section_2 4 M:c_section_3
+alias_1             0               0               0               0
+alias_2             0               0               0               0
+alias_3             1               0               0               0
+alias_4             0               0               0               0
+alias_5             1               0               0               0
+alias_6             0               0               0               0
+        4 M:c_section_4 4 M:c_section_5 4 M:vaginal_1 4 M:vaginal_2
+alias_1               0               0             0             0
+alias_2               0               0             0             0
+alias_3               0               0             0             0
+alias_4               0               0             0             0
+alias_5               0               0             0             0
+alias_6               0               0             0             0
+        4 M:vaginal_3 4 M:vaginal_4 4 M:vaginal_5 12 M:c_section_1
+alias_1             0             0             0                0
+alias_2             0             0             0                0
+alias_3             0             0             1                0
+alias_4             0             0             0                0
+alias_5             0             0             1                0
+alias_6             0             0             0                0
+        12 M:c_section_2 12 M:c_section_3 12 M:c_section_4 12 M:c_section_5
+alias_1                0                0                0                0
+alias_2                0                0                1                0
+alias_3                0                0                0                1
+alias_4                0                0                0                1
+alias_5                0                0                0                1
+alias_6                0                0                0                0
+        12 M:vaginal_1 12 M:vaginal_2 12 M:vaginal_3 12 M:vaginal_4
+alias_1      0.0000000      0.0000000              0      0.0000000
+alias_2      0.0000000      0.0000000              0      0.0000000
+alias_3      0.5711675      0.7917966              0      0.8458279
+alias_4      0.4381769      0.8070759              0      0.8551967
+alias_5      0.3734241      0.6711095              0      0.6826041
+alias_6      0.0000000      0.0000000              0      0.0000000
+        12 M:vaginal_5
+alias_1              0
+alias_2              0
+alias_3              0
+alias_4              0
+alias_5              0
+alias_6              0</code></pre>
+<pre class="r"><code>fig_2 &lt;- fig_1
+gr_C &lt;- unique(gsub(pattern = &quot;:.*&quot;, &quot;&quot;, colnames(obs_ave)))
+angle &lt;- c(8, 5, 5)
+for (i in seq_along(gr_C)) {
+  gr_ci &lt;- gr_C[i]
+  sel_i &lt;- grepl(gr_ci, colnames(obs_ave))
+  mc &lt;- obs_ave[, sel_i]
+  head(mc)
+  
+  split_i &lt;- ifelse(grepl(pattern = &quot;:c_&quot;, colnames(mc)), 
+                    &quot;c-section&quot;, &quot;vaginal&quot;)
+  names(split_i) &lt;- colnames(mc)
+  
+  split_lab_i &lt;- split_i
+  names(split_lab_i) &lt;- split_i
+  
+  # 6 20
+  fig_2 &lt;- TreeHeatmap(tree = new_phy, 
+              tree_fig = fig_2,  
+              tree_hm_gap = 6 + 14*(i-1),
+              column_split_gap = 0.2, 
+              column_split = split_i,
+              column_split_label = split_lab_i,
+              split_label_size = 3,
+              split_label_offset_y = 22 -(i) * 3 ,
+              split_label_offset_x = -1,
+              split_label_angle = angle[i],
+              rel_width = 0.5,
+              hm_data = mc,
+              legend_title_hm = &quot;Abundance&quot;) +
+    guides(fill = guide_legend(order = 2))
+  
+}</code></pre>
+<pre><code>Scale for &#39;fill&#39; is already present. Adding another scale for &#39;fill&#39;, which
+will replace the existing scale.
+Scale for &#39;fill&#39; is already present. Adding another scale for &#39;fill&#39;, which
+will replace the existing scale.</code></pre>
+<pre class="r"><code>fig_2 </code></pre>
+<p><img src="figure/Visualization.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="label-months" class="section level1">
+<h1>Label months</h1>
+<pre class="r"><code># separate 0M, 4M, 12M with lines
+hd &lt;- getData(tree_hm = fig_2, type = &quot;heatmap&quot;)
+df_dec &lt;- data.frame(x = c(max(hd$x) + 2, max(hd$x) - 12 , max(hd$x) - 27),
+                      y1 = min(hd$y),
+                      y2 = max(hd$y) + c(22, 18, 14),
+                      label = c(&quot;12 M&quot;, &quot;4 M&quot;, &quot;0 M&quot;), 
+                      rotate = c(12, 8, 10),
+                      ny = c(18, 18, 10))
+
+fig_3 &lt;- fig_2 + 
+  new_scale_fill() +
+  geom_segment(data = df_dec, 
+               aes(x = x, y = y1, xend = x, yend = y2, group = label),
+               linetype = &quot;solid&quot;,
+               inherit.aes = FALSE) +
+  geom_label(data = df_dec, 
+            aes(x = x, y = y2 + ny, label = label,
+                angle = rotate, fill = label),
+            #alpha = 0.4, 
+            hjust = 1,
+            show.legend = FALSE,
+             inherit.aes = FALSE) +
+  scale_fill_brewer(palette = &quot;Set3&quot;) +
+  new_scale_fill()</code></pre>
+</div>
+<div id="anotate-genus" class="section level1">
+<h1>Anotate genus</h1>
+<p>The genus of detected branches. We only show genus that has above five species (leaf nodes) detected.</p>
+<pre class="r"><code># genus: detected
+df_genus &lt;- lapply(seq_along(loc), FUN = function(i) {
+  bse.i &lt;- bse[[i]]
+  loc.i &lt;- loc[[i]]
+  des.i &lt;- findOS(tree = new_phy, node = loc.i, 
+                  only.leaf = TRUE, self.include = TRUE)
+  des.i &lt;- unlist(des.i)
+  
+  ri &lt;- rowLinks(bse.i)$nodeNum %in% des.i
+  
+  bse.ri &lt;- bse.i[ri, ]
+  data.frame(Genus = as.character(rowData(bse.ri)$Genus),
+             node = rowLinks(bse.ri)$nodeNum, 
+             period = names(loc)[i])
+  
+})
+df_genus &lt;- do.call(rbind, df_genus) %&gt;%
+  group_by(Genus, period) %&gt;%
+  mutate(n = n()) 
+dim(df_genus)</code></pre>
+<pre><code>[1] 261   4</code></pre>
+<pre class="r"><code># genus: detected &amp; above 5
+df_genus_4 &lt;- df_genus %&gt;%
+  filter(n &gt; 4) %&gt;%
+  mutate(alias = transNode(tree = new_phy, 
+                           node = node, use.alias = TRUE)) %&gt;%
+  ungroup() %&gt;%
+  select(Genus, alias) %&gt;%
+  distinct()
+
+# the matrix is used later to label heatmap
+mat_genus &lt;- cbind(as.character(df_genus_4$Genus))
+colnames(mat_genus) &lt;- &quot;Genus&quot;
+rownames(mat_genus) &lt;- df_genus_4$alias</code></pre>
+<pre class="r"><code>fig_4 &lt;- TreeHeatmap(tree = new_phy, 
+              tree_fig = fig_3,  
+              tree_hm_gap = 50,
+              rel_width = 0.1,
+              hm_data = mat_genus,
+              legend_title_hm = &quot;Genus&quot;) +
+  scale_fill_brewer(palette = &quot;Paired&quot;) +
+  guides(fill = guide_legend(order = 3))+
+  theme(
+    aspect.ratio = 1,
+    legend.position = c(0.15, 0.66),
+    legend.background = element_rect(fill = NA),
+    plot.title = element_text(hjust = 0.5),
+    legend.title = element_text(size = 9),
+    legend.text = element_text(size = 7),
+    legend.key.size = unit(0.4, &quot;cm&quot;),
+    legend.spacing.x = unit(0.2, &quot;mm&quot;),
+    legend.margin = margin(t = 0, b = 0, r = 5, l = 0),
+    legend.box.margin=margin(t = -5, b = -5, r = 0, l = -60),
+    plot.margin = margin(t = -50, b = -78, r = -200, l = -150)
+  )
+
+fig_4</code></pre>
+<p><img src="figure/Visualization.Rmd/unnamed-chunk-11-1.png" width="768" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggsave(&quot;output/baby_born.eps&quot;, fig_4, 
+       units = &quot;in&quot;, width = 8, height = 7,
+       dpi = 300)</code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 3.6.1 (2019-07-05)
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+Running under: macOS Mojave 10.14.4
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] parallel  stats4    stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+ [1] ggnewscale_0.4.0               viridis_0.5.1                 
+ [3] viridisLite_0.3.0              ggplot2_3.3.0                 
+ [5] TreeHeatmap_0.1.0              ggtree_2.1.6                  
+ [7] treeclimbR_0.1.1               dplyr_0.8.5                   
+ [9] TreeSummarizedExperiment_1.3.0 SingleCellExperiment_1.8.0    
+[11] SummarizedExperiment_1.16.0    DelayedArray_0.12.0           
+[13] BiocParallel_1.20.0            matrixStats_0.55.0            
+[15] Biobase_2.46.0                 GenomicRanges_1.38.0          
+[17] GenomeInfoDb_1.22.0            IRanges_2.20.0                
+[19] S4Vectors_0.24.0               BiocGenerics_0.32.0           
+
+loaded via a namespace (and not attached):
+  [1] backports_1.1.6             circlize_0.4.8             
+  [3] diffcyt_1.6.1               workflowr_1.5.0            
+  [5] plyr_1.8.5                  igraph_1.2.4.1             
+  [7] lazyeval_0.2.2              ConsensusClusterPlus_1.50.0
+  [9] splines_3.6.1               flowCore_1.52.0            
+ [11] fda_2.4.8                   TH.data_1.0-10             
+ [13] digest_0.6.25               htmltools_0.4.0            
+ [15] fansi_0.4.1                 magrittr_1.5               
+ [17] CytoML_1.12.0               cluster_2.1.0              
+ [19] ks_1.11.6                   limma_3.42.0               
+ [21] ComplexHeatmap_2.2.0        RcppParallel_4.4.4         
+ [23] R.utils_2.9.0               sandwich_2.5-1             
+ [25] flowWorkspace_3.34.0        colorspace_1.4-1           
+ [27] rrcov_1.4-7                 xfun_0.11                  
+ [29] crayon_1.3.4                RCurl_1.95-4.12            
+ [31] jsonlite_1.6.1              hexbin_1.28.0              
+ [33] graph_1.64.0                lme4_1.1-21                
+ [35] dirmult_0.1.3-4             survival_2.44-1.1          
+ [37] zoo_1.8-6                   ape_5.3                    
+ [39] glue_1.4.0                  flowClust_3.24.0           
+ [41] gtable_0.3.0                zlibbioc_1.32.0            
+ [43] XVector_0.26.0              GetoptLong_0.1.7           
+ [45] ggcyto_1.14.0               IDPmisc_1.1.19             
+ [47] Rgraphviz_2.30.0            shape_1.4.4                
+ [49] DEoptimR_1.0-8              scales_1.1.0               
+ [51] mvtnorm_1.0-11              edgeR_3.28.0               
+ [53] Rcpp_1.0.4                  clue_0.3-57                
+ [55] tidytree_0.3.3              openCyto_1.24.0            
+ [57] mclust_5.4.5                FlowSOM_1.18.0             
+ [59] tsne_0.1-3                  RColorBrewer_1.1-2         
+ [61] ellipsis_0.3.0              farver_2.0.3               
+ [63] pkgconfig_2.0.3             XML_3.98-1.20              
+ [65] R.methodsS3_1.7.1           flowViz_1.50.0             
+ [67] locfit_1.5-9.1              labeling_0.3               
+ [69] reshape2_1.4.3              flowStats_3.44.0           
+ [71] tidyselect_1.0.0            rlang_0.4.5                
+ [73] later_1.0.0                 munsell_0.5.0              
+ [75] tools_3.6.1                 cli_2.0.2                  
+ [77] evaluate_0.14               stringr_1.4.0              
+ [79] yaml_2.2.0                  knitr_1.26                 
+ [81] fs_1.3.1                    robustbase_0.93-5          
+ [83] purrr_0.3.3                 RBGL_1.62.1                
+ [85] nlme_3.1-142                R.oo_1.23.0                
+ [87] aplot_0.0.4                 compiler_3.6.1             
+ [89] png_0.1-7                   treeio_1.11.2              
+ [91] tibble_3.0.0                pcaPP_1.9-73               
+ [93] stringi_1.4.6               lattice_0.20-38            
+ [95] Matrix_1.2-17               nloptr_1.2.1               
+ [97] vctrs_0.2.4                 pillar_1.4.3               
+ [99] lifecycle_0.2.0             BiocManager_1.30.10        
+[101] GlobalOptions_0.1.1         data.table_1.12.6          
+[103] cowplot_1.0.0               bitops_1.0-6               
+[105] corpcor_1.6.9               patchwork_1.0.0            
+[107] httpuv_1.5.2                R6_2.4.1                   
+[109] latticeExtra_0.6-28         promises_1.1.0             
+[111] KernSmooth_2.23-15          gridExtra_2.3              
+[113] codetools_0.2-16            boot_1.3-23                
+[115] MASS_7.3-51.4               gtools_3.8.1               
+[117] assertthat_0.2.1            rprojroot_1.3-2            
+[119] rjson_0.2.20                withr_2.1.2                
+[121] mnormt_1.5-5                multcomp_1.4-10            
+[123] GenomeInfoDbData_1.2.2      ncdfFlow_2.32.0            
+[125] grid_3.6.1                  tidyr_1.0.2                
+[127] minqa_1.2.4                 rvcheck_0.1.8              
+[129] rmarkdown_1.17              git2r_0.26.1               
+[131] base64enc_0.1-3             ellipse_0.4.1              </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
