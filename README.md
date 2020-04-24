@@ -37,7 +37,7 @@ Heatmap shows counts of entities (rows) in samples (columns) split by groups. Br
 1. Parametric synthetical microbial data
 2. Non-parametric synthetical microbial data
 3. AML-sim and BCR-XL-sim
-4. Infant gut microbial data
+4. Infant gut microbial data ([see here](https://htmlpreview.github.io/?https://github.com/fionarhuang/treeclimbR_article/blob/master/microbe/docs/index.html))
 5. Mouse miRNA data
 6. Mouse cortex scRNAseq data
 
