@@ -1,0 +1,24 @@
+name: "miRNA"
+output_dir: ../docs
+navbar:
+  title: "miRNA"
+  left:
+  - text: Home
+    href: index.html
+  - text: Preparation
+    href: 1-Preparation.html
+  - text: Analysis
+    href: 2-Analysis.html
+  - text: Visualization
+    href: 3-Visualization.html
+  right:
+  - text: Robinson Lab
+    href: https://robinsonlabuzh.github.io
+  - icon: fa-github
+    href: https://github.com/fionarhuang/treeclimbR_article
+output:
+  workflowr::wflow_html:
+    toc: yes
+    toc_float: yes
+    theme: cosmo
+    highlight: textmate

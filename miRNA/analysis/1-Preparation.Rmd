@@ -1,0 +1,91 @@
+---
+title: "Preparation"
+author: "fionarhuang"
+date: "2020-04-24"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+```{r}
+suppressPackageStartupMessages({
+    library(TreeSummarizedExperiment)
+    library(treeclimbR)
+    library(ape)
+    library(ggtree)
+    library(ggplot2)
+    library(cowplot)
+    library(edgeR)
+    library(ComplexHeatmap)
+    library(dplyr)
+    library(TreeHeatmap)
+    library(ggnewscale)
+    library(scales)
+})
+```
+
+# Load data
+Datasets that are loaded here are prepared by Pierre-Luc ([see here](https://github.com/plger/fiona_miRNA))
+```{r}
+# count data
+heart <- readRDS("data/heart.SE.rds")
+
+# tree
+treeO <- readRDS("data/origin_tree.rds")
+
+```
+
+
+Here, we check whether the mapping is correct between the count table and the tree.
+```{r}
+# all features could be mapped to the tree
+tree_lab <- treeO$tip.label
+row_name <- rownames(heart)
+all(row_name %in% tree_lab)
+
+# leaves without data
+empty_leaf <- setdiff(tree_lab, row_name)
+```
+
+
+# Preprocess tree
+
+Leaves that can't be mapped to rows of the count table are removed.
+```{r}
+heart_tree <- drop.tip(phy = treeO, tip = empty_leaf, 
+                       trim.internal = TRUE, 
+                       collapse.singles = TRUE)
+heart_tree
+```
+
+
+# Data aggregation
+
+Data on the leaf level is first stored in a
+`TreeSummarizedExperiment` container, and is further aggregated to generate
+counts on internal nodes of the tree.
+```{r}
+lse <- TreeSummarizedExperiment(assays = assays(heart),
+                                rowData = rowData(heart),
+                                colData = colData(heart),
+                                rowTree = heart_tree)
+# data are on the leaf level
+table(rowLinks(lse)$isLeaf)
+rowData(lse) <- droplevels(rowData(lse))
+```
+
+Threre are 10 samples, five from the Sham surgery and the other five from the TAC surgery. 
+```{r}
+table(heart$surgery)
+```
+
+The aggregation has used the sum of counts on the leaf level.
+```{r}
+
+all_node <- showNode(tree = heart_tree, only.leaf = FALSE)
+tse <- aggValue(x = lse, rowLevel = all_node,
+                FUN = function(x) {
+                    sum(x, na.rm = TRUE)
+                }, message = TRUE)
+saveRDS(tse, file = "output/heart_origin_tse.rds")
+```

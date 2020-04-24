@@ -1,0 +1,28 @@
+---
+title: "Home"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    toc: false
+editor_options:
+  chunk_output_type: console
+---
+
+- [Preparation](1-Preparation.html):
+    - Load data
+    - Preprocess tree
+    - Data aggregation
+    
+- [Analysis](2-Analysis.html):
+    - run edgeR
+    - Run treeclimbR
+    - Results
+    
+- [Visualization](3-Visualization.html):
+    - Plot tree
+    - Color branches and nodes
+    - Scale branches
+    - Label hierarchy levels
+    - Heatmap
+    - Anotate miRNA
+    - Anotate genomic clusters

@@ -1,0 +1,369 @@
+---
+title: "Visualization"
+author: "fionarhuang"
+date: "2020-04-24"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+```{r}
+suppressPackageStartupMessages({
+  library(TreeSummarizedExperiment)
+  library(dplyr)
+  library(treeclimbR)
+  library(ggtree)
+  library(TreeHeatmap)
+  library(ggplot2)
+  library(viridis)
+  library(ggnewscale)
+  library(edgeR)
+  library(scales)
+})
+```
+
+
+```{r}
+tse <- readRDS("output/heart_origin_tse.rds")
+candB <- readRDS("output/heart_origin_result.rds")
+# information about sequence 
+origin_df <- readRDS("data/origin_dataframe.rds")
+```
+
+
+# Plot tree
+
+```{r}
+# tree
+heart_tree <- rowTree(tse)
+
+# nodes
+all_node <- showNode(tree = heart_tree, only.leaf = FALSE)
+
+# figures
+fig_tree <- ggtree(heart_tree, ladderize = FALSE,
+                   layout = "fan", 
+                   open.angle = 10,
+                   size = 0.5)
+fig_tree
+```
+
+# Color branches
+```{r}
+# prepare data to color branches
+result <- topNodes(object = candB, n = Inf, p_value = 0.05)
+loc_0.05 <- result$node
+names(loc_0.05) <- ifelse(result$logFC > 0, "Up-regulated", "Down-regulated")
+
+br_0.05 <- findOS(tree = heart_tree, node = loc_0.05,
+                  only.leaf = FALSE, self.include = TRUE)
+df_branch <- data.frame(node = unlist(br_0.05),
+                        Branch = rep(names(loc_0.05),
+                                     unlist(lapply(br_0.05, length)))) %>%
+    distinct() %>%
+    add_row(node = setdiff(all_node, unlist(br_0.05)),
+            Branch = "same")
+
+# branch colors
+branch_col <- c("same" = "grey70", "Up-regulated" = "navy", 
+                "Down-regulated" = "orange")
+
+# figure: tree
+fig_tree <- fig_tree %<+% 
+    df_branch + 
+    aes(color = Branch) + 
+    scale_color_manual(values = branch_col, 
+                       guide = guide_legend(
+                         override.aes = list(size = 3))) +
+    geom_point2(aes(subset = (node %in% loc_0.05)), 
+                color = "red", shape = 19, size = 1.5) 
+
+fig_tree
+
+```
+
+# Scale branches
+
+Branches without signal are shrinked to save space.
+```{r}
+# branches without signal
+leaf <- showNode(tree = heart_tree, only.leaf = TRUE)
+leaf_yes <- findOS(tree = heart_tree, node = loc_0.05, 
+                   only.leaf = TRUE, self.include = TRUE)
+leaf_no <- setdiff(leaf, unlist(leaf_yes))
+node_no <- signalNode(tree = heart_tree, node = leaf_no)
+node_no <- node_no[!isLeaf(tree = heart_tree, node = node_no)]
+
+
+circo_full <- fig_tree
+for (i in node_no) {
+    circo_full <- scaleClade(circo_full, node = i, scale = 0.2)
+}
+circo_full
+```
+
+Branches that have signal and have more than 10 leaves are scaled to have more space.
+```{r}
+# zoom in signal branches
+loc_a <- findOS(tree = heart_tree, node = loc_0.05, 
+                only.leaf = TRUE, self.include = TRUE)
+len <- unlist(lapply(loc_a, length))
+node_a <- loc_0.05[len > 10]
+
+for (i in node_a) {
+    circo_full <- scaleClade(circo_full, node = i, scale = 3.5)
+}
+
+```
+
+
+# Label hierarchical levels
+
+```{r}
+ux <- setdiff(sort(unique(circo_full$data$x)), 0)
+names(ux) <- c("genomic_cluster", "primary_tx", "miRNA", "sequence" )
+df_layer <- data.frame(x = ux)%>%
+    arrange(x) %>%
+    mutate(y = max(circo_full$data$y, na.rm = TRUE),
+           layer = factor(names(ux), levels = names(ux)))
+
+# annotate the four levels on the tree
+layer_shape <- 49:52
+names(layer_shape) <- names(ux)
+circo_full <- circo_full + 
+    geom_point(data = df_layer, 
+               aes(x, y = y + 210, shape = layer),
+               size = 6, 
+               inherit.aes = FALSE) +
+    scale_shape_manual(values = layer_shape, 
+                       guide = guide_legend(
+                           override.aes = list(size = 4), 
+                           order = 1)) +
+    labs(shape = "Hierarchy")
+circo_full  
+```
+
+
+# Heatmap
+
+The heatmap uses data on the leaf level. Counts of miRNAs in cpm are firstly log transformed, and then standardized using `scale` for each miRNA across samples.
+
+```{r}
+# the data on the leaf level for signal branches
+yes_L <- findOS(tree = heart_tree, node = loc_0.05, 
+                only.leaf = TRUE, self.include = TRUE)
+yes_L <- rowLinks(tse)$nodeNum %in% unlist(yes_L)
+
+# scale counts:
+#   1. log transformed in cpm counts
+#   2. log-count of each miRNA is further scaled among samples
+
+# log-transformed by columns
+count_L <- assays(tse)[[1]][yes_L, ]
+countL <- cpm(count_L)
+scale_L <- log(countL + 1) 
+
+# standardized
+scale_L <- t(apply(scale_L, 1, FUN = function(y) {
+    ly <- length(unique(y))
+    if (ly == 1) {
+        sy <- rep(0, length(y))
+    } else {
+        sy <- scale(y)
+    }
+    return(sy)
+}))
+rownames(scale_L) <- rownames(count_L)
+colnames(scale_L) <- colnames(count_L)
+dim(scale_L)
+```
+
+Heatmap is only on leaves that are identified as differentially abundant.
+```{r}
+surgery <- colData(tse)$surgery
+surgery <- ifelse(surgery == "Sham", "Sham", "TAC")
+names(surgery) <- colnames(tse)
+
+fig2 <- TreeHeatmap(tree = heart_tree, 
+                    rel_width = 0.2,
+                    tree_fig = circo_full,
+                    hm_data = scale_L, 
+                    legend_title_hm = "Expression(scale)",
+                    tree_hm_gap = 0.3,
+                    column_split = surgery, 
+                    column_split_gap = 0.05, 
+                    column_split_label = c("Sham" = "Sham", 
+                                           "TAC" = "TAC"), 
+                    split_label_angle = 80,
+                    split_label_size = 4, 
+                    split_label_offset_y = 260) +
+    scale_fill_gradient(low = "navy", high = "yellow",
+                        limits = c(-1, 1),
+                        oob = squish,
+                        guide = guide_colorbar(order = 3)) +
+    new_scale_fill() 
+
+fig2
+```
+
+# Annotation: miRNA
+
+```{r}
+leaf_a  <- findOS(tree = heart_tree, node = node_a, 
+                  only.leaf = TRUE, self.include = TRUE)
+
+names(leaf_a) <- transNode(tree = heart_tree, node = node_a,
+                           use.alias = TRUE)
+
+df_a <- lapply(node_a, FUN = function(x){
+    xx <- rowData(tse)[rowLinks(tse)$nodeNum %in% x, ]
+})
+
+
+mir_a <- lapply(leaf_a, FUN = function(x){
+    ix <- (rowLinks(tse)$nodeNum %in% x) & rowLinks(tse)$isLeaf
+    xx <- rowData(tse)[ix, "Annotation"]
+    unique(as.character(xx))
+})
+head(mir_a)
+
+
+mir_s_a <- lapply(mir_a, FUN = function(x){
+    
+    if (length(x) == 1) {
+        gsub(pattern = "mmu-mir-", "", x)
+    } else {
+        xx <- unique(stringr::str_extract(x, "^mmu-mir-[0-9]+"))
+        if (length(xx) == 1) {
+            x <- unlist(strsplit(x = x, split = ";"))
+            x <- unique(x)
+            px <- paste(x, collapse = ";")
+            gsub(pattern = "mmu-mir-", "", px)
+        } else {
+            "mixed" 
+        }}
+})
+
+mat_a <- data.frame(mir = (unlist(mir_s_a)))
+rownames(mat_a) <- names(mir_s_a)
+
+length(unique(mat_a[, 1]))
+
+
+```
+
+
+```{r, fig.height=6.5, fig.width=7.8}
+dat <- getData(tree_hm = fig2, type = "heatmap")
+df_line <- data.frame(x = max(dat$x)+0.25,
+                      y1 = max(min(dat$y), 0), 
+                      y2 = max(dat$y))
+
+cols <- c("darkmagenta", "darkorchid1", "cornflowerblue", "cyan3", 
+          "blue", "plum2", "orange", "firebrick2", "tan4",
+          "deeppink", "darkslateblue", "darkred", "magenta",
+          "darkseagreen",
+          "mediumpurple", "darkolivegreen1", "gray", "black")
+names(cols) <- sort(unique(mat_a[, 1]))
+
+
+fig3 <- TreeHeatmap(tree = heart_tree, 
+                    tree_fig = fig2,  
+                    tree_hm_gap = 1.5,
+                    rel_width = 0.05, 
+                    hm_data = mat_a,
+                    legend_title_hm = "miRNA") +
+    scale_fill_manual(values = cols, 
+                      guide = guide_legend(order = 4, ncol = 2)) +
+    geom_segment(data = df_line,
+                 aes(x = x, y = y1, xend = x, yend = y2),
+                 linetype = "dashed",  
+                 inherit.aes = FALSE)  
+
+fig3 +
+  theme(
+        aspect.ratio = 1,
+        legend.position = c(0.12, 0.5),
+        legend.background = element_rect(fill = NA),
+        plot.title = element_text(hjust = 0.5),
+        legend.title = element_text(size = 9),
+        legend.text = element_text(size = 7),
+        legend.key.size = unit(0.3, "cm"),
+        legend.spacing.x = unit(0.2, "mm"),
+        legend.margin = margin(t = 0, b = 0, r = 20, l = 0),
+        legend.box.margin=margin(t = -5, b = -5, r = 25, l = -60),
+        plot.margin = margin(t = -50, b = -50, r = -150, l = -40)
+    )
+
+```
+
+# Annotate genomic clusters
+
+Identified nodes are annotated with their correspoinding hierarchy levels.
+```{r}
+source("code/fun_inner_label.R")
+# leaf labels
+leaf_0.05 <- findOS(tree = heart_tree, node = loc_0.05, 
+                    only.leaf = TRUE, self.include = TRUE)
+label_0.05 <- transNode(tree = heart_tree, node = unlist(leaf_0.05))
+
+# hierarchical levels of detected nodes
+node_info <- origin_df %>% 
+    filter(sequence %in% label_0.05)
+node_lab <- fun_inner_label(tree = heart_tree, 
+                            tree_df = node_info, 
+                            column_leaf = "sequence")
+lab_0.05 <- lapply(node_lab, FUN = function(x) {
+    x[x %in% loc_0.05]
+})
+
+# the number of nodes detected at each level
+lapply(lab_0.05, length)
+
+# on genomic_cluster level
+lab_0.05$`1`
+```
+
+
+
+```{r, fig.height=6.5, fig.width=7.8}
+# data to plot points
+dat <- getData(tree_hm = fig3, type = "heatmap")
+
+df_point <- data.frame(node = lab_0.05$`1`, 
+                    "Genomic_range" = factor(names(lab_0.05$`1`)))  %>%
+  left_join(dat) %>%
+  mutate(x = x + 0.2, y = y )
+
+# colors for points
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", 
+               "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+col_g <- cols[df_point$value]
+col_g[col_g == "black"] <- cbPalette[seq_len(sum(col_g == "black"))]
+names(col_g) <- df_point$Genomic_range
+
+fig4 <- fig3 +
+  new_scale_color() +
+  geom_point(data = df_point, aes(x = x, y = y, color = Genomic_range),
+             shape = 19, size = 4,
+            inherit.aes = FALSE) +
+  scale_color_manual(values = col_g) +
+  guides(color = guide_legend(order = 5, ncol = 1))+
+    theme(
+        aspect.ratio = 1,
+        legend.position = c(0.12, 0.5),
+        legend.background = element_rect(fill = NA),
+        plot.title = element_text(hjust = 0.5),
+        legend.title = element_text(size = 7),
+        legend.text = element_text(size = 6),
+        legend.key.size = unit(0.25, "cm"),
+        legend.spacing.x = unit(0.2, "mm"),
+        legend.margin = margin(t = 0, b = 0, r = 50, l = 0),
+        legend.box.margin=margin(t = -5, b = -5, r = 25, l = -60),
+        plot.margin = margin(t = -50, b = -50, r = -150, l = -40)
+    )
+fig4 
+ggsave("output/heart_microRNA.eps", fig4, 
+       units = "in", width = 7.8, height = 6.5,
+       dpi = 300)
+```

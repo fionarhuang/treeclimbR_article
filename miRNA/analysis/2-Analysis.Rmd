@@ -1,0 +1,132 @@
+---
+title: "Analysis"
+author: "fionarhuang"
+date: "2020-04-24"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+```{r}
+suppressPackageStartupMessages({
+    library(TreeSummarizedExperiment)
+    library(treeclimbR)
+    library(ape)
+    library(ggtree)
+    library(ggplot2)
+    library(cowplot)
+    library(edgeR)
+    library(ComplexHeatmap)
+    library(dplyr)
+    library(TreeHeatmap)
+    library(ggnewscale)
+    library(scales)
+})
+```
+
+# Load data
+
+```{r}
+tse <- readRDS("output/heart_origin_tse.rds")
+```
+
+
+# Differential analysis
+
+`edgeR` was used to perform differential abundance (DA) test on all nodes..
+
+```{r}
+surgery <- colData(tse)$surgery
+surgery <- ifelse(surgery == "Sham", "Sham", "TAC")
+names(surgery) <- colnames(tse)
+
+res <- runDA(TSE = tse, feature_on_row = TRUE, assay = 1,
+             option = "glm", group_column = "surgery",
+             design_terms = "surgery")
+out <- nodeResult(object = res, n = Inf)
+```
+
+
+## Run `treeclimbR`
+
+Multiple candidates are proposed by tuning `t`.
+
+```{r}
+cand <- getCand(tree = rowTree(tse), 
+                score_data = out, node_column = "node",
+                p_column = "PValue", sign_column = "logFC", 
+                message = FALSE)
+```
+
+All proposed candidates are evaluated. One candidate is selected as the best at FDR $\alpha = 0.05$.
+```{r}
+candB <- evalCand(tree = rowTree(tse), 
+                  levels = cand$candidate_list, 
+                  score_data = out, node_column = "node", 
+                  p_column = "PValue", sign_column = "logFC",
+                  method = "BH", limit_rej = 0.05,
+                  use_pseudo_leaf = FALSE,
+                  message = FALSE)
+```
+
+
+# Results
+
+Nodes that are reported to be DA are in `loc_0.05`.
+```{r}
+# the result table
+result <- topNodes(object = candB, n = Inf, p_value = 0.05)
+loc_0.05 <- result$node
+
+# the logFC of reported nodes
+loc_lfc <- result$logFC
+
+# the sign of reported nodes
+loc_sign <- ifelse(sign(loc_lfc) > 0, "Up-regulated", "Down-regulated")
+names(loc_0.05) <- loc_sign
+
+head(loc_0.05)
+```
+
+
+The size (number of leaves) of identified branches.
+```{r}
+leaf_0.05 <- findOS(tree = rowTree(tse), node = loc_0.05, 
+                    only.leaf = TRUE, self.include = TRUE)
+size_0.05 <- unlist(lapply(leaf_0.05, length))
+table(size_0.05)
+
+# the totoal number of leaves covered by identified nodes
+sum(size_0.05)
+```
+
+
+```{r}
+# the number of nodes detected:
+length(loc_0.05)
+
+# the number of sequences detected
+sum(size_0.05)
+```
+
+
+Below gives miRNAs that the identified sequences belong to:
+```{r}
+seqs <- unlist(leaf_0.05)
+seqs_mir <- rowData(tse)[rowLinks(tse)$nodeNum %in% seqs,
+                                "Annotation"]
+seqs_mir <- unique(as.character(seqs_mir))
+head(seqs_mir)
+# For those with more than one mirs separated by ";"
+# For example, "a;b"means sequences could be from a or b or both
+seqs_mir <- unlist(strsplit(seqs_mir, ";"))
+seqs_mir <- unique(seqs_mir)
+
+# the number of miRNAs
+length(seqs_mir)
+head(seqs_mir)
+```
+
+```{r}
+saveRDS(candB, file = "output/heart_origin_result.rds")
+```
