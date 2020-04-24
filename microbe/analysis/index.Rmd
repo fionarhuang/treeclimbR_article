@@ -8,18 +8,18 @@ editor_options:
   chunk_output_type: console
 ---
 
-- [Preparation](Preparation.html):
+- [Preparation](1-Preparation.html):
     - Download data
     - Data aggregation
     - Viz Data
     
-- [Analysis](Analysis.html):
+- [Analysis](2-Analysis.html):
     - Data aggregation
     - run edgeR
     - Run treeclimbR
     - Results
     
-- [Visualization](Visualization.html):
+- [Visualization](3-Visualization.html):
     - Plot tree
     - Color branches and nodes
     - Black bars

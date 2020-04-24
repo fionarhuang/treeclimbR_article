@@ -6,11 +6,11 @@ navbar:
   - text: Home
     href: index.html
   - text: Preparation
-    href: Preparation.html
+    href: 1-Preparation.html
   - text: Analysis
-    href: Analysis.html
+    href: 2-Analysis.html
   - text: Visualization
-    href: Visualization.html
+    href: 3-Visualization.html
   right:
   - text: Robinson Lab
     href: https://robinsonlabuzh.github.io
