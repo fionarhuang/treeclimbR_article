@@ -1,0 +1,108 @@
+---
+title: "3-treeclimbR"
+author: "fionarhuang"
+date: "2020-04-20"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+# Load packages
+```{r}
+suppressPackageStartupMessages({
+   library(treeclimbR)
+  library(TreeSummarizedExperiment)
+  library(parallel)
+})
+```
+
+# load data
+
+```{r}
+se_count <- readRDS("output/se_count.rds")
+cell_tree <- readRDS("output/cell_tree.rds")
+
+lab <- as.character(colData(se_count)$cluster_id)
+tse <- TreeSummarizedExperiment(assays = assays(se_count),
+                                colTree = cell_tree,
+                                colNodeLab = lab, 
+                                colData = colData(se_count))
+
+colData(tse)$group_id <- factor(colData(tse)$group_id, levels = c("WT", "LPS"))
+```
+
+
+# Data aggregation
+
+```{r}
+# build tse
+d_se <- aggDS(TSE = tse,
+              assay = 1,
+              sample_id = "sample_id",
+              group_id = "group_id",
+              cluster_id = "cluster_id",
+              FUN = sum,
+              message = FALSE)
+
+res <- runDS(SE = d_se, tree = colTree(tse),
+             option = "glm", 
+             min_cells = 10,
+             filter_min_count = 1, 
+             filter_min_prop = 1,
+             group_column = "group_id",
+             design_terms = "group_id",
+             message = FALSE)
+
+out <- nodeResult(res, n = Inf, type = "DS")
+head(out)
+```
+
+
+# run `treeclimbR`
+
+## get candidates
+```{r}
+# this takes hours
+out_list <- split(out, f = out$feature)
+system.time({
+    cand_list <- mclapply(seq_along(out_list), 
+                          FUN = function(x) {
+                            xx <- getCand(tree = colTree(tse), 
+                                          score_data = out_list[[x]], 
+                                          node_column = "node", 
+                                          p_column = "PValue", 
+                                          sign_column = "logFC",
+                                          message = FALSE)
+                            xx$candidate_list},
+                          mc.cores = 4)  
+})
+names(cand_list) <- names(out_list)
+
+
+```
+
+
+## evaluate candidates
+```{r}
+system.time({
+   best_0.05 <- evalCand(tree = cell_tree, type = "multiple", 
+                    levels = cand_list, score_data = out_list, 
+                    node_column = "node", 
+                    p_column = "PValue", 
+                    sign_column = "logFC", 
+                    feature_column = "feature",
+                    limit_rej = 0.05,
+                    message = TRUE,
+                    use_pseudo_leaf = FALSE)
+})
+
+```
+
+
+# output
+```{r}
+
+save(tse, d_se, out, cand_list, best_0.05, file = "output/3-treeclimbR.RData")
+
+```
+
