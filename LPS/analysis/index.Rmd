@@ -1,0 +1,34 @@
+---
+title: "Home"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    toc: false
+editor_options:
+  chunk_output_type: console
+---
+
+- [Preprocessing](1-preprocessing.html):
+    - Download data
+    - Data aggregation
+    - Viz Data
+    
+- [Tree construction](2-tree.html):
+    - Load packages
+    - Load data
+    - Type markers
+    - Tree construction
+    - Viz tree
+    - Output SE
+    
+- [Data analysis](3-treeclimbR.html):
+    - Load packages
+    - Load data
+    - Data aggregation
+    - Run treeclimbR
+    - Output 
+    
+- [Visualization](4-visualization.html):
+    - Load packages
+    - Load data
+    
