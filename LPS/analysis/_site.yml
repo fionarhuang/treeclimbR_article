@@ -1,0 +1,25 @@
+name: "LPS"
+output_dir: ../docs
+navbar:
+  title: "LPS"
+  left:
+  - text: Preprocessing
+    href: 1-preprocessing.html
+  - text: Tree
+    href: 2-tree.html
+  - text: State analysis
+    href: 3-treeclimbR.html
+  - text: Visualization
+    href: 4-visualization.html
+  right:
+  - text: Robinson Lab
+    href: https://robinsonlabuzh.github.io
+  - icon: fa-github
+    href: https://github.com/fionarhuang/treeclimbR_article
+output:
+  workflowr::wflow_html:
+    toc: yes
+    toc_float: yes
+    theme: cosmo
+    highlight: textmate
+

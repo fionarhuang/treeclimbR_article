@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="fionarhuang" />
+
+<meta name="date" content="2020-04-20" />
+
+<title>3-treeclimbR</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">LPS</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="1-preprocessing.html">Preprocessing</a>
+</li>
+<li>
+  <a href="2-tree.html">Tree</a>
+</li>
+<li>
+  <a href="3-treeclimbR.html">State analysis</a>
+</li>
+<li>
+  <a href="4-visualization.html">Visualization</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://robinsonlabuzh.github.io">Robinson Lab</a>
+</li>
+<li>
+  <a href="https://github.com/fionarhuang/treeclimbR_article">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">3-treeclimbR</h1>
+<h4 class="author">fionarhuang</h4>
+<h4 class="date">2020-04-20</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2020-04-25
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>LPS/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.5.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20200425code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20200425)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20200425code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20200425)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomfionarhuangtreeclimbRarticletree83473d43e47168e5def6f3aa7272faf2591d3ef6targetblank83473d4a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/fionarhuang/treeclimbR_article/tree/83473d43e47168e5def6f3aa7272faf2591d3ef6" target="_blank">83473d4</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomfionarhuangtreeclimbRarticletree83473d43e47168e5def6f3aa7272faf2591d3ef6targetblank83473d4a" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    LPS_old/output/
+    Ignored:    LPS_old/temp/
+    Ignored:    data/
+
+Untracked files:
+    Untracked:  .gitignore
+    Untracked:  LPS/
+    Untracked:  cytof/
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the R Markdown and HTML files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view them.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/fionarhuang/treeclimbR_article/blob/83473d43e47168e5def6f3aa7272faf2591d3ef6/LPS/analysis/3-treeclimbR.Rmd" target="_blank">83473d4</a>
+</td>
+<td>
+fionarhuang
+</td>
+<td>
+2020-04-25
+</td>
+<td>
+remove LPS folder
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/fionarhuang/treeclimbR_article/83473d43e47168e5def6f3aa7272faf2591d3ef6/LPS/docs/3-treeclimbR.html" target="_blank">83473d4</a>
+</td>
+<td>
+fionarhuang
+</td>
+<td>
+2020-04-25
+</td>
+<td>
+remove LPS folder
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/fionarhuang/treeclimbR_article/blob/f77a45b473a18b0d7aea32677cd253aeb265b6a1/LPS/analysis/3-treeclimbR.Rmd" target="_blank">f77a45b</a>
+</td>
+<td>
+fionarhuang
+</td>
+<td>
+2020-04-25
+</td>
+<td>
+upload analysis files of LPS
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/fionarhuang/treeclimbR_article/f77a45b473a18b0d7aea32677cd253aeb265b6a1/LPS/docs/3-treeclimbR.html" target="_blank">f77a45b</a>
+</td>
+<td>
+fionarhuang
+</td>
+<td>
+2020-04-25
+</td>
+<td>
+upload analysis files of LPS
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="load-packages" class="section level1">
+<h1>Load packages</h1>
+<pre class="r"><code>suppressPackageStartupMessages({
+   library(treeclimbR)
+  library(TreeSummarizedExperiment)
+  library(parallel)
+})</code></pre>
+</div>
+<div id="load-data" class="section level1">
+<h1>load data</h1>
+<pre class="r"><code>se_count &lt;- readRDS(&quot;output/se_count.rds&quot;)
+cell_tree &lt;- readRDS(&quot;output/cell_tree.rds&quot;)
+
+lab &lt;- as.character(colData(se_count)$cluster_id)
+tse &lt;- TreeSummarizedExperiment(assays = assays(se_count),
+                                colTree = cell_tree,
+                                colNodeLab = lab, 
+                                colData = colData(se_count))
+
+colData(tse)$group_id &lt;- factor(colData(tse)$group_id, levels = c(&quot;WT&quot;, &quot;LPS&quot;))</code></pre>
+</div>
+<div id="data-aggregation" class="section level1">
+<h1>Data aggregation</h1>
+<pre class="r"><code># build tse
+d_se &lt;- aggDS(TSE = tse,
+              assay = 1,
+              sample_id = &quot;sample_id&quot;,
+              group_id = &quot;group_id&quot;,
+              cluster_id = &quot;cluster_id&quot;,
+              FUN = sum,
+              message = FALSE)
+
+res &lt;- runDS(SE = d_se, tree = colTree(tse),
+             option = &quot;glm&quot;, 
+             min_cells = 10,
+             filter_min_count = 1, 
+             filter_min_prop = 1,
+             group_column = &quot;group_id&quot;,
+             design_terms = &quot;group_id&quot;,
+             message = FALSE)</code></pre>
+<pre><code>Warning in runDS(SE = d_se, tree = colTree(tse), option = &quot;glm&quot;, min_cells =
+10, : 12 nodes are ignored. They don&#39;t have cells above 10 in more than half
+samples</code></pre>
+<pre class="r"><code>out &lt;- nodeResult(res, n = Inf, type = &quot;DS&quot;)
+head(out)</code></pre>
+<pre><code>      logFC    logCPM       LR       PValue          FDR node
+1  7.979626 12.603466 233.8315 8.705302e-53 9.831890e-47   68
+2 10.512575  8.660439 221.4157 4.442065e-50 1.825029e-44   75
+3 10.946707 10.531528 221.2417 4.847724e-50 1.825029e-44   68
+4  9.851250  9.676625 204.7047 1.964383e-46 5.546505e-41   51
+5  9.020660 10.213986 193.1379 6.567885e-44 1.483572e-38   68
+6  7.668008 10.037197 183.8302 7.066200e-42 1.330111e-36   68
+                     feature
+1    ENSMUSG00000026822.Lcn2
+2  ENSMUSG00000034855.Cxcl10
+3    ENSMUSG00000035385.Ccl2
+4    ENSMUSG00000026822.Lcn2
+5   ENSMUSG00000029380.Cxcl1
+6 ENSMUSG00000030022.Adamts9</code></pre>
+</div>
+<div id="run-treeclimbr" class="section level1">
+<h1>run <code>treeclimbR</code></h1>
+<div id="get-candidates" class="section level2">
+<h2>get candidates</h2>
+<pre class="r"><code># this takes hours
+out_list &lt;- split(out, f = out$feature)
+system.time({
+    cand_list &lt;- mclapply(seq_along(out_list), 
+                          FUN = function(x) {
+                            xx &lt;- getCand(tree = colTree(tse), 
+                                          score_data = out_list[[x]], 
+                                          node_column = &quot;node&quot;, 
+                                          p_column = &quot;PValue&quot;, 
+                                          sign_column = &quot;logFC&quot;,
+                                          message = FALSE)
+                            xx$candidate_list},
+                          mc.cores = 4)  
+})</code></pre>
+<pre><code>     user    system   elapsed 
+30178.959   252.465 10224.034 </code></pre>
+<pre class="r"><code>names(cand_list) &lt;- names(out_list)</code></pre>
+</div>
+<div id="evaluate-candidates" class="section level2">
+<h2>evaluate candidates</h2>
+<pre class="r"><code>system.time({
+   best_0.05 &lt;- evalCand(tree = cell_tree, type = &quot;multiple&quot;, 
+                    levels = cand_list, score_data = out_list, 
+                    node_column = &quot;node&quot;, 
+                    p_column = &quot;PValue&quot;, 
+                    sign_column = &quot;logFC&quot;, 
+                    feature_column = &quot;feature&quot;,
+                    limit_rej = 0.05,
+                    message = TRUE,
+                    use_pseudo_leaf = FALSE)
+})</code></pre>
+<pre><code>Evaluating candidates ... </code></pre>
+<pre><code>working on 1 out of 25 candidates 
+working on 2 out of 25 candidates 
+working on 3 out of 25 candidates 
+working on 4 out of 25 candidates 
+working on 5 out of 25 candidates 
+working on 6 out of 25 candidates 
+working on 7 out of 25 candidates 
+working on 8 out of 25 candidates 
+working on 9 out of 25 candidates 
+working on 10 out of 25 candidates 
+working on 11 out of 25 candidates 
+working on 12 out of 25 candidates 
+working on 13 out of 25 candidates 
+working on 14 out of 25 candidates 
+working on 15 out of 25 candidates 
+working on 16 out of 25 candidates 
+working on 17 out of 25 candidates 
+working on 18 out of 25 candidates 
+working on 19 out of 25 candidates 
+working on 20 out of 25 candidates 
+working on 21 out of 25 candidates 
+working on 22 out of 25 candidates 
+working on 23 out of 25 candidates 
+working on 24 out of 25 candidates 
+working on 25 out of 25 candidates 
+mulitple-hypothesis correction on the best candidate ...
+output the results ...</code></pre>
+<pre><code>   user  system elapsed 
+127.720   0.797 128.554 </code></pre>
+</div>
+</div>
+<div id="output" class="section level1">
+<h1>output</h1>
+<pre class="r"><code>save(tse, d_se, out, cand_list, best_0.05, file = &quot;output/3-treeclimbR.RData&quot;)</code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 3.6.1 (2019-07-05)
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+Running under: macOS Mojave 10.14.4
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] parallel  stats4    stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+ [1] treeclimbR_0.1.1               TreeSummarizedExperiment_1.3.0
+ [3] SingleCellExperiment_1.8.0     SummarizedExperiment_1.16.0   
+ [5] DelayedArray_0.12.0            BiocParallel_1.20.0           
+ [7] matrixStats_0.55.0             Biobase_2.46.0                
+ [9] GenomicRanges_1.38.0           GenomeInfoDb_1.22.0           
+[11] IRanges_2.20.0                 S4Vectors_0.24.0              
+[13] BiocGenerics_0.32.0            workflowr_1.5.0               
+
+loaded via a namespace (and not attached):
+  [1] backports_1.1.6             circlize_0.4.8             
+  [3] diffcyt_1.6.1               plyr_1.8.5                 
+  [5] igraph_1.2.4.1              lazyeval_0.2.2             
+  [7] ConsensusClusterPlus_1.50.0 splines_3.6.1              
+  [9] flowCore_1.52.0             fda_2.4.8                  
+ [11] TH.data_1.0-10              ggplot2_3.3.0              
+ [13] digest_0.6.25               htmltools_0.4.0            
+ [15] fansi_0.4.1                 magrittr_1.5               
+ [17] CytoML_1.12.0               cluster_2.1.0              
+ [19] ks_1.11.6                   limma_3.42.0               
+ [21] ComplexHeatmap_2.2.0        RcppParallel_4.4.4         
+ [23] R.utils_2.9.0               sandwich_2.5-1             
+ [25] flowWorkspace_3.34.0        colorspace_1.4-1           
+ [27] rrcov_1.4-7                 xfun_0.11                  
+ [29] dplyr_0.8.5                 crayon_1.3.4               
+ [31] RCurl_1.95-4.12             jsonlite_1.6.1             
+ [33] hexbin_1.28.0               graph_1.64.0               
+ [35] lme4_1.1-21                 dirmult_0.1.3-4            
+ [37] survival_2.44-1.1           zoo_1.8-6                  
+ [39] ape_5.3                     glue_1.4.0                 
+ [41] flowClust_3.24.0            gtable_0.3.0               
+ [43] zlibbioc_1.32.0             XVector_0.26.0             
+ [45] GetoptLong_0.1.7            ggcyto_1.14.0              
+ [47] IDPmisc_1.1.19              Rgraphviz_2.30.0           
+ [49] shape_1.4.4                 DEoptimR_1.0-8             
+ [51] scales_1.1.0                mvtnorm_1.0-11             
+ [53] edgeR_3.28.0                Rcpp_1.0.4                 
+ [55] clue_0.3-57                 tidytree_0.3.3             
+ [57] openCyto_1.24.0             mclust_5.4.5               
+ [59] FlowSOM_1.18.0              tsne_0.1-3                 
+ [61] RColorBrewer_1.1-2          ellipsis_0.3.0             
+ [63] pkgconfig_2.0.3             XML_3.98-1.20              
+ [65] R.methodsS3_1.7.1           flowViz_1.50.0             
+ [67] locfit_1.5-9.1              reshape2_1.4.3             
+ [69] flowStats_3.44.0            tidyselect_1.0.0           
+ [71] rlang_0.4.5                 later_1.0.0                
+ [73] munsell_0.5.0               tools_3.6.1                
+ [75] cli_2.0.2                   evaluate_0.14              
+ [77] stringr_1.4.0               yaml_2.2.0                 
+ [79] ggtree_2.1.6                knitr_1.26                 
+ [81] fs_1.3.1                    robustbase_0.93-5          
+ [83] purrr_0.3.3                 RBGL_1.62.1                
+ [85] nlme_3.1-142                whisker_0.4                
+ [87] R.oo_1.23.0                 aplot_0.0.4                
+ [89] compiler_3.6.1              png_0.1-7                  
+ [91] treeio_1.11.2               tibble_3.0.0               
+ [93] pcaPP_1.9-73                stringi_1.4.6              
+ [95] lattice_0.20-38             Matrix_1.2-17              
+ [97] nloptr_1.2.1                vctrs_0.2.4                
+ [99] pillar_1.4.3                lifecycle_0.2.0            
+[101] BiocManager_1.30.10         GlobalOptions_0.1.1        
+[103] data.table_1.12.6           cowplot_1.0.0              
+[105] bitops_1.0-6                corpcor_1.6.9              
+[107] patchwork_1.0.0             httpuv_1.5.2               
+[109] R6_2.4.1                    latticeExtra_0.6-28        
+[111] promises_1.1.0              KernSmooth_2.23-15         
+[113] gridExtra_2.3               codetools_0.2-16           
+[115] boot_1.3-23                 MASS_7.3-51.4              
+[117] gtools_3.8.1                assertthat_0.2.1           
+[119] rprojroot_1.3-2             rjson_0.2.20               
+[121] mnormt_1.5-5                multcomp_1.4-10            
+[123] GenomeInfoDbData_1.2.2      ncdfFlow_2.32.0            
+[125] grid_3.6.1                  tidyr_1.0.2                
+[127] minqa_1.2.4                 rvcheck_0.1.8              
+[129] rmarkdown_1.17              git2r_0.26.1               
+[131] base64enc_0.1-3             ellipse_0.4.1              </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
