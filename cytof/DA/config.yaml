@@ -1,0 +1,18 @@
+## Path to the programs for this project
+codeP: /home/fiona/treeclimbR_article/cytof/DA/code
+
+## Path to output (data, figures)
+outPD: /home/fiona/treeclimbR_article/cytof/DA/output/RData
+outPF: /home/fiona/treeclimbR_article/cytof/DA/output/Figure
+
+## Path to parameter settings
+partext: /home/fiona/treeclimbR_article/cytof/DA/parameter/par_other
+## Path to log files
+RoutP: /home/fiona/treeclimbR_article/cytof/DA/Rout
+
+## R setup
+##---------------------------------------------------------------------------------------------
+## Specify "True" if R should be installed in a conda environment or "False" if you want to use 
+## your own R installation (then you have to set the path to your library in the .Renviron file)
+Rbin: /usr/local/R/R-3.6.1/bin/R
+##---------------------------------------------------------------------------------------------
