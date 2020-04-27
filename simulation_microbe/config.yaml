@@ -1,0 +1,27 @@
+## Path to self-generated R package
+#pathTool: /home/fiona/phd/microbes/simulation/Tool
+
+
+## Path to the original data
+## dataS: /home/fiona/phd/microbes/simulation/S1/branches/data
+
+## Path to the programs for this project
+codeP: /home/fiona/phd/microbes/simulation/wflow_saliva/code
+codeT: /home/fiona/phd/microbes/Tool
+
+## Path to output (data, figures)
+outPD: /home/fiona/phd/microbes/simulation/wflow_saliva/output/RData
+outPF: /home/fiona/phd/microbes/simulation/wflow_saliva/output/Figure
+
+## Path to parameter settings
+partext: /home/fiona/phd/microbes/simulation/wflow_saliva/parameter/par_other
+## Path to log files
+RoutP: /home/fiona/phd/microbes/simulation/wflow_saliva/Rout
+
+## R setup
+##---------------------------------------------------------------------------------------------
+## Specify "True" if R should be installed in a conda environment or "False" if you want to use 
+## your own R installation (then you have to set the path to your library in the .Renviron file)
+Rbin: /usr/local/R/R-3.6.1/bin/R
+##---------------------------------------------------------------------------------------------
+

@@ -1,0 +1,43 @@
+# === tool ========
+source("/home/fiona/phd/microbes/simulation/Tool/argsR_compile.R")
+
+R.Version()
+
+# =================== arguments from batch R=============
+args <- (commandArgs(trailingOnly = TRUE))
+args
+
+
+argsList <- argRun(args, grp.pattern = "dirGRP")
+argsList
+for (i in seq_along(argsList)) {
+    if(length(argsList[[i]])>1){
+        assign(names(argsList)[i],argsList[[i]])
+    }else{eval(parse(text = argsList[[i]]))}
+}
+
+# ======================== parameters ===================
+ls.before <- ls()
+
+
+nSam <- c(10, 10)
+nSIM <- 5
+limFDR <- 0.05
+ratio <- 4
+scene <- "S3"
+pr <- c(0.01, 0.05)
+numTip1 <- c(11, 15)
+erp <- 0.01
+numTip2 <- c(0, 40)
+
+# 40% leaves in branch A has differential abundance
+pct <- 0.4
+
+ls.after <- ls()
+ls.save <- setdiff(ls.after, c(ls.before, "ls.before"))
+
+# if the file doesn't exist or was modified earlier than the R script
+
+if((!file.exists(outRDat)) | (file.mtime(outRDat) < file.mtime(scriptP))){
+    save(list = ls.save, file = outRDat)
+}

@@ -1,0 +1,101 @@
+configfile: "config.yaml"
+
+textFiles,  =  glob_wildcards(config["codeP"]+"/parameter/{par}.R")
+method = glob_wildcards(config["codeP"]+"/Analysis/{file}.R").file
+toolFile = glob_wildcards(config["codeT"]+"/{file}.R").file
+
+## Define the R binary
+Rbin = config["Rbin"]
+## ------------------------------------------------------------------------------------ ##
+## Target definitions
+## ------------------------------------------------------------------------------------ ##
+## Run all analyses
+rule all:
+	input:
+		expand(config["outPD"]+"/DataPrep/{parFile}.RData", parFile=textFiles),
+		expand(config["outPD"]+"/Analysis/{parFile}/{analyFile}.RData", parFile=textFiles,analyFile=method),
+		expand(config["outPF"]+"/{parFile}/ROC.png", parFile=textFiles),
+		expand(config["outPF"]+"/{parFile}/treeFig.txt", parFile=textFiles)
+		
+		
+## ------------------------------------------------------------------------------------ ##
+## install packages
+## ------------------------------------------------------------------------------------ ##
+rule pkginstall:
+	input:
+		script = config["codeP"]+"/pkgs/install_pkgs.R"
+	output:
+	    config["RoutP"]+ "/pkgs/pkginstall_state.txt"
+	priority: 50
+	log:
+		config["RoutP"]+ "/pkgs/install_pkgs.Rout"
+	shell:
+		'''{Rbin} CMD BATCH --no-restore --no-save "--args outtxt='{output}'" {input.script} {log}'''
+## ------------------------------------------------------------------------------------ ##
+## Data preparation
+## ------------------------------------------------------------------------------------ ##
+rule getPr:
+	input:
+	    script = config["codeP"]+"/parameter/{par}.R"
+	output:
+		config["outPD"]+"/parameter/{par}.RData"
+	log:
+		config["RoutP"]+"/parameter/{par}.Rout"
+	shell:
+		'''{Rbin} CMD BATCH --no-restore --no-save "--args outRDat='{output}' scriptP='{input.script}'" {input.script} {log}'''
+
+
+rule dataPrep:
+	input:
+	    parSet = config["outPD"]+"/parameter/{par}.RData",
+	    script = config["codeP"]+"/Preparation/DataPrep.R"
+	output:
+		config["outPD"]+"/DataPrep/{par}.RData"
+	log:
+		config["RoutP"]+"/DataPrep/{par}.Rout"
+	shell:
+		'''{Rbin} CMD BATCH --no-restore --no-save "--args inRDat='{input.parSet}' scriptP='{input.script}' parSet='{input.parSet}' outRDat='{output}'" {input.script} {log}'''
+
+## ------------------------------------------------------------------------------------ ##
+## Data analysis
+## ------------------------------------------------------------------------------------ ##
+rule analyStep:
+	input:
+	    script = config["codeP"]+"/Analysis/{analyFile}.R",
+		data = config["outPD"]+"/DataPrep/{par}.RData"
+	output:
+		config["outPD"]+"/Analysis/{par}/{analyFile}.RData"
+	log:
+		config["RoutP"]+"/Analysis/{par}/{analyFile}.Rout"
+	shell:
+		'''{Rbin} CMD BATCH --no-restore --no-save "--args inRDat='{input.data}' outRDat='{output}'" {input.script} {log}'''
+
+## ------------------------------------------------------------------------------------ ##
+## Figures
+## ------------------------------------------------------------------------------------ ##
+rule ROC:
+	input:
+	    parSet = config["outPD"]+"/parameter/{par}.RData",
+		script = config["codeP"]+"/Figure/ROC.R",
+		dataA = expand(config["outPD"]+"/Analysis/{{par}}/{analyFile}.RData", analyFile=method),
+		data = config["outPD"]+"/DataPrep/{par}.RData"
+	output:
+	    config["outPF"]+"/{par}/ROC.png"
+	log:
+		config["RoutP"]+"/Figure/{par}/ROC.Rout"
+	shell:
+		'''{Rbin} CMD BATCH --no-restore --no-save "--args dirGRP='{input.dataA}' inRDat='{input.data}' parSet='{input.parSet}' outFig='{output}'" {input.script} {log}'''
+
+rule treeFig:
+	input:
+	    parSet = config["outPD"]+"/parameter/{par}.RData",
+		script = config["codeP"]+"/Figure/treeFig.R",
+		dataA = expand(config["outPD"]+"/Analysis/{{par}}/{analyFile}.RData", analyFile=method),
+		data = config["outPD"]+"/DataPrep/{par}.RData"
+	output:
+	    config["outPF"]+"/{par}/treeFig.txt"
+	log:
+		config["RoutP"]+"/Figure/{par}/treeFig.Rout"
+	shell:
+		'''{Rbin} CMD BATCH --no-restore --no-save "--args dirGRP='{input.dataA}' inRDat='{input.data}' parSet='{input.parSet}' outFig='{output}'" {input.script} {log}'''
+
