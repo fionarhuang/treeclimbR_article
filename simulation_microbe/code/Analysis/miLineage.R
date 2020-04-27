@@ -20,16 +20,6 @@ for (i in seq_along(argsList)) {
     }else{eval(parse(text = argsList[[i]]))}
 }
 
-# ==========read in parameter value================#
-# pardata <- read.delim(file = parSet, header = TRUE,
-#                       as.is = TRUE, sep = "\t")
-# parSet <- lapply(2:ncol(pardata), FUN = function(x){
-#     paste(colnames(pardata)[x], " = ", pardata[1,x] )
-# })
-# names(parSet) <- colnames(pardata)[2:ncol(pardata)]
-# for(i in 1:length(parSet)){
-#     eval(parse(text = parSet[[i]]))
-# }
 
 print(inRDat)
 
@@ -80,7 +70,7 @@ all(rownames(taxTree) == colnames(taxCount[[1]]))
 # check sample order
 all(rownames(case) == rownames(taxCount[[1]]))
 
-# analysis (resample 100)
+# analysis (resample 100) find nothing
 # one-part analysis
 # system.time({
 # loc1_rs100_0.05.MLA <- lapply(seq_along(taxCount), FUN = function(x){

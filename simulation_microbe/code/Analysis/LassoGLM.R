@@ -45,19 +45,8 @@ glmnet <- function(countTab, y, isTip,
     dy <- DGEList(countTab, remove.zeros = TRUE)
     dy$samples$lib.size <- libSize
 
-    # # normalisation
-    # if (normalize) { dy <- calcNormFactors(dy, method = method)
-    # } else {
-    #  dy <- dy
-    # }
     cd <- edgeR::cpm(dy, log = FALSE)
     mat <- t(cd)
-    # normalisation
-    # if(normalize){
-    #     nFact <- calcNormFactors(countTab[isTip,], method = method)
-    #     mat <- countTab %*% diag(nFact)
-    #     mat <- t(mat)
-    # }else{mat <- t(countTab)}
 
 
     # lasso regularisation

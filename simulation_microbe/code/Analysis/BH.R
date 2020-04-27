@@ -34,7 +34,7 @@ system.time({
                       res <- runDA(TSE = lse, 
                                    feature_on_row = TRUE, 
                                    assay = x, option = "glm", 
-                                   filter_min_count = 0,
+                                   #filter_min_count = 0,
                                    normalize = TRUE, 
                                    group_column = "group",
                                    design_terms = "group")

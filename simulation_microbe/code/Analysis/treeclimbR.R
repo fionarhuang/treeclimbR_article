@@ -32,7 +32,7 @@ system.time({
         cat(x, "out of ", nSIM, "has been done", "\n")
         res <- runDA(TSE = tse, feature_on_row = TRUE, 
                      assay = x, option = "glm", 
-                     filter_min_count = 1, 
+                     #filter_min_count = 1, 
                      normalize = TRUE, group_column = "group",
                      design_terms = "group")
         out <- nodeResult(object = res, n = Inf)
