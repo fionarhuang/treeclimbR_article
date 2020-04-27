@@ -73,7 +73,6 @@ lse <- simData(obj = saliva_v35,
                scenario = scene,
                pct = pct)
 
-viewSim(obj = lse, branch.length = "none", layout="circular")
 allNode <- unique(sort(as.vector(rowTree(saliva_v35)$edge)))
 tse <- aggValue(x = lse, rowLevel = allNode, FUN = sum)
 tse
