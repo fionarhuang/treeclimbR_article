@@ -39,7 +39,8 @@ Heatmap shows counts of entities (rows) in samples (columns) split by groups. Br
 2. Non-parametric synthetical microbial data
 
 3. AML-sim and BCR-XL-sim ([see here](https://github.com/fionarhuang/treeclimbR_article/tree/master/cytof))
- The semi-simulated data are download in the `cytof/data/` folder from `HDCytoData` using [Download.R](https://github.com/fionarhuang/treeclimbR_article/tree/master/cytof/data) 
+
+ The semi-simulated data are firstly downloaded in the `cytof/data/` folder from `HDCytoData` using [Download.R](https://github.com/fionarhuang/treeclimbR_article/tree/master/cytof/data) 
    - AML-sim (DA folder)
       - install snakemake
       - Set directory to `DA/`
