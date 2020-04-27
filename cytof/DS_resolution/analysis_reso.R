@@ -213,5 +213,5 @@ ggplot(df_auc, aes(x = n_cluster, y = AUC, color = method)) +
         strip.background = element_rect(colour = "black", fill = "gray90"),
         strip.text.x = element_text(color = "black", size = 8),
         strip.text.y = element_text(color = "black", size = 8))
-ggsave("DS_resolution/AUC_reso.eps", units = "in", width = 4, height = 4,
+ggsave("DS_resolution/Supplementary_AUC_reso.eps", units = "in", width = 4, height = 4,
        dpi = 300)
