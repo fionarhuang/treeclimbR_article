@@ -1,12 +1,13 @@
-## Path to the programs for this project
+## Input files
+##---------------------------------------------------------------------------------------------
+## Path to codes (the code folder)
 codeP: /home/fiona/treeclimbR_article/cytof/DS/code
 
+## Output files
+##---------------------------------------------------------------------------------------------
 ## Path to output (data, figures)
 outPD: /home/fiona/treeclimbR_article/cytof/DS/output/RData
 outPF: /home/fiona/treeclimbR_article/cytof/DS/output/Figure
-
-## Path to parameter settings
-partext: /home/fiona/treeclimbR_article/cytof/DS/parameter/par_other
 ## Path to log files
 RoutP: /home/fiona/treeclimbR_article/cytof/DS/Rout
 
