@@ -36,7 +36,7 @@ Heatmap shows counts of entities (rows) in samples (columns) split by groups. Br
 ### Reproduce figures in the manuscript of treeclimbR
 1. Parametric synthetical microbial data
 
-2. Non-parametric synthetical microbial data
+2. Non-parametric synthetical microbial data ([see here](https://github.com/fionarhuang/correlationtree_analysis))
 
 3. AML-sim and BCR-XL-sim ([see here](https://github.com/fionarhuang/treeclimbR_article/tree/master/cytof))
 
