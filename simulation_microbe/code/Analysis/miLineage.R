@@ -1,8 +1,7 @@
 # === tool ========
-source("/home/fiona/phd/microbes/simulation/Tool/argsR_compile.R")
 .libPaths(c(Sys.getenv('R_LIBS_1'), 
             Sys.getenv('R_LIBS_2'),
-            .libPaths()))
+            Sys.getenv('R_LIBS_3')))
 .libPaths()
 
 suppressPackageStartupMessages({
@@ -13,9 +12,7 @@ suppressPackageStartupMessages({
 
 R.Version()
 # ==== arguments from batch R=====================
-args <- (commandArgs(trailingOnly = TRUE))
-args
-argsList <- argRun(args, grp.pattern = "dirGRP")
+argsList <- (commandArgs(trailingOnly = TRUE))
 argsList
 for (i in seq_along(argsList)) {
     if(length(argsList[[i]])>1){

@@ -1,8 +1,7 @@
 # === tool ========
-source("/home/fiona/phd/microbes/simulation/Tool/argsR_compile.R")
 .libPaths(c(Sys.getenv('R_LIBS_1'), 
             Sys.getenv('R_LIBS_2'),
-            .libPaths()))
+            Sys.getenv('R_LIBS_3')))
 .libPaths()
 
 suppressPackageStartupMessages({
@@ -14,9 +13,7 @@ suppressPackageStartupMessages({
 })
 R.Version()
 # ==== arguments from batch R=====================
-args <- (commandArgs(trailingOnly = TRUE))
-args
-argsList <- argRun(args, grp.pattern = "dirGRP")
+argsList <- (commandArgs(trailingOnly = TRUE))
 argsList
 for (i in seq_along(argsList)) {
     if(length(argsList[[i]])>1){
@@ -82,7 +79,7 @@ perm.func <- function (X, Y) {
 system.time({
     lse <- tse[rowLinks(tse)$isLeaf, ]
     nodeLab <- rowLinks(lse)$nodeLab
-    loc.str_0.05 <- loc.str_0.01 <- loc.str_0.1 <- vector("list", nSIM)
+    loc.StructFDR_0.05 <- loc.StructFDR_0.01 <- loc.StructFDR_0.1 <- vector("list", nSIM)
     for (i in seq_len(nSIM)) {
         cat(i, "\n")
         X <- assays(lse)[[i]]
@@ -94,25 +91,25 @@ system.time({
         # 0.05
         sel <- tree.fdr.obj$p.adj <= 0.05
         sx <- nodeLab[sel]
-        loc.str_0.05[[i]] <- transNode(tree = rowTree(lse), 
+        loc.StructFDR_0.05[[i]] <- transNode(tree = rowTree(lse), 
                                        node = as.character(sx))
         
         # 0.01
         sel <- tree.fdr.obj$p.adj <= 0.01
         sx <- nodeLab[sel]
-        loc.str_0.01[[i]] <- transNode(tree = rowTree(lse), 
+        loc.StructFDR_0.01[[i]] <- transNode(tree = rowTree(lse), 
                                        node = as.character(sx))
         
         # 0.1
         sel <- tree.fdr.obj$p.adj <= 0.1
         sx <- nodeLab[sel]
-        loc.str_0.1[[i]] <- transNode(tree = rowTree(lse), 
+        loc.StructFDR_0.1[[i]] <- transNode(tree = rowTree(lse), 
                                        node = as.character(sx))
     }
     
 })
 
 
-save(loc.str_0.01, loc.str_0.05, loc.str_0.1, file = outRDat)
+save(loc.StructFDR_0.01, loc.StructFDR_0.05, loc.StructFDR_0.1, file = outRDat)
 
 sessionInfo()

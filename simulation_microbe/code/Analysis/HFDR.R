@@ -1,8 +1,7 @@
 # === tool ========
-source("/home/fiona/phd/microbes/simulation/Tool/argsR_compile.R")
 .libPaths(c(Sys.getenv('R_LIBS_1'), 
             Sys.getenv('R_LIBS_2'),
-            .libPaths()))
+            Sys.getenv('R_LIBS_3')))
 .libPaths()
 
 suppressPackageStartupMessages({
@@ -16,9 +15,7 @@ suppressPackageStartupMessages({
 
 R.Version()
 # ==== arguments from batch R=====================
-args <- (commandArgs(trailingOnly = TRUE))
-args
-argsList <- argRun(args, grp.pattern = "dirGRP")
+argsList <- (commandArgs(trailingOnly = TRUE))
 argsList
 for (i in seq_along(argsList)) {
     if(length(argsList[[i]])>1){
@@ -49,7 +46,7 @@ system.time({
         return(out)
     })
     
-    loc.hcFDR_0.05 <- loc.hcFDR_0.01 <- loc.hcFDR_0.1 <- vector("list", nSIM)
+    loc.HFDR_0.05 <- loc.HFDR_0.01 <- loc.HFDR_0.1 <- vector("list", nSIM)
     
     # edges
     chl.tree <- apply(ed, 2, FUN = function(x) {
@@ -67,24 +64,24 @@ system.time({
         find_0.05 <- rownames(chl.hfdr_0.05@p.vals)[chl.hfdr_0.05@p.vals$adjp <= 0.05]
         find_0.05 <- find_0.05[!is.na(find_0.05)]
         find_0.05 <- transNode(tree = treeR, node = find_0.05)
-        loc.hcFDR_0.05[[i]] <- find_0.05[isLeaf(tree = treeR, node = find_0.05)]
+        loc.HFDR_0.05[[i]] <- find_0.05[isLeaf(tree = treeR, node = find_0.05)]
         
         find_0.01 <- rownames(chl.hfdr_0.01@p.vals)[chl.hfdr_0.01@p.vals$adjp <= 0.01]
         find_0.01 <- find_0.01[!is.na(find_0.01)]
         find_0.01 <- transNode(tree = treeR, node = find_0.01)
-        loc.hcFDR_0.01[[i]] <- find_0.01[isLeaf(tree = treeR, node = find_0.01)]
+        loc.HFDR_0.01[[i]] <- find_0.01[isLeaf(tree = treeR, node = find_0.01)]
         
         find_0.1 <- rownames(chl.hfdr_0.1@p.vals)[chl.hfdr_0.1@p.vals$adjp <= 0.1]
         find_0.1 <- find_0.1[!is.na(find_0.1)]
         find_0.1 <- transNode(tree = treeR, node = find_0.1)
-        loc.hcFDR_0.1[[i]] <- find_0.1[isLeaf(tree = treeR, node = find_0.1)]
+        loc.HFDR_0.1[[i]] <- find_0.1[isLeaf(tree = treeR, node = find_0.1)]
         
         
     }
     
 })
 
-save(loc.hcFDR_0.05, loc.hcFDR_0.01, loc.hcFDR_0.1, file = outRDat)
+save(loc.HFDR_0.05, loc.HFDR_0.01, loc.HFDR_0.1, file = outRDat)
 
 
 sessionInfo()
