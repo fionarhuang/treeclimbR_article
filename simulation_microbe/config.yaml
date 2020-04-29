@@ -1,0 +1,20 @@
+## Input files
+##---------------------------------------------------------------------------------------------
+## Path to code
+codeP: /home/fiona/phd/treeclimbR_article/simulation_microbe/code
+
+## Output files
+##---------------------------------------------------------------------------------------------
+## Path to output (data, figures)
+outPD: /home/fiona/phd/treeclimbR_article/simulation_microbe/output/RData
+outPF: /home/fiona/phd/treeclimbR_article/simulation_microbe/output/Figure
+
+## Path to log files
+RoutP: /home/fiona/phd/treeclimbR_article/simulation_microbe/Rout
+
+## R setup
+##---------------------------------------------------------------------------------------------
+## Specify your own R installation (then you have to set the path to your library in the .Renviron file)
+Rbin: /usr/local/R/R-3.6.1/bin/R
+##---------------------------------------------------------------------------------------------
+
