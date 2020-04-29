@@ -115,7 +115,11 @@ for (i in seq_along(avDat)) {
     
     # lasso
     loc.Lasso <- lapply(loc.Lasso, FUN = function(x) {
-        rm_ancestor(node = x, tree = rowTree(tse))})
+        if (reso == "high") {
+        rm_ancestor(node = x, tree = rowTree(tse))
+        } 
+        return(x)
+    })
     loc.ll <- list(loc.Lasso, loc.Lasso, loc.Lasso)
     names(loc.ll) <- c(0.01, 0.05, 0.1)
     rate.Lasso <- rateFun(loc.ll, 
