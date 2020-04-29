@@ -178,6 +178,41 @@ ggsave(figPath, cb_both, units = "in", width = 8, height = 8,
        dpi = 300)
 
 
+# run below code to get fig_list
+source("DS/code/Figure/DS_heatmap_pie.R")
 
-source("DS/code/Figure/DS_roc.R")
-source("DS_resolution/AUC_reso.R")
+load("DS_resolution/AUC_reso.RData")
+df_auc <- data.frame(n_cluster = reso^2, 
+                     diffcyt = res_auc$diffcyt, 
+                     treeclimbR = res_auc$treeclimbR) %>%
+    gather(Method, AUC, -n_cluster)
+
+fig_auc <- ggplot(df_auc, aes(x = n_cluster, y = AUC, color = Method)) +
+    geom_point() +
+    geom_line() +
+    scale_color_manual(values = c("treeclimbR" = "#E41A1C", "diffcyt" = "#377EB8")) +
+    scale_x_sqrt(labels = reso^2, breaks = reso^2) +
+    ylim(c(0, 1)) + 
+    labs(x = "The number of clusters", title = "BCR-XL-sim, medium") +
+    theme_bw(base_size = 8) + theme(
+        aspect.ratio = 1,
+        panel.grid = element_blank(),
+        panel.spacing = unit(0, "lines"),
+        axis.text = element_text(color = "black"),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.key.size= unit(2.5, "mm"),
+        plot.title = element_text(hjust = 0.5),
+        legend.text = element_text(size = 8),
+        legend.position=c(0.5, 0.5),
+        legend.margin = margin(0, 0, 0, 0),
+        legend.box.margin=margin(-5,-5,-10,-5),
+        strip.background = element_rect(colour = "black", fill = "gray90"),
+        strip.text.x = element_text(color = "black", size = 8),
+        strip.text.y = element_text(color = "black", size = 8))
+
+fig_list <- c(fig_list, list(fig_auc))
+fig_more <- plot_grid(plotlist = fig_list, nrow = 2, 
+                      rel_heights = c(0.5, 0.5))
+figPath <- "summary/Supplementary_cytof_2020_more.eps"
+ggsave(figPath, fig_more, units = "in", width = 8, height = 8.5,
+       dpi = 300)
