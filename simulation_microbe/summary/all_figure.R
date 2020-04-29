@@ -16,7 +16,7 @@ suppressPackageStartupMessages({
 
 ### Edit this!!!
 # resolution: low or high
-reso <- "high"
+reso <- "low"
 
 # schematic scenarios: BS, US, SS
 source("summary/scenario.R")
@@ -48,7 +48,21 @@ fig_cb <- plot_grid(fig_up, fig_bottom, nrow = 2,
                     vjust = 0.5,
                     rel_heights = c(1.6, 1))
 
-cbPath <- file.path(sprintf("summary/figure/microbe_%s_simu.eps", reso))
+if (reso == "high") {
+  cbPath <- file.path(sprintf("summary/figure/microbe_%s_simu.eps", reso))
+}
+
+# Supplementary Figure 2
+if (reso == "low") {
+  cbPath <- file.path(sprintf("summary/figure/Supplementary_microbe_%s_simu.eps", reso))
+}
+
 ggsave(cbPath, fig_cb, units = "in", width = 8, height = 8,
        dpi = 300)
 
+rm(list = ls())
+# Supplementary Figure 1
+source("summary/microbe_loc.R")
+cbPath <- file.path("summary/figure/Supplementary_microbe_loc.eps")
+ggsave(cbPath, fig_loc, units = "in", width = 8, height = 8,
+       dpi = 300)

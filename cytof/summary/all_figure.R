@@ -178,6 +178,8 @@ ggsave(figPath, cb_both, units = "in", width = 8, height = 8,
        dpi = 300)
 
 
+
+# -----------------------Supplementary Figure 4 ---------------------------
 # run below code to get fig_list
 source("DS/code/Figure/DS_heatmap_pie.R")
 
@@ -212,7 +214,7 @@ fig_auc <- ggplot(df_auc, aes(x = n_cluster, y = AUC, color = Method)) +
 
 fig_list <- c(fig_list, list(fig_auc))
 fig_more <- plot_grid(plotlist = fig_list, nrow = 2, 
-                      rel_heights = c(0.5, 0.5))
+                      rel_heights = c(0.5, 0.5), labels = letters[1:4])
 figPath <- "summary/Supplementary_cytof_2020_more.eps"
 ggsave(figPath, fig_more, units = "in", width = 8, height = 8.5,
        dpi = 300)
