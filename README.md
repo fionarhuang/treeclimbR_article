@@ -34,8 +34,21 @@ Heatmap shows counts of entities (rows) in samples (columns) split by groups. Br
 
 
 ### Reproduce figures in the manuscript of treeclimbR
-1. Parametric synthetical microbial data
-
+1. Parametric synthetical microbial data ([see here](https://github.com/fionarhuang/treeclimbR_article/tree/master/simulation_microbe))
+      - install snakemake
+      - Set directory to `simulation_microbe/`
+      - Update paths to input and output files specified in the configuration file ([config.yaml](https://github.com/fionarhuang/treeclimbR_article/blob/master/simulation_microbe/config.yaml))
+      - Specify paths to your R libraries in the [.Renviron](https://github.com/fionarhuang/treeclimbR_article/blob/master/simulation_microbe/.Renviron). If there is less or more than 3 library paths, then files in `code/` folder with code below should be updated correspondingly.
+      ```
+      .libPaths(c(
+            Sys.getenv('R_LIBS_1'), 
+            Sys.getenv('R_LIBS_2'),
+            Sys.getenv('R_LIBS_3')))
+      ```            
+      - dry run the pipeline using `snakemake -npr` 
+      - run the pipeline using `snakemake --cores n` (n is the number of cores to be used)
+      - After the pipeline is done with `snakemake`, all figures could be generated using [all_figure.R](https://github.com/fionarhuang/treeclimbR_article/tree/master/simulation_microbe/summary) under the folder `simulation_microbe/summary/`.
+      
 2. Non-parametric synthetical microbial data ([see here](https://github.com/fionarhuang/correlationtree_analysis))
 
 3. AML-sim and BCR-XL-sim ([see here](https://github.com/fionarhuang/treeclimbR_article/tree/master/cytof))
