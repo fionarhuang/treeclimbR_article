@@ -1,61 +1,75 @@
 
-# .libPaths("/Users/ruizhu/Library/R/3.6/devel")
 suppressPackageStartupMessages({
     library(treeclimbR)
     library(ggtree)
     library(ggplot2)
     library(cowplot)
+    library(dplyr)
 })
-# data("exTree")
+
+
 set.seed(1)
 exTree <- ape::rtree(50)
-leaf1 <- findOS(tree = exTree, node = 68, only.leaf = TRUE)
-leaf2 <- findOS(tree = exTree, node = 79, only.leaf = TRUE)
-gr_leaf <- c(leaf1, leaf2)
-names(gr_leaf) <- c("A", "B")
-leaf1 <- unlist(leaf1)
-leaf2 <- unlist(leaf2)
-l1 <- length(leaf1)
-l2 <- length(leaf2)
-leaf3 <- c(38, 36, 34, 30, 28)
+br_color <- findOS(tree = exTree, node = c(68, 79), only.leaf = FALSE)
+leaf_color <- findOS(tree = exTree, node = c(68, 79), only.leaf = TRUE)
+ll <- lapply(leaf_color, length)
+df_a <- data.frame(node = showNode(tree = exTree, only.leaf = FALSE)) %>%
+    mutate(group = ifelse(node %in% br_color[[1]], "A", 
+                         ifelse(node %in% br_color[[2]], "B", "other")))
+
+fig0_a <- ggtree(exTree, branch.length = "none") %<+% df_a +
+    aes(color = group) +
+    scale_color_manual(values = c("other" = "grey", 
+                                  "A" = "#D69C4E", "B" = "#046C9A")) 
+fig0_a <- fig0_a %>% 
+    scaleClade(node = 58, scale = 1/20) %>%
+    scaleClade(node = 89, scale = 1/20) %>%
+    scaleClade(node = 52, scale = 1/20) 
 
 
-fig1 <- viewBranch(tree = exTree, group_leaf = gr_leaf, 
-                   group_color = c("0" = "grey", "A" = "#D69C4E", "B" = "#046C9A"), 
-                   zoom_node = c(58, 89, 52), zoom_scale = 1/20) + 
-    geom_point2(aes(subset = (node %in% leaf1)), 
+df_b <- data.frame(node = showNode(tree = exTree, only.leaf = FALSE)) %>%
+    mutate(group = ifelse(node %in% br_color[[1]], "A", 
+                          ifelse(node %in% c(38, 36, 34, 30, 28), "B", "other")))
+fig0_b <- ggtree(exTree, branch.length = "none") %<+% df_b +
+    aes(color = group) +
+    scale_color_manual(values = c("other" = "grey", 
+                                  "A" = "#D69C4E", "B" = "#046C9A")) 
+fig0_b <- fig0_b %>% 
+    scaleClade(node = 58, scale = 1/20) %>%
+    scaleClade(node = 89, scale = 1/20) %>%
+    scaleClade(node = 52, scale = 1/20) 
+
+
+## ----------------------------BS----------------------------------------------
+fig1 <- fig0_a + 
+    geom_point2(aes(subset = (node %in% leaf_color[[1]])), 
                 color = "#D69C4E", size =  2) + 
-    geom_point2(aes(subset = (node %in% leaf2)), 
+    geom_point2(aes(subset = (node %in% leaf_color[[2]])), 
                 color = "#046C9A", size = 2) + 
-   # geom_text(aes(x = 0.1, y = 18, label = "BS"), color = "black") +
     coord_flip() + scale_x_reverse() + theme(legend.position = "none")
 
+
+
+## ----------------------------US----------------------------------------------
 set.seed(4)
-fig2 <- viewBranch(tree = exTree, group_leaf = gr_leaf, 
-                   group_color = c("0" = "grey", "A" = "#D69C4E", "B" = "#046C9A"), 
-                   zoom_node = c(58, 89, 52), zoom_scale = 1/20) + 
-    geom_point2(aes(subset = (node %in% leaf1)), 
-                color = "#D69C4E", size =  runif(l1)*3) + 
-    geom_point2(aes(subset = (node %in% leaf2)), 
-                color = "#046C9A", size = runif(l2)*3) + 
-   # geom_text(aes(x = 0.1, y = 18), label = "US", color = "black") + 
+fig2 <- fig0_a + 
+    geom_point2(aes(subset = (node %in% leaf_color[[1]])), 
+                color = "#D69C4E", size =  runif(ll[[1]])*3) + 
+    geom_point2(aes(subset = (node %in% leaf_color[[2]])), 
+                color = "#046C9A", size = runif(ll[[2]])*3) + 
     coord_flip() + scale_x_reverse()+ theme(legend.position = "none")
 
-gr3 <- as.list(leaf3)
-names(gr3) <- rep("A", length(gr3))
 
-fig3 <- viewBranch(tree = exTree, group_leaf = c(gr3, "B" = list(leaf1)), 
-                   group_color = c("0" = "grey", "A" = "#046C9A", "B" = "#D69C4E"), 
-                   zoom_node = c(58, 89, 52), zoom_scale = 1/20, 
-                   ladderize = FALSE) + 
-    geom_point2(aes(subset = (node %in% leaf1)), 
+## ----------------------------SS----------------------------------------------
+fig3 <- fig0_b + 
+    geom_point2(aes(subset = (node %in% leaf_color[[1]])), 
                 color = "#D69C4E", size =  2) + 
-    geom_point2(aes(subset = (node %in% leaf3)), 
+    geom_point2(aes(subset = (node %in% c(38, 36, 34, 30, 28))), 
                 color = "#046C9A", size = 2)+ 
    # geom_text(aes(x = 0.1, y = 18, label = "SS"), color = "black") +
     coord_flip() + 
     scale_x_reverse() + 
     theme(legend.position = "none")
 
-save(fig1, fig2, fig3, file = "summary/scenario.RData")
+
 

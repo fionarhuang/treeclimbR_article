@@ -41,8 +41,8 @@ for (i in 1:3) {
     #
     tse_list[[i]] <- tse
     loc_da <- list(treeclimbR = outsel_0.05[[s]]$node[outsel_0.05[[s]]$signal.node],
-                   StructFDR = loc.str_0.05[[s]],
-                   HFDR = loc.hcFDR_0.05[[s]],
+                   StructFDR = loc.StructFDR_0.05[[s]],
+                   HFDR = loc.HFDR_0.05[[s]],
                    lasso = loc.Lasso[[s]],
                    BH = loc.bh_0.05[[s]],
                    minP = outMin[[s]]$node[outMin[[s]]$keep_0.05],
