@@ -15,7 +15,7 @@ BiocManager::install("fionarhuang/treeclimbR")
 BiocManager::install("fionarhuang/TreeHeatmap")
 ```
 
-### Get started with toy examples ([click here](https://fionarhuang.github.io/treeclimbR_toy_example/))
+### Toy examples ([click here](https://fionarhuang.github.io/treeclimbR_toy_example/))
 
 Below are results of one toy dataset. 
 
