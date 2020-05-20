@@ -417,7 +417,7 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2020-04-24
+<strong>Last updated:</strong> 2020-05-16
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
@@ -441,7 +441,7 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 </div>
 <div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown is untracked by Git. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+<p>The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
 </div>
 </div>
 </div>
@@ -508,33 +508,83 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomfionarhuangtreeclimbRarticletree672ffdb32770d8ede8594670881236ed8a1788catargetblank672ffdba"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/fionarhuang/treeclimbR_article/tree/672ffdb32770d8ede8594670881236ed8a1788ca" target="_blank">672ffdb</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomfionarhuangtreeclimbRarticletree288365f7ba0d92af452790a4fcedd7d3ee789502targetblank288365fa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/fionarhuang/treeclimbR_article/tree/288365f7ba0d92af452790a4fcedd7d3ee789502" target="_blank">288365f</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomfionarhuangtreeclimbRarticletree672ffdb32770d8ede8594670881236ed8a1788catargetblank672ffdba" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomfionarhuangtreeclimbRarticletree288365f7ba0d92af452790a4fcedd7d3ee789502targetblank288365fa" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 </p>
 <pre><code>
 Ignored files:
+    Ignored:    .DS_Store
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
+    Ignored:    LPS/.DS_Store
+    Ignored:    LPS/.Rhistory
+    Ignored:    LPS/.Rproj.user/
+    Ignored:    LPS/data/.DS_Store
+    Ignored:    cytof/.DS_Store
+    Ignored:    cytof/DA/.DS_Store
+    Ignored:    cytof/DA/code/.DS_Store
+    Ignored:    cytof/DA/code/Preparation/.DS_Store
+    Ignored:    cytof/DS/.DS_Store
+    Ignored:    cytof/DS/code/.DS_Store
+    Ignored:    cytof/DS/code/Preparation/.DS_Store
+    Ignored:    microbe/.Rproj.user/
 
 Untracked files:
     Untracked:  .gitignore
-    Untracked:  miRNA/
-    Untracked:  microbe/analysis/1-Preparation.Rmd
-    Untracked:  microbe/analysis/2-Analysis.Rmd
-    Untracked:  microbe/analysis/3-Visualization.Rmd
+    Untracked:  LPS/.Rprofile
+    Untracked:  LPS/.gitattributes
+    Untracked:  LPS/.gitignore
+    Untracked:  LPS/LPS.Rproj
+    Untracked:  LPS/data/LC016.zip
+    Untracked:  LPS/data/LC016/
+    Untracked:  LPS/data/LC017.zip
+    Untracked:  LPS/data/LC017/
+    Untracked:  LPS/data/LC019.zip
+    Untracked:  LPS/data/LC019/
+    Untracked:  LPS/data/LC020.zip
+    Untracked:  LPS/data/LC020/
+    Untracked:  LPS/data/LC022.zip
+    Untracked:  LPS/data/LC022/
+    Untracked:  LPS/data/LC023.zip
+    Untracked:  LPS/data/LC023/
+    Untracked:  LPS/data/LC025.zip
+    Untracked:  LPS/data/LC025/
+    Untracked:  LPS/data/LC026.zip
+    Untracked:  LPS/data/LC026/
+    Untracked:  LPS/data/metadata.xlsx
+    Untracked:  LPS/output/3-treeclimbR.RData
+    Untracked:  LPS/output/LPS.eps
+    Untracked:  LPS/output/MAGL-SCE.rds
+    Untracked:  LPS/output/all_mk.rds
+    Untracked:  LPS/output/ao.rds
+    Untracked:  LPS/output/as.rds
+    Untracked:  LPS/output/cell_info.rds
+    Untracked:  LPS/output/cell_tree.rds
+    Untracked:  LPS/output/known_mk.rds
+    Untracked:  LPS/output/se_count.rds
+    Untracked:  LPS/output/se_mk.rds
+    Untracked:  LPS/temp/all_mk.rds
+    Untracked:  LPS/temp/ias.rds
     Untracked:  treeclimbR_article.Rproj
 
 Unstaged changes:
-    Deleted:    microbe/analysis/Analysis.Rmd
-    Deleted:    microbe/analysis/Preparation.Rmd
-    Deleted:    microbe/analysis/Visualization.Rmd
-    Modified:   microbe/analysis/_site.yml
-    Modified:   microbe/analysis/index.Rmd
+    Modified:   miRNA/analysis/2-Analysis.Rmd
+    Modified:   miRNA/docs/2-Analysis.html
+    Modified:   miRNA/docs/3-Visualization.html
+    Modified:   miRNA/docs/figure/3-Visualization.Rmd/unnamed-chunk-11-1.png
+    Modified:   miRNA/docs/figure/3-Visualization.Rmd/unnamed-chunk-13-1.png
+    Modified:   miRNA/docs/figure/3-Visualization.Rmd/unnamed-chunk-4-1.png
+    Modified:   miRNA/docs/figure/3-Visualization.Rmd/unnamed-chunk-5-1.png
+    Modified:   miRNA/docs/figure/3-Visualization.Rmd/unnamed-chunk-7-1.png
+    Modified:   miRNA/docs/figure/3-Visualization.Rmd/unnamed-chunk-9-1.png
+    Modified:   miRNA/output/heart_microRNA.eps
+    Modified:   miRNA/output/heart_origin_result.rds
+    Modified:   microbe/analysis/3-Visualization.Rmd
 
 </code></pre>
 <p>
@@ -547,9 +597,69 @@ Note that any generated files, e.g. HTML, png, CSS, etc., are not included in t
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
+
 <p>
-There are no past versions. Publish this analysis with <code>wflow_publish()</code> to start tracking its development.
+These are the previous versions of the R Markdown and HTML files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view them.
 </p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/fionarhuang/treeclimbR_article/blob/96004feb1bf46ea32d94eb7286f5493495d88001/microbe/analysis/3-Visualization.Rmd" target="_blank">96004fe</a>
+</td>
+<td>
+fionarhuang
+</td>
+<td>
+2020-04-24
+</td>
+<td>
+renames files
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/fionarhuang/treeclimbR_article/96004feb1bf46ea32d94eb7286f5493495d88001/microbe/docs/3-Visualization.html" target="_blank">96004fe</a>
+</td>
+<td>
+fionarhuang
+</td>
+<td>
+2020-04-24
+</td>
+<td>
+renames files
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <hr>
 </div>
 </div>
@@ -580,6 +690,43 @@ replace the existing scale.</code></pre>
 <pre><code>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</code></pre>
 <pre class="r"><code>fig_0</code></pre>
 <p><img src="figure/3-Visualization.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-3-1">
+Past versions of unnamed-chunk-3-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-3-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/fionarhuang/treeclimbR_article/blob/b8f4b6e965e1c8e5f674fb1feea0cd050edad475/microbe/docs/figure/3-Visualization.Rmd/unnamed-chunk-3-1.png" target="_blank">b8f4b6e</a>
+</td>
+<td>
+fionarhuang
+</td>
+<td>
+2020-04-24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="color-branches-and-nodes" class="section level1">
 <h1>Color branches and nodes</h1>
@@ -598,7 +745,7 @@ df_br &lt;- data.frame(node = all_node, Detected = &quot;F&quot;) %&gt;%
 # tree (colored branch) + result
 fig_0 &lt;- fig_0 %&lt;+% df_br + aes(color = Detected)+
     geom_point2(aes(subset = (node %in% loc[[1]])), 
-                      color = &quot;red&quot;, size = 2, alpha = 0.8) +
+                      color = &quot;red&quot;, size = 2) +
   scale_color_manual(values = c(&quot;Yes&quot; = &quot;orange&quot;, &quot;No&quot; = &quot;grey&quot;)) +
   guides(color = guide_legend(override.aes = list(size = 2)),
          fill = guide_legend(order = 1))
@@ -606,6 +753,43 @@ fig_0 &lt;- fig_0 %&lt;+% df_br + aes(color = Detected)+
 
 fig_0</code></pre>
 <p><img src="figure/3-Visualization.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-4-1">
+Past versions of unnamed-chunk-4-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-4-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/fionarhuang/treeclimbR_article/blob/b8f4b6e965e1c8e5f674fb1feea0cd050edad475/microbe/docs/figure/3-Visualization.Rmd/unnamed-chunk-4-1.png" target="_blank">b8f4b6e</a>
+</td>
+<td>
+fionarhuang
+</td>
+<td>
+2020-04-24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="black-bars" class="section level1">
 <h1>Black bars</h1>
@@ -661,6 +845,43 @@ fig_1 &lt;- TreeHeatmap(tree = new_phy,
 will replace the existing scale.</code></pre>
 <pre class="r"><code>fig_1</code></pre>
 <p><img src="figure/3-Visualization.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-1">
+Past versions of unnamed-chunk-6-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/fionarhuang/treeclimbR_article/blob/b8f4b6e965e1c8e5f674fb1feea0cd050edad475/microbe/docs/figure/3-Visualization.Rmd/unnamed-chunk-6-1.png" target="_blank">b8f4b6e</a>
+</td>
+<td>
+fionarhuang
+</td>
+<td>
+2020-04-24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="add-heatmaps" class="section level1">
 <h1>Add heatmaps</h1>
@@ -822,6 +1043,43 @@ Scale for &#39;fill&#39; is already present. Adding another scale for &#39;fill&
 will replace the existing scale.</code></pre>
 <pre class="r"><code>fig_2 </code></pre>
 <p><img src="figure/3-Visualization.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-1">
+Past versions of unnamed-chunk-8-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-8-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/fionarhuang/treeclimbR_article/blob/b8f4b6e965e1c8e5f674fb1feea0cd050edad475/microbe/docs/figure/3-Visualization.Rmd/unnamed-chunk-8-1.png" target="_blank">b8f4b6e</a>
+</td>
+<td>
+fionarhuang
+</td>
+<td>
+2020-04-24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="label-months" class="section level1">
 <h1>Label months</h1>
@@ -911,6 +1169,43 @@ rownames(mat_genus) &lt;- df_genus_4$alias</code></pre>
 
 fig_4</code></pre>
 <p><img src="figure/3-Visualization.Rmd/unnamed-chunk-11-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-11-1">
+Past versions of unnamed-chunk-11-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-11-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/fionarhuang/treeclimbR_article/blob/b8f4b6e965e1c8e5f674fb1feea0cd050edad475/microbe/docs/figure/3-Visualization.Rmd/unnamed-chunk-11-1.png" target="_blank">b8f4b6e</a>
+</td>
+<td>
+fionarhuang
+</td>
+<td>
+2020-04-24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>ggsave(&quot;output/baby_born.eps&quot;, fig_4, 
        units = &quot;in&quot;, width = 8, height = 7,
        dpi = 300)</code></pre>
@@ -948,75 +1243,74 @@ other attached packages:
 [15] Biobase_2.46.0                 GenomicRanges_1.38.0          
 [17] GenomeInfoDb_1.22.0            IRanges_2.20.0                
 [19] S4Vectors_0.24.0               BiocGenerics_0.32.0           
-[21] workflowr_1.5.0               
 
 loaded via a namespace (and not attached):
   [1] backports_1.1.6             circlize_0.4.8             
-  [3] diffcyt_1.6.1               plyr_1.8.5                 
-  [5] igraph_1.2.4.1              lazyeval_0.2.2             
-  [7] ConsensusClusterPlus_1.50.0 splines_3.6.1              
-  [9] flowCore_1.52.0             fda_2.4.8                  
- [11] TH.data_1.0-10              digest_0.6.25              
- [13] htmltools_0.4.0             fansi_0.4.1                
- [15] magrittr_1.5                CytoML_1.12.0              
- [17] cluster_2.1.0               ks_1.11.6                  
- [19] limma_3.42.0                ComplexHeatmap_2.2.0       
- [21] RcppParallel_4.4.4          R.utils_2.9.0              
- [23] sandwich_2.5-1              flowWorkspace_3.34.0       
- [25] colorspace_1.4-1            rrcov_1.4-7                
- [27] xfun_0.11                   crayon_1.3.4               
- [29] RCurl_1.95-4.12             jsonlite_1.6.1             
- [31] hexbin_1.28.0               graph_1.64.0               
- [33] lme4_1.1-21                 dirmult_0.1.3-4            
- [35] survival_2.44-1.1           zoo_1.8-6                  
- [37] ape_5.3                     glue_1.4.0                 
- [39] flowClust_3.24.0            gtable_0.3.0               
- [41] zlibbioc_1.32.0             XVector_0.26.0             
- [43] GetoptLong_0.1.7            ggcyto_1.14.0              
- [45] IDPmisc_1.1.19              Rgraphviz_2.30.0           
- [47] shape_1.4.4                 DEoptimR_1.0-8             
- [49] scales_1.1.0                mvtnorm_1.0-11             
- [51] edgeR_3.28.0                Rcpp_1.0.4                 
- [53] clue_0.3-57                 tidytree_0.3.3             
- [55] openCyto_1.24.0             mclust_5.4.5               
- [57] FlowSOM_1.18.0              tsne_0.1-3                 
- [59] RColorBrewer_1.1-2          ellipsis_0.3.0             
- [61] farver_2.0.3                pkgconfig_2.0.3            
- [63] XML_3.98-1.20               R.methodsS3_1.7.1          
- [65] flowViz_1.50.0              locfit_1.5-9.1             
- [67] labeling_0.3                reshape2_1.4.3             
- [69] flowStats_3.44.0            tidyselect_1.0.0           
- [71] rlang_0.4.5                 later_1.0.0                
- [73] munsell_0.5.0               tools_3.6.1                
- [75] cli_2.0.2                   evaluate_0.14              
- [77] stringr_1.4.0               yaml_2.2.0                 
- [79] knitr_1.26                  fs_1.3.1                   
- [81] robustbase_0.93-5           purrr_0.3.3                
- [83] RBGL_1.62.1                 nlme_3.1-142               
- [85] R.oo_1.23.0                 aplot_0.0.4                
- [87] compiler_3.6.1              png_0.1-7                  
- [89] treeio_1.11.2               tibble_3.0.0               
- [91] pcaPP_1.9-73                stringi_1.4.6              
- [93] lattice_0.20-38             Matrix_1.2-17              
- [95] nloptr_1.2.1                vctrs_0.2.4                
- [97] pillar_1.4.3                lifecycle_0.2.0            
- [99] BiocManager_1.30.10         GlobalOptions_0.1.1        
-[101] data.table_1.12.6           cowplot_1.0.0              
-[103] bitops_1.0-6                corpcor_1.6.9              
-[105] patchwork_1.0.0             httpuv_1.5.2               
-[107] R6_2.4.1                    latticeExtra_0.6-28        
-[109] promises_1.1.0              KernSmooth_2.23-15         
-[111] gridExtra_2.3               codetools_0.2-16           
-[113] boot_1.3-23                 MASS_7.3-51.4              
-[115] gtools_3.8.1                assertthat_0.2.1           
-[117] rprojroot_1.3-2             rjson_0.2.20               
-[119] withr_2.1.2                 mnormt_1.5-5               
-[121] multcomp_1.4-10             GenomeInfoDbData_1.2.2     
-[123] ncdfFlow_2.32.0             grid_3.6.1                 
-[125] tidyr_1.0.2                 minqa_1.2.4                
-[127] rvcheck_0.1.8               rmarkdown_1.17             
-[129] git2r_0.26.1                base64enc_0.1-3            
-[131] ellipse_0.4.1              </code></pre>
+  [3] diffcyt_1.6.1               workflowr_1.5.0            
+  [5] plyr_1.8.5                  igraph_1.2.4.1             
+  [7] lazyeval_0.2.2              ConsensusClusterPlus_1.50.0
+  [9] splines_3.6.1               flowCore_1.52.0            
+ [11] fda_2.4.8                   TH.data_1.0-10             
+ [13] digest_0.6.25               htmltools_0.4.0            
+ [15] fansi_0.4.1                 magrittr_1.5               
+ [17] CytoML_1.12.0               cluster_2.1.0              
+ [19] ks_1.11.6                   limma_3.42.0               
+ [21] ComplexHeatmap_2.2.0        RcppParallel_4.4.4         
+ [23] R.utils_2.9.0               sandwich_2.5-1             
+ [25] flowWorkspace_3.34.0        colorspace_1.4-1           
+ [27] rrcov_1.4-7                 xfun_0.11                  
+ [29] crayon_1.3.4                RCurl_1.95-4.12            
+ [31] jsonlite_1.6.1              hexbin_1.28.0              
+ [33] graph_1.64.0                lme4_1.1-21                
+ [35] dirmult_0.1.3-4             survival_2.44-1.1          
+ [37] zoo_1.8-6                   ape_5.3                    
+ [39] glue_1.4.0                  flowClust_3.24.0           
+ [41] gtable_0.3.0                zlibbioc_1.32.0            
+ [43] XVector_0.26.0              GetoptLong_0.1.7           
+ [45] ggcyto_1.14.0               IDPmisc_1.1.19             
+ [47] Rgraphviz_2.30.0            shape_1.4.4                
+ [49] DEoptimR_1.0-8              scales_1.1.0               
+ [51] mvtnorm_1.0-11              edgeR_3.28.0               
+ [53] Rcpp_1.0.4                  clue_0.3-57                
+ [55] tidytree_0.3.3.991          openCyto_1.24.0            
+ [57] mclust_5.4.5                FlowSOM_1.18.0             
+ [59] tsne_0.1-3                  RColorBrewer_1.1-2         
+ [61] ellipsis_0.3.0              farver_2.0.3               
+ [63] pkgconfig_2.0.3             XML_3.98-1.20              
+ [65] R.methodsS3_1.7.1           flowViz_1.50.0             
+ [67] locfit_1.5-9.1              labeling_0.3               
+ [69] reshape2_1.4.3              flowStats_3.44.0           
+ [71] tidyselect_1.0.0            rlang_0.4.5                
+ [73] later_1.0.0                 munsell_0.5.0              
+ [75] tools_3.6.1                 cli_2.0.2                  
+ [77] evaluate_0.14               stringr_1.4.0              
+ [79] yaml_2.2.0                  knitr_1.26                 
+ [81] fs_1.3.1                    robustbase_0.93-5          
+ [83] purrr_0.3.3                 RBGL_1.62.1                
+ [85] nlme_3.1-142                whisker_0.4                
+ [87] R.oo_1.23.0                 aplot_0.0.4.991            
+ [89] compiler_3.6.1              png_0.1-7                  
+ [91] treeio_1.11.3               tibble_3.0.0               
+ [93] pcaPP_1.9-73                stringi_1.4.6              
+ [95] lattice_0.20-38             Matrix_1.2-17              
+ [97] nloptr_1.2.1                vctrs_0.2.4                
+ [99] pillar_1.4.3                lifecycle_0.2.0            
+[101] BiocManager_1.30.10         GlobalOptions_0.1.1        
+[103] data.table_1.12.6           bitops_1.0-6               
+[105] corpcor_1.6.9               patchwork_1.0.0            
+[107] httpuv_1.5.2                R6_2.4.1                   
+[109] latticeExtra_0.6-28         promises_1.1.0             
+[111] KernSmooth_2.23-15          gridExtra_2.3              
+[113] codetools_0.2-16            boot_1.3-23                
+[115] MASS_7.3-51.4               gtools_3.8.1               
+[117] assertthat_0.2.1            rprojroot_1.3-2            
+[119] rjson_0.2.20                withr_2.1.2                
+[121] mnormt_1.5-5                multcomp_1.4-10            
+[123] GenomeInfoDbData_1.2.2      ncdfFlow_2.32.0            
+[125] grid_3.6.1                  tidyr_1.0.2                
+[127] minqa_1.2.4                 rvcheck_0.1.8              
+[129] rmarkdown_1.17              git2r_0.26.1               
+[131] base64enc_0.1-3             ellipse_0.4.1              </code></pre>
 </div>
 </div>
 

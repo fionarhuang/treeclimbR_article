@@ -61,7 +61,7 @@ df_br <- data.frame(node = all_node, Detected = "F") %>%
 # tree (colored branch) + result
 fig_0 <- fig_0 %<+% df_br + aes(color = Detected)+
     geom_point2(aes(subset = (node %in% loc[[1]])), 
-                      color = "red", size = 2, alpha = 0.8) +
+                      color = "red", size = 2) +
   scale_color_manual(values = c("Yes" = "orange", "No" = "grey")) +
   guides(color = guide_legend(override.aes = list(size = 2)),
          fill = guide_legend(order = 1))
