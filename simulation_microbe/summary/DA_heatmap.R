@@ -10,7 +10,7 @@ suppressPackageStartupMessages({
 })
 
 # load functions
- source("summary/drawF.R")   
+source("summary/drawF.R")   
 
 if (reso == "high") {
 source("summary/rm_ancestor.R")
@@ -40,14 +40,15 @@ for (i in 1:3) {
     
     #
     tse_list[[i]] <- tse
-    loc_da <- list(treeclimbR = outsel_0.05[[s]]$node[outsel_0.05[[s]]$signal.node],
-                   StructFDR = loc.StructFDR_0.05[[s]],
-                   HFDR = loc.HFDR_0.05[[s]],
-                   lasso = loc.Lasso[[s]],
-                   BH = loc.bh_0.05[[s]],
-                   minP = outMin[[s]]$node[outMin[[s]]$keep_0.05],
-                   miLineage1 = loc1_0.05.MLA[[s]],
-                   miLineage2 = loc2_0.05.MLA[[s]])
+    loc_da <- list(
+        lasso = loc.Lasso[[s]],
+        HFDR = loc.HFDR_0.05[[s]],
+        StructFDR = loc.StructFDR_0.05[[s]],
+        BH = loc.bh_0.05[[s]],
+        miLineage1 = loc1_0.05.MLA[[s]],
+        miLineage2 = loc2_0.05.MLA[[s]],
+        minP = outMin[[s]]$node[outMin[[s]]$keep_0.05],
+        treeclimbR = outsel_0.05[[s]]$node[outsel_0.05[[s]]$signal.node])
     loc_list[[i]] <- lapply(loc_da, FUN = function(x){
         if(length(x)) {x} else{ NULL }
         if (reso == "high") {
@@ -60,8 +61,6 @@ for (i in 1:3) {
 
 
 fig_list <- lapply(seq_along(loc_list), FUN = function(x, r) {
-    # load data
-    #dataFile <- file.path(pathD, paste0(ss[x], ".RData"))
     loc_da <- loc_list[[x]]
     drawF(tse = tse_list[[x]], s = r, 
           anno_node = loc_da$treeclimbR, 
