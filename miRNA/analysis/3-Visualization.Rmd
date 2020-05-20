@@ -19,6 +19,9 @@ suppressPackageStartupMessages({
   library(ggnewscale)
   library(edgeR)
   library(scales)
+  library(grid)
+  library(cowplot)
+  library(png)
 })
 ```
 
@@ -74,7 +77,8 @@ fig_tree <- fig_tree %<+%
     aes(color = Branch) + 
     scale_color_manual(values = branch_col, 
                        guide = guide_legend(
-                         override.aes = list(size = 3))) +
+                         override.aes = list(size = 3),
+                         order = 1)) +
     geom_point2(aes(subset = (node %in% loc_0.05)), 
                 color = "red", shape = 19, size = 1.5) 
 
@@ -134,7 +138,7 @@ circo_full <- circo_full +
     geom_point(data = df_layer, 
                aes(x, y = y + 210, shape = layer),
                size = 6, 
-               inherit.aes = FALSE) +
+               inherit.aes = FALSE, show.legend = FALSE) +
     scale_shape_manual(values = layer_shape, 
                        guide = guide_legend(
                            override.aes = list(size = 4), 
@@ -344,14 +348,15 @@ names(col_g) <- df_point$Genomic_range
 
 fig4 <- fig3 +
   new_scale_color() +
-  geom_point(data = df_point, aes(x = x, y = y, color = Genomic_range),
+  geom_point(data = df_point, 
+             aes(x = x, y = y, color = Genomic_range),
              shape = 19, size = 4,
             inherit.aes = FALSE) +
   scale_color_manual(values = col_g) +
-  guides(color = guide_legend(order = 5, ncol = 1))+
+  guides(color = guide_legend(order = 5, ncol = 2))+
     theme(
         aspect.ratio = 1,
-        legend.position = c(0.12, 0.5),
+        legend.position = c(0.20, 0.33),
         legend.background = element_rect(fill = NA),
         plot.title = element_text(hjust = 0.5),
         legend.title = element_text(size = 7),
@@ -364,6 +369,23 @@ fig4 <- fig3 +
     )
 fig4 
 ggsave("output/heart_microRNA.eps", fig4, 
+       units = "in", width = 7.8, height = 6.5,
+       dpi = 300)
+
+```
+
+# Add hierarchy in legend
+```{r, fig.height=6.5, fig.width=7.8}
+img <- readPNG("data/hierarchy.png")
+g <- rasterGrob(img, width = 4.265, height = 4.453,
+                default.units = "cm",
+                interpolate=FALSE)
+
+
+figF <- ggdraw(fig4) +
+    draw_grob(g, x = -0.38, y = 0.3, scale = 1)
+figF
+ggsave("output/heart_microRNA.pdf", figF,
        units = "in", width = 7.8, height = 6.5,
        dpi = 300)
 ```

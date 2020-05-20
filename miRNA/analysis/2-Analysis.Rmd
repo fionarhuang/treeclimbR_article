@@ -40,7 +40,7 @@ surgery <- colData(tse)$surgery
 surgery <- ifelse(surgery == "Sham", "Sham", "TAC")
 names(surgery) <- colnames(tse)
 
-res <- runDA(TSE = tse, feature_on_row = TRUE, assay = 1,
+res <- runDA(TSE = tse, feature_on_row = TRUE, assay = 1, 
              option = "glm", group_column = "surgery",
              design_terms = "surgery")
 out <- nodeResult(object = res, n = Inf)
@@ -61,7 +61,7 @@ cand <- getCand(tree = rowTree(tse),
 All proposed candidates are evaluated. One candidate is selected as the best at FDR $\alpha = 0.05$.
 ```{r}
 candB <- evalCand(tree = rowTree(tse), 
-                  levels = cand$candidate_list, 
+                  levels = cand$candidate_list,
                   score_data = out, node_column = "node", 
                   p_column = "PValue", sign_column = "logFC",
                   method = "BH", limit_rej = 0.05,
