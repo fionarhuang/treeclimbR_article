@@ -33,6 +33,9 @@ source("summary/rm_ancestor.R")
 # calculate TPR/FDR function 
 source("summary/rateFun.R")
 
+# load results of lefse
+load("lefse/output/nodes/out_lefse.RData")
+
 avDat <- vector("list", length(sim))
 for (i in seq_along(avDat)) {
     cat(i, "\n")
@@ -49,12 +52,21 @@ for (i in seq_along(avDat)) {
     # ==================================================================
     # the number of simulation
     nSim <- length(assays(tse))
-    rejLimit <- 0.05
+    
     
     # truth
     fc <- metadata(tse)$FC
     truth <- names(fc[fc != 1])
     truth <- signalNode(tree = rowTree(tse), node = truth)
+    
+    # lefse
+    if (reso == "high") {
+        out_lefse <- out_lefse_high
+    } else {
+        out_lefse <- out_lefse_low
+    }
+    loc.lefse <- out_lefse[[si]]
+    rate.lefse <- rateFun(loc.lefse, nSim, method = "lefse")
     
     # minP
     loc.minP <- lapply(c(0.01, 0.05, 0.1), FUN = function(x){
@@ -168,7 +180,9 @@ for (i in seq_along(avDat)) {
     
     rateDat <- rbind(rate.treeclimbR, rate.minP, 
                      rate.ml1, rate.ml2,
-                     rate.Lasso, rate.HFDR, rate.bh, rate.StructFDR)
+                     rate.Lasso, rate.HFDR, 
+                     rate.bh, rate.StructFDR,
+                     rate.lefse)
     
     
     avDat[[i]] <- rateDat %>%
@@ -190,12 +204,14 @@ Dat <- Dat %>%
                            levels = c("lasso", "HFDR",
                                       "StructFDRFDR", "BH", 
                                       "miLineage1", 
-                                      "miLineage2", "minP", 
+                                      "miLineage2", "minP",
+                                      "lefse",
                                       "treeclimbR"),
                            labels = c("lasso", "HFDR",
                                       "StructFDR", "BH", 
                                       "miLineage1", 
                                       "miLineage2", "minP", 
+                                      "lefse",
                                       "treeclimbR"))) %>%
     arrange(method) %>%
     filter(!(method == "lasso" & alpha != 0.05)) 
@@ -203,16 +219,19 @@ Dat <- Dat %>%
 vcolor <- c("treeclimbR" = "#E41A1C", "BH" = "#377EB8",
             "StructFDR" = "#4DAF4A", "HFDR" = "#984EA3",
             "lasso" = "#FF7F00", "minP" = "#A65628",
-            "miLineage1" = "#999999", "miLineage2" = "#666666")
+            "miLineage1" = "#999999", "miLineage2" = "#666666",
+            "lefse" = "#E7298A")
 vshape <- c("treeclimbR" = 5, "BH" = 16,
             "StructFDR" = 16, "HFDR" = 16,
             "lasso" = 16, "minP" = 16,
-            "miLineage1" = 16, "miLineage2" = 16)
+            "miLineage1" = 16, "miLineage2" = 16,
+            "lefse" = 16)
 
 vsize <- c("treeclimbR" = 3, "BH" = 2,
            "StructFDR" = 2, "HFDR" = 2,
            "lasso" = 2, "minP" = 2,
-           "miLineage1" = 2, "miLineage2" = 2)
+           "miLineage1" = 2, "miLineage2" = 2,
+           "lefse" = 2)
 prettify <- theme_bw(base_size = 8) + theme(
     aspect.ratio = 1,
     #plot.margin = unit(c(0, 0, 0.2, 0), "cm"),

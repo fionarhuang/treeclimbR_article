@@ -208,7 +208,8 @@ drawF <- function(tse, s = 3, anno_node, loc_da, scene) {
         scale_color_manual(values = c("treeclimbR" = "#E41A1C", "BH" = "#377EB8",
                                       "StructFDR" = "#4DAF4A", "HFDR" = "#984EA3",
                                       "lasso" = "#FF7F00", "minP" = "#A65628",
-                                      "miLineage1" = "#999999", "miLineage2" = "#666666"),
+                                      "miLineage1" = "#999999", "miLineage2" = "#666666",
+                                      "lefse" = "#E7298A"),
                            guide = guide_legend(order = 4)) +
         theme(legend.box.margin = 
                   margin(t = 3, b = 5, 

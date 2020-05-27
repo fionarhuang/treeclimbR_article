@@ -12,11 +12,12 @@ dir <- c("LassoGLM.RData", "HFDR.RData", "StructFDR.RData",
          "treeclimbR.RData")
 mdir <- "output/RData"
 
-
-load("output/RData/DataPrep/BS_sp25_sim5_r4_L2.RData")
-lapply(file.path(mdir, "Analysis", "BS_sp25_sim5_r4_L2", dir),
+scene <- "BS_sp25_sim5_r4_L2"
+load(file.path("output/RData/DataPrep", paste0(scene, ".RData")))
+lapply(file.path(mdir, "Analysis", scene, dir),
        load,.GlobalEnv)
-
+# load results of lefse
+load("lefse/output/nodes/out_lefse.RData")
 # tree
 phy_tree <- rowTree(tse)
 
@@ -39,6 +40,7 @@ loc <- list("lasso" = loc.Lasso[[s]],
             "miLineage1" = loc1_0.05.MLA[[s]], 
             "miLineage2" = loc2_0.05.MLA[[s]],
             "minP" = loc.minP[[s]],
+            "lefse" = out_lefse_low[[scene]][[s]],
             "treeclimbR" = loc.treeclimbR[[s]])
 
 
