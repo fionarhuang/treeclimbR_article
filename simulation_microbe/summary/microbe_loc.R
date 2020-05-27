@@ -40,7 +40,7 @@ loc <- list("lasso" = loc.Lasso[[s]],
             "miLineage1" = loc1_0.05.MLA[[s]], 
             "miLineage2" = loc2_0.05.MLA[[s]],
             "minP" = loc.minP[[s]],
-            "lefse" = out_lefse_low[[scene]][[s]],
+            "lefse" = out_lefse_low[[scene]]$`0.05`[[s]],
             "treeclimbR" = loc.treeclimbR[[s]])
 
 
@@ -94,8 +94,13 @@ fig_loc <- plot_grid(
                     color = "red", size = 0.9) +
         theme(legend.position = "none") +
         expand_limits(y = 1770), 
+    p + 
+        geom_point2(aes(subset = (node %in% loc[[9]])), 
+                    color = "red", size = 0.9) +
+        theme(legend.position = "none") +
+        expand_limits(y = 1770), 
     labels = names(loc),
     label_size = 8, 
     label_x = c(0, 0, 0, 0, -0.02, -0.02, 0, -0.08),
-    nrow = 2)
+    nrow = 3)
 

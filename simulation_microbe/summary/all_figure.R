@@ -31,8 +31,9 @@ fig_scene <- plot_grid(fig1 +
                        label_size = 10)
 # TPR vs FDR 
 source("summary/fig_tpr_fdr_reso.R")
+p_roc
 
-# heatmap: bottom (panel c)
+ # heatmap: bottom (panel c)
 s <- 5 # 5th repetition
 source("summary/DA_heatmap.R")
 
@@ -61,6 +62,7 @@ ggsave(cbPath, fig_cb, units = "in", width = 8, height = 8,
        dpi = 300)
 
 rm(list = ls())
+
 # Supplementary Figure 1
 source("summary/microbe_loc.R")
 cbPath <- file.path("summary/figure/Supplementary_microbe_loc.eps")
