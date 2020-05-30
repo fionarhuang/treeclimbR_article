@@ -40,7 +40,7 @@ loc <- list("lasso" = loc.Lasso[[s]],
             "miLineage1" = loc1_0.05.MLA[[s]], 
             "miLineage2" = loc2_0.05.MLA[[s]],
             "minP" = loc.minP[[s]],
-            "lefse" = out_lefse_low[[scene]]$`0.05`[[s]],
+            "LEfSe" = out_lefse_low[[scene]]$`0.05`[[s]],
             "treeclimbR" = loc.treeclimbR[[s]])
 
 

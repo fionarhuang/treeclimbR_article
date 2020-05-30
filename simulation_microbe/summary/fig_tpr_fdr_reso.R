@@ -66,7 +66,7 @@ for (i in seq_along(avDat)) {
         out_lefse <- out_lefse_low
     }
     loc.lefse <- out_lefse[[si]]
-    rate.lefse <- rateFun(loc.lefse, nSim, method = "lefse")
+    rate.lefse <- rateFun(loc.lefse, nSim, method = "LEfSe")
     
     # minP
     loc.minP <- lapply(c(0.01, 0.05, 0.1), FUN = function(x){
@@ -128,7 +128,7 @@ for (i in seq_along(avDat)) {
     # lasso
     loc.Lasso <- lapply(loc.Lasso, FUN = function(x) {
         if (reso == "high") {
-        rm_ancestor(node = x, tree = rowTree(tse))
+        x <- rm_ancestor(node = x, tree = rowTree(tse))
         } 
         return(x)
     })
@@ -147,7 +147,7 @@ for (i in seq_along(avDat)) {
                               })
                           })
     names(loc.StructFDR) <- c(0.01, 0.05, 0.1)
-    rate.StructFDR <- rateFun(loc.StructFDR, nSim, method = "StructFDRFDR")
+    rate.StructFDR <- rateFun(loc.StructFDR, nSim, method = "StructFDR")
     
     # BH
     loc.bh <- lapply(list(loc.bh_0.01, loc.bh_0.05, 
@@ -202,16 +202,16 @@ Dat <- Dat %>%
                        labels = c("BS", "US", "SS"))) %>%
     mutate(method = factor(method, 
                            levels = c("lasso", "HFDR",
-                                      "StructFDRFDR", "BH", 
+                                      "StructFDR", "BH", 
                                       "miLineage1", 
                                       "miLineage2", "minP",
-                                      "lefse",
+                                      "LEfSe",
                                       "treeclimbR"),
                            labels = c("lasso", "HFDR",
                                       "StructFDR", "BH", 
                                       "miLineage1", 
                                       "miLineage2", "minP", 
-                                      "lefse",
+                                      "LEfSe",
                                       "treeclimbR"))) %>%
     arrange(method) %>%
     filter(!(method == "lasso" & alpha != 0.05)) 
@@ -220,18 +220,18 @@ vcolor <- c("treeclimbR" = "#E41A1C", "BH" = "#377EB8",
             "StructFDR" = "#4DAF4A", "HFDR" = "#984EA3",
             "lasso" = "#FF7F00", "minP" = "#A65628",
             "miLineage1" = "#999999", "miLineage2" = "#666666",
-            "lefse" = "#E7298A")
+            "LEfSe" = "#E7298A")
 vshape <- c("treeclimbR" = 5, "BH" = 16,
             "StructFDR" = 16, "HFDR" = 16,
             "lasso" = 16, "minP" = 16,
             "miLineage1" = 16, "miLineage2" = 16,
-            "lefse" = 16)
+            "LEfSe" = 16)
 
 vsize <- c("treeclimbR" = 3, "BH" = 2,
            "StructFDR" = 2, "HFDR" = 2,
            "lasso" = 2, "minP" = 2,
            "miLineage1" = 2, "miLineage2" = 2,
-           "lefse" = 2)
+           "LEfSe" = 2)
 prettify <- theme_bw(base_size = 8) + theme(
     aspect.ratio = 1,
     #plot.margin = unit(c(0, 0, 0.2, 0), "cm"),
@@ -240,6 +240,7 @@ prettify <- theme_bw(base_size = 8) + theme(
     axis.text = element_text(color = "black"),
     axis.text.x = element_text(angle = 45, hjust = 1),
     legend.key.size= unit(1.5, "mm"),
+    legend.spacing.x = unit(0.5, "mm"),
     plot.title = element_text(hjust = 0.5),
     legend.text = element_text(size = 7),
     legend.position="bottom",

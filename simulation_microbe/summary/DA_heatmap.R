@@ -51,7 +51,7 @@ for (i in 1:3) {
         miLineage1 = loc1_0.05.MLA[[s]],
         miLineage2 = loc2_0.05.MLA[[s]],
         minP = outMin[[s]]$node[outMin[[s]]$keep_0.05],
-        lefse = out_lefse_low[[si]]$`0.05`[[s]],
+        LEfSe = out_lefse_low[[si]]$`0.05`[[s]],
         treeclimbR = outsel_0.05[[s]]$node[outsel_0.05[[s]]$signal.node])
     loc_list[[i]] <- lapply(loc_da, FUN = function(x){
         if(length(x)) {x} else{ NULL }
