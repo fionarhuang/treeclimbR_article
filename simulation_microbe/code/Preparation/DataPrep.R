@@ -25,10 +25,10 @@ for (i in seq_along(argsList)) {
 print(inRDat)
 load(inRDat)
 
-data("saliva_v35")
-lib <- apply(assays(saliva_v35)[[1]], 2, sum)
+data("throat_v35")
+lib <- apply(assays(throat_v35)[[1]], 2, sum)
 ## ========== Select branches to swap ================
-(sel1 <- selNode(obj = saliva_v35, minTip = numTip1[1], 
+(sel1 <- selNode(obj = throat_v35, minTip = numTip1[1], 
                  maxTip = numTip1[2],
                  minPr = pr[1], maxPr = pr[2],  all = TRUE))
 
@@ -38,7 +38,7 @@ for (i in seq_len(nrow(sel1))) {
     pr2 <- ratio*sel1[i, "proportion"] + c(-erp, erp)
     
     res <- try({
-        sel2 <- selNode(obj = saliva_v35,
+        sel2 <- selNode(obj = throat_v35,
                         minTip = numTip2[1], maxTip = numTip2[2],
                         minPr = pr2[1], maxPr = pr2[2],
                         all = TRUE, skip = sel1[i, "nodeNum"])},
@@ -64,7 +64,7 @@ if (scene %in% c("S1", "S2")) {
 }
 
 set.seed(2020)
-lse <- simData(obj = saliva_v35,
+lse <- simData(obj = throat_v35,
                from.A = sp[1],
                from.B = sp[2],
                mu = lib,
@@ -73,7 +73,7 @@ lse <- simData(obj = saliva_v35,
                scenario = scene,
                pct = pct)
 
-allNode <- unique(sort(as.vector(rowTree(saliva_v35)$edge)))
+allNode <- unique(sort(as.vector(rowTree(throat_v35)$edge)))
 tse <- aggValue(x = lse, rowLevel = allNode, FUN = sum)
 tse
 
