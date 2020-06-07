@@ -56,7 +56,7 @@ Heatmap shows counts of entities (rows) in samples (columns) split by groups. Br
 
  The semi-simulated data should be downloaded in the `cytof/data/` folder from `HDCytoData` using [Download.R](https://github.com/fionarhuang/treeclimbR_article/tree/master/cytof/data) before running the pipeline
  - AML-sim (DA folder)
-   - install [snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) & [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/)
+   - install [snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) 
    - Set directory to `DA/`
    - Specify paths to input and output files in the configuration file ([config.yaml](https://github.com/fionarhuang/treeclimbR_article/blob/master/cytof/DA/config.yaml))
    - Specify R library paths in the [.Renviron](https://github.com/fionarhuang/treeclimbR_article/blob/master/cytof/DA/.Renviron). If there is less than 3 library paths, then set `R_LIBS_3 = ""` to remove the third library path. 
