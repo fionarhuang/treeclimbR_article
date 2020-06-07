@@ -34,7 +34,7 @@ source("summary/rm_ancestor.R")
 source("summary/rateFun.R")
 
 # load results of lefse
-load("lefse/output/nodes/out_lefse.RData")
+load("output/RData/lefse/out_lefse.RData")
 
 avDat <- vector("list", length(sim))
 for (i in seq_along(avDat)) {

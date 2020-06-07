@@ -16,8 +16,9 @@ scene <- "BS_sp25_sim5_r4_L2"
 load(file.path("output/RData/DataPrep", paste0(scene, ".RData")))
 lapply(file.path(mdir, "Analysis", scene, dir),
        load,.GlobalEnv)
+
 # load results of lefse
-load("lefse/output/nodes/out_lefse.RData")
+load("output/RData/lefse/out_lefse.RData")
 # tree
 phy_tree <- rowTree(tse)
 
