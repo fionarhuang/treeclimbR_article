@@ -64,6 +64,7 @@ Heatmap shows counts of entities (rows) in samples (columns) split by groups. Br
    - run the pipeline using `snakemake --cores n` (n is the number of cores to be used)
    
  - BCR-XL-sim (DS folder). Similarly to run AML-sim
+ 
  [Figues 3]() is generated using [all_figure.R](https://github.com/fionarhuang/treeclimbR_article/blob/master/cytof/summary/all_figure.R)
    
 ### 4. Infant gut microbial data (in **folder** [microbe](https://htmlpreview.github.io/?https://github.com/fionarhuang/treeclimbR_article/blob/master/microbe/docs/index.html))
