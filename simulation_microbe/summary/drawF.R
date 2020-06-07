@@ -2,7 +2,7 @@
 # s : which repition was used
 # anno_node: nodes annotated in the tree
 # loc_da: nodes found by methods 
-drawF <- function(tse, s = 3, anno_node, loc_da, scene) {
+drawF <- function(tse, s = 5, anno_node, loc_da, scene) {
     
     # ---------------------- visualization level ----------------------
     # tree
@@ -193,7 +193,21 @@ drawF <- function(tse, s = 3, anno_node, loc_da, scene) {
         select(x1, x2, y1) %>%
         distinct()
     df_1b <- getData(tree_hm = fig_1a, type = "column_split") %>%
-        rename(Method = column_split)
+        rename(Method = column_split) %>%
+        mutate(Method = factor(Method, 
+                               levels = c("lasso", "HFDR",
+                                          "StructFDR", "BH", 
+                                          "miLineage1", 
+                                          "miLineage2", "minP",
+                                          "LEfSe",
+                                          "treeclimbR"),
+                               labels = c("lasso", "HFDR",
+                                          "StructFDR", "BH", 
+                                          "miLineage1", 
+                                          "miLineage2", "minP", 
+                                          "LEfSe",
+                                          "treeclimbR"))) %>%
+        arrange(Method)
     
     fig_1b <- fig_1a +
         geom_segment(data = df_1a, 
@@ -203,13 +217,23 @@ drawF <- function(tse, s = 3, anno_node, loc_da, scene) {
                   aes(x = 0.5*(x1+x2), y = y1 + 6.8),
                   inherit.aes = FALSE, label = "Results", size = 2)+
         geom_point(data = df_1b, 
-                   aes(x = x , y = y + 2.5, color = Method), 
-                   shape = 16, inherit.aes = FALSE) +
-        scale_color_manual(values = c("treeclimbR" = "#E41A1C", "BH" = "#377EB8",
-                                      "StructFDR" = "#4DAF4A", "HFDR" = "#984EA3",
-                                      "lasso" = "#FF7F00", "minP" = "#A65628",
-                                      "miLineage1" = "#999999", "miLineage2" = "#666666",
-                                      "lefse" = "#E7298A"),
+                   aes(x = x , y = y + 2.5, color = Method, shape = Method), 
+                   inherit.aes = FALSE) +
+        scale_color_manual(values = c("treeclimbR" = "#E41A1C", 
+                                      "BH" = "#377EB8",
+                                      "StructFDR" = "#4DAF4A", 
+                                      "HFDR" = "#984EA3",
+                                      "lasso" = "#FF7F00", 
+                                      "minP" = "#A65628",
+                                      "miLineage1" = "#999999",
+                                      "miLineage2" = "#666666",
+                                      "LEfSe" = "#E7298A"),
+                           guide = guide_legend(order = 4)) +
+        scale_shape_manual(values = c("treeclimbR" = 5, "BH" = 16,
+                                      "StructFDR" = 16, "HFDR" = 16,
+                                      "lasso" = 16, "minP" = 16,
+                                      "miLineage1" = 16, "miLineage2" = 16,
+                                      "LEfSe" = 16),
                            guide = guide_legend(order = 4)) +
         theme(legend.box.margin = 
                   margin(t = 3, b = 5, 

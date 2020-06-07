@@ -59,7 +59,7 @@ if (sum(selD)) {
 
 
 ## ========== simulate data ================
-if (scene %in% c("S1", "S2")) {
+if (scene %in% c("BS", "US")) {
     pct <- NULL
 }
 

@@ -15,8 +15,8 @@ suppressPackageStartupMessages({
 # ---------------------- load data ----------------------
 
 ### Edit this!!!
-# resolution: low or high
-reso <- "low"
+# resolution: low or high (low for the supplementary figure)
+reso <- "high"
 
 # schematic scenarios: BS, US, SS
 source("summary/scenario.R")
