@@ -37,9 +37,9 @@ Heatmap shows counts of entities (rows) in samples (columns) split by groups. Br
 
 ### 1. Parametric synthetical microbial data (in **folder** [simulation_microbe](https://github.com/fionarhuang/treeclimbR_article/tree/master/simulation_microbe))
 
- - install snakemake & conda
+ - install [snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) & [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/)
  - Clone this repository and set directory to `simulation_microbe/`
- - Modify the configuration file to specify paths of input and output files in ([config.yaml](https://github.com/fionarhuang/treeclimbR_article/blob/master/simulation_microbe/config.yaml))
+ - Modify the configuration file ([config.yaml](https://github.com/fionarhuang/treeclimbR_article/blob/master/simulation_microbe/config.yaml)) to specify paths of input and output files.
    - `Rbin`: the path to the system R
    - `condaR`: the path to conda R 
      - run `create an environment: conda env create -f envs/lefse.yml`
