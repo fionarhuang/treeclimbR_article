@@ -1,7 +1,7 @@
 configfile: "config.yaml"
 
-textFiles,  =  glob_wildcards(config["codeP"]+"/parameter/{par}.R")
-method = glob_wildcards(config["codeP"]+"/Analysis/{file}.R").file
+textFiles,  =  glob_wildcards(config["codeP"]+"parameter/{par}.R")
+method = glob_wildcards(config["codeP"]+"Analysis/{file}.R").file
 sim = [1,2,3,4,5]
 
 ## Define the R binary
@@ -13,11 +13,11 @@ condaR = config["condaR"]
 ## Run all analyses
 rule all:
 	input:
-		expand(config["outPD"]+"/DataPrep/{parFile}.RData", parFile=textFiles),
-#		expand(config["outPD"]+"/Analysis/{parFile}/{analyFile}.RData", parFile=textFiles,analyFile=method),
-		config["outPD"]+"/lefse/make_txt.txt",
-		config["outPD"]+"/lefse/run_lefse.txt",
-		config["outPD"]+"/lefse/out_lefse.RData"
+		expand(config["outPD"]+"DataPrep/{parFile}.RData", parFile=textFiles),
+		expand(config["outPD"]+"Analysis/{parFile}/{analyFile}.RData", parFile=textFiles,analyFile=method),
+		config["outPD"]+"lefse/make_txt.txt",
+		config["outPD"]+"lefse/run_lefse.txt",
+		config["outPD"]+"lefse/out_lefse.RData"
 		
 		
 ## ------------------------------------------------------------------------------------ ##
@@ -25,23 +25,23 @@ rule all:
 ## ------------------------------------------------------------------------------------ ##
 rule getPr:
 	input:
-	    script = config["codeP"]+"/parameter/{par}.R"
+	    script = config["codeP"]+"parameter/{par}.R"
 	output:
-		config["outPD"]+"/parameter/{par}.RData"
+		config["outPD"]+"parameter/{par}.RData"
 	log:
-		config["RoutP"]+"/parameter/{par}.Rout"
+		config["RoutP"]+"parameter/{par}.Rout"
 	shell:
 		'''{Rbin} CMD BATCH --no-restore --no-save "--args outRDat='{output}' scriptP='{input.script}'" {input.script} {log}'''
 
 
 rule dataPrep:
 	input:
-	    parSet = config["outPD"]+"/parameter/{par}.RData",
-	    script = config["codeP"]+"/Preparation/DataPrep.R"
+	    parSet = config["outPD"]+"parameter/{par}.RData",
+	    script = config["codeP"]+"Preparation/DataPrep.R"
 	output:
-		config["outPD"]+"/DataPrep/{par}.RData"
+		config["outPD"]+"DataPrep/{par}.RData"
 	log:
-		config["RoutP"]+"/DataPrep/{par}.Rout"
+		config["RoutP"]+"DataPrep/{par}.Rout"
 	shell:
 		'''{Rbin} CMD BATCH --no-restore --no-save "--args inRDat='{input.parSet}' scriptP='{input.script}' parSet='{input.parSet}' outRDat='{output}'" {input.script} {log}'''
 
@@ -50,12 +50,12 @@ rule dataPrep:
 ## ------------------------------------------------------------------------------------ ##
 rule analyStep:
 	input:
-	    script = config["codeP"]+"/Analysis/{analyFile}.R",
-		data = config["outPD"]+"/DataPrep/{par}.RData"
+	    script = config["codeP"]+"Analysis/{analyFile}.R",
+		data = config["outPD"]+"DataPrep/{par}.RData"
 	output:
-		config["outPD"]+"/Analysis/{par}/{analyFile}.RData"
+		config["outPD"]+"Analysis/{par}/{analyFile}.RData"
 	log:
-		config["RoutP"]+"/Analysis/{par}/{analyFile}.Rout"
+		config["RoutP"]+"Analysis/{par}/{analyFile}.Rout"
 	shell:
 		'''{Rbin} CMD BATCH --no-restore --no-save "--args inRDat='{input.data}' outRDat='{output}'" {input.script} {log}'''
 
@@ -64,46 +64,46 @@ rule analyStep:
 ## ------------------------------------------------------------------------------------ ##
 rule outTXT:
 	input:
-	    data = expand(config["outPD"]+"/DataPrep/{par}.RData", par = textFiles),
-	    script = config["codeP"]+"/lefse/make_txt.R"
+	    data = expand(config["outPD"]+"DataPrep/{par}.RData", par = textFiles),
+	    script = config["codeP"]+"lefse/make_txt.R"
 	output:
-		txt = config["outPD"]+"/lefse/make_txt.txt",
-		outTree = config["outPD"]+"/lefse/tree.RData"
+		txt = config["outPD"]+"lefse/make_txt.txt",
+		outTree = config["outPD"]+"lefse/tree.RData"
 	params:
-	    inPath = config["outPD"]+"/DataPrep",
-	    outPath = config["outPD"]+"/lefse/txt"
+	    inPath = config["outPD"]+"DataPrep",
+	    outPath = config["outPD"]+"lefse/txt"
 	log:
-		config["RoutP"]+"/lefse/make_txt.Rout"
+		config["RoutP"]+"lefse/make_txt.Rout"
 	shell:
 		'''{Rbin} CMD BATCH --no-restore --no-save "--args txtFile='{output.txt}' inPath='{params.inPath}' outPath='{params.outPath}' outTree='{output.outTree}'" {input.script} {log}'''
 		
 rule lefse:
 	input:
-	    data = config["outPD"]+"/lefse/make_txt.txt",
-	    script = config["codeP"]+"/lefse/run_lefse.R"
+	    data = config["outPD"]+"lefse/make_txt.txt",
+	    script = config["codeP"]+"lefse/run_lefse.R"
 	output:
-		config["outPD"]+"/lefse/run_lefse.txt"
+		config["outPD"]+"lefse/run_lefse.txt"
 	params:
-	    txtPath = config["outPD"]+"/lefse/txt",
-	    inPath = config["outPD"]+"/lefse/in",
-	    resPath = config["outPD"]+"/lefse/res"
+	    txtPath = config["outPD"]+"lefse/txt",
+	    inPath = config["outPD"]+"lefse/in",
+	    resPath = config["outPD"]+"lefse/res"
 	conda:
 	    "envs/lefse.yml"
 	log:
-		config["RoutP"]+"/lefse/run_lefse.Rout"
+		config["RoutP"]+"lefse/run_lefse.Rout"
 	shell:
 		'''{condaR} CMD BATCH --no-restore --no-save "--args outFile='{output}' txtPath='{params.txtPath}' inPath='{params.inPath}' resPath='{params.resPath}'" {input.script} {log}'''
 
 rule lefseResult:
 	input:
-	    data = config["outPD"]+"/lefse/tree.RData",
-	    txt = config["outPD"]+"/lefse/run_lefse.txt",
-	    script = config["codeP"]+"/lefse/identify_node.R"
+	    data = config["outPD"]+"lefse/tree.RData",
+	    txt = config["outPD"]+"lefse/run_lefse.txt",
+	    script = config["codeP"]+"lefse/identify_node.R"
 	output:
-		config["outPD"]+"/lefse/out_lefse.RData"
+		config["outPD"]+"lefse/out_lefse.RData"
 	params:
-	    resPath = config["outPD"]+"/lefse/res"
+	    resPath = config["outPD"]+"lefse/res"
 	log:
-		config["RoutP"]+"/lefse/identify_node.Rout"
+		config["RoutP"]+"lefse/identify_node.Rout"
 	shell:
 		'''{Rbin} CMD BATCH --no-restore --no-save "--args resPath='{params.resPath}' outDat='{output}' inDat='{input.data}'" {input.script} {log}'''
