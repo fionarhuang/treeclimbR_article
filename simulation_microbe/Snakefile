@@ -14,7 +14,7 @@ condaR = config["condaR"]
 rule all:
 	input:
 		expand(config["outPD"]+"/DataPrep/{parFile}.RData", parFile=textFiles),
-		expand(config["outPD"]+"/Analysis/{parFile}/{analyFile}.RData", parFile=textFiles,analyFile=method),
+#		expand(config["outPD"]+"/Analysis/{parFile}/{analyFile}.RData", parFile=textFiles,analyFile=method),
 		config["outPD"]+"/lefse/make_txt.txt",
 		config["outPD"]+"/lefse/run_lefse.txt",
 		config["outPD"]+"/lefse/out_lefse.RData"
@@ -67,14 +67,15 @@ rule outTXT:
 	    data = expand(config["outPD"]+"/DataPrep/{par}.RData", par = textFiles),
 	    script = config["codeP"]+"/lefse/make_txt.R"
 	output:
-		config["outPD"]+"/lefse/make_txt.txt"
+		txt = config["outPD"]+"/lefse/make_txt.txt",
+		outTree = config["outPD"]+"/lefse/tree.RData"
 	params:
 	    inPath = config["outPD"]+"/DataPrep",
 	    outPath = config["outPD"]+"/lefse/txt"
 	log:
 		config["RoutP"]+"/lefse/make_txt.Rout"
 	shell:
-		'''{Rbin} CMD BATCH --no-restore --no-save "--args txtFile='{output}' inPath='{params.inPath}' outPath='{params.outPath}'" {input.script} {log}'''
+		'''{Rbin} CMD BATCH --no-restore --no-save "--args txtFile='{output.txt}' inPath='{params.inPath}' outPath='{params.outPath}' outTree='{output.outTree}'" {input.script} {log}'''
 		
 rule lefse:
 	input:
