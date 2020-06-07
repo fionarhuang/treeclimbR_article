@@ -1,3 +1,4 @@
-R_LIBS_1 = "/home/Shared/Rlib/release-3.10-lib"
-R_LIBS_2 = "/usr/local/R/R-3.6.1/library"
-R_LIBS_3 = "/home/fiona/tmp/R310_lib/"
+R_LIBS_USER = ""
+R_LIBS_1 = "/Users/ruizhu/Library/R/3.6/library"
+R_LIBS_2 = "/Library/Frameworks/R.framework/Versions/3.6/Resources/library"
+R_LIBS_3 = ""
