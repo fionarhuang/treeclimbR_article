@@ -48,7 +48,7 @@ Heatmap shows counts of entities (rows) in samples (columns) split by groups. Br
  - Specify the R library paths in the [.Renviron](https://github.com/fionarhuang/treeclimbR_article/blob/master/simulation_microbe/.Renviron). If there is less than 3 library paths, then set `R_LIBS_3 = ""` to remove the third library path. 
  - dry run the pipeline using `snakemake --use-conda -npr` 
  - run the pipeline using `snakemake --use-conda --cores n` (n is the number of cores to be used)
- - After the pipeline is done with `snakemake`, all figures could be generated using [all_figure.R](https://github.com/fionarhuang/treeclimbR_article/tree/master/simulation_microbe/summary) under the folder `simulation_microbe/summary/`.
+ - Once the pipeline is run successfully, all figures could be generated using [all_figure.R](https://github.com/fionarhuang/treeclimbR_article/tree/master/simulation_microbe/summary) under the folder `simulation_microbe/summary/`.
       
 ### Non-parametric synthetical microbial data ([see here](https://github.com/fionarhuang/correlationtree_analysis))
 
