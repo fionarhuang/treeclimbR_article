@@ -15,6 +15,8 @@ RoutP: /home/fiona/phd/treeclimbR_article/simulation_microbe/Rout
 ## R setup
 ##---------------------------------------------------------------------------------------------
 ## Specify your own R installation (then you have to set the path to your library in the .Renviron file)
+useConda: True
+condaR: /home/fiona/miniconda3/envs/lefse/bin/R
 Rbin: /usr/local/R/R-3.6.1/bin/R
 ##---------------------------------------------------------------------------------------------
 
