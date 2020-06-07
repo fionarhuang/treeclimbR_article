@@ -50,9 +50,9 @@ Heatmap shows counts of entities (rows) in samples (columns) split by groups. Br
  - run the pipeline using `snakemake --use-conda --cores n` (n is the number of cores to be used)
  - Once the pipeline is run successfully, all figures could be generated using [all_figure.R](https://github.com/fionarhuang/treeclimbR_article/tree/master/simulation_microbe/summary) under the folder `simulation_microbe/summary/`.
       
-### Non-parametric synthetical microbial data ([see here](https://github.com/fionarhuang/correlationtree_analysis))
+### 2. Non-parametric synthetical microbial data ([see here](https://github.com/fionarhuang/correlationtree_analysis))
 
-### AML-sim and BCR-XL-sim (in **folder** [cytof](https://github.com/fionarhuang/treeclimbR_article/tree/master/cytof))
+### 3. AML-sim and BCR-XL-sim (in **folder** [cytof](https://github.com/fionarhuang/treeclimbR_article/tree/master/cytof))
 
  The semi-simulated data are firstly downloaded in the `cytof/data/` folder from `HDCytoData` using [Download.R](https://github.com/fionarhuang/treeclimbR_article/tree/master/cytof/data) 
    - AML-sim (DA folder)
@@ -71,9 +71,9 @@ Heatmap shows counts of entities (rows) in samples (columns) split by groups. Br
    - BCR-XL-sim (DS folder). Similar to run AML-sim pipeline.
  [Figues 3]() is generated using [all_figure.R](https://github.com/fionarhuang/treeclimbR_article/blob/master/cytof/summary/all_figure.R)
    
-### Infant gut microbial data (in **folder** [microbe](https://htmlpreview.github.io/?https://github.com/fionarhuang/treeclimbR_article/blob/master/microbe/docs/index.html))
+### 4. Infant gut microbial data (in **folder** [microbe](https://htmlpreview.github.io/?https://github.com/fionarhuang/treeclimbR_article/blob/master/microbe/docs/index.html))
 
-### Mouse miRNA data (in **folder** [miRNA](https://htmlpreview.github.io/?https://github.com/fionarhuang/treeclimbR_article/blob/master/miRNA/docs/index.html))
+### 5. Mouse miRNA data (in **folder** [miRNA](https://htmlpreview.github.io/?https://github.com/fionarhuang/treeclimbR_article/blob/master/miRNA/docs/index.html))
 
-### Mouse cortex scRNAseq data(in **folder** [LPS](https://htmlpreview.github.io/?https://raw.githubusercontent.com/fionarhuang/treeclimbR_article/master/LPS/docs/index.html))
+### 6. Mouse cortex scRNAseq data(in **folder** [LPS](https://htmlpreview.github.io/?https://raw.githubusercontent.com/fionarhuang/treeclimbR_article/master/LPS/docs/index.html))
 
