@@ -25,6 +25,7 @@ for (i in seq_along(argsList)) {
 print(inPath)
 print(txtFile)
 print(outPath)
+print(outTree)
 
 dir.create(outPath)
 
@@ -48,8 +49,7 @@ for (i in seq_along(dataFile)) {
     # hierarchy
     tree <- rowTree(tse)
     if (i == 1) {
-        save(tree, file = file.path(gsub(pattern = "/txt", "", outPath),
-                                    "tree.RData"))
+        save(tree, file = outTree)
     }
     path <- matTree(tree = tree)
     pathL <- lapply(seq_len(nrow(path)), FUN = function(x) {
