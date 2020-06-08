@@ -183,7 +183,7 @@ $nickname
 4 out of  5 has been done 
 5 out of  5 has been done 
     user   system  elapsed 
-2355.956   21.204  429.074 
+2696.340   38.804  634.279 
 > 
 > # two - part analysis
 > system.time({
@@ -203,7 +203,7 @@ $nickname
 4 out of  5 has been done 
 5 out of  5 has been done 
     user   system  elapsed 
-2670.448   30.372  617.693 
+2836.748   34.028  685.704 
 > 
 > # ------------------0.01 -------------------------------------------
 > system.time({
@@ -223,7 +223,7 @@ $nickname
 4 out of  5 has been done 
 5 out of  5 has been done 
     user   system  elapsed 
-2620.424   28.892  473.492 
+2607.600   26.380  477.223 
 > 
 > # two - part analysis
 > system.time({
@@ -243,7 +243,7 @@ $nickname
 4 out of  5 has been done 
 5 out of  5 has been done 
     user   system  elapsed 
-2889.800   38.392  710.658 
+2480.940   25.288  555.372 
 > 
 > # ------------------0.1 -------------------------------------------
 > system.time({
@@ -263,7 +263,7 @@ $nickname
 4 out of  5 has been done 
 5 out of  5 has been done 
     user   system  elapsed 
-2658.752   38.028  537.756 
+2543.980   24.716  439.511 
 > 
 > # two - part analysis
 > system.time({
@@ -283,7 +283,7 @@ $nickname
 4 out of  5 has been done 
 5 out of  5 has been done 
     user   system  elapsed 
-2633.924   35.852  640.635 
+2385.432   28.788  570.586 
 > 
 > 
 > 
@@ -340,4 +340,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
      user    system   elapsed 
-15843.736   193.868  3424.903 
+15566.508   179.440  3379.625 

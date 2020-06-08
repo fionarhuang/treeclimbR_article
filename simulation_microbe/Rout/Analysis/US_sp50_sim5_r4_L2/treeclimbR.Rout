@@ -183,7 +183,7 @@ get the best:  3  out of  5  simulations ...
 get the best:  4  out of  5  simulations ...
 get the best:  5  out of  5  simulations ...
    user  system elapsed 
-528.936   2.848 532.523 
+745.472  36.928 790.126 
 > 
 > save(out, cand, best, outsel_0.01, outsel_0.05, outsel_0.1, 
 +      file = outRDat)
@@ -277,4 +277,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
-541.748   3.652 546.156 
+764.788  38.724 811.520 

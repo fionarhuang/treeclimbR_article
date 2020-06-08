@@ -133,7 +133,7 @@ $nickname
 + })
 + })
    user  system elapsed 
- 18.696   0.116  18.832 
+ 24.104   0.340  24.572 
 > 
 > 
 > save(outMin, file = outRDat)
@@ -227,4 +227,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
- 32.880   0.988  33.909 
+ 42.188   1.628  44.158 

@@ -98,10 +98,10 @@ $nickname
 [1] "/home/fiona/phd/treeclimbR_article/simulation_microbe/output/RData/parameter/SS_sp50_sim5_r4_pct0.4_L2.RData"
 > load(inRDat)
 > 
-> data("saliva_v35")
-> lib <- apply(assays(saliva_v35)[[1]], 2, sum)
+> data("throat_v35")
+> lib <- apply(assays(throat_v35)[[1]], 2, sum)
 > ## ========== Select branches to swap ================
-> (sel1 <- selNode(obj = saliva_v35, minTip = numTip1[1], 
+> (sel1 <- selNode(obj = throat_v35, minTip = numTip1[1], 
 +                  maxTip = numTip1[2],
 +                  minPr = pr[1], maxPr = pr[2],  all = TRUE))
            nodeNum nodeLab nodeLab_alias proportion numTip
@@ -160,7 +160,7 @@ alias_1875    1875   0.000    alias_1875 0.02361402     15
 +     pr2 <- ratio*sel1[i, "proportion"] + c(-erp, erp)
 +     
 +     res <- try({
-+         sel2 <- selNode(obj = saliva_v35,
++         sel2 <- selNode(obj = throat_v35,
 +                         minTip = numTip2[1], maxTip = numTip2[2],
 +                         minPr = pr2[1], maxPr = pr2[2],
 +                         all = TRUE, skip = sel1[i, "nodeNum"])},
@@ -457,12 +457,12 @@ alias_1861    1861   0.244    alias_1861 0.07927481     38
 > 
 > 
 > ## ========== simulate data ================
-> if (scene %in% c("S1", "S2")) {
+> if (scene %in% c("BS", "US")) {
 +     pct <- NULL
 + }
 > 
 > set.seed(2020)
-> lse <- simData(obj = saliva_v35,
+> lse <- simData(obj = throat_v35,
 +                from.A = sp[1],
 +                from.B = sp[2],
 +                mu = lib,
@@ -471,7 +471,7 @@ alias_1861    1861   0.244    alias_1861 0.07927481     38
 +                scenario = scene,
 +                pct = pct)
 > 
-> allNode <- unique(sort(as.vector(rowTree(saliva_v35)$edge)))
+> allNode <- unique(sort(as.vector(rowTree(throat_v35)$edge)))
 > tse <- aggValue(x = lse, rowLevel = allNode, FUN = sum)
 > tse
 class: TreeSummarizedExperiment 
@@ -594,4 +594,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
- 56.524   1.560  58.181 
+ 57.928   1.812  59.813 

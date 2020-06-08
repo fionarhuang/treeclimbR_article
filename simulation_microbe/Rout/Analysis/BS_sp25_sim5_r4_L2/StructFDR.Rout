@@ -212,7 +212,7 @@ Estimating hyperparameter ...
 Structure-based adjustment ...
 Done!
    user  system elapsed 
-573.424   6.736 580.985 
+628.220   3.476 636.260 
 > 
 > 
 > save(loc.StructFDR_0.01, loc.StructFDR_0.05, loc.StructFDR_0.1, file = outRDat)
@@ -307,4 +307,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
-589.020   8.152 598.030 
+644.296   4.444 653.371 

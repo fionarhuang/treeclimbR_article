@@ -162,7 +162,7 @@ $nickname
 4 
 5 
    user  system elapsed 
-  6.524   0.224   6.758 
+  7.280   0.116   7.415 
 There were 15 warnings (use warnings() to see them)
 > 
 > save(loc.HFDR_0.05, loc.HFDR_0.01, loc.HFDR_0.1, file = outRDat)
@@ -258,4 +258,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
- 23.304   1.176  24.531 
+ 25.960   2.120  28.189 

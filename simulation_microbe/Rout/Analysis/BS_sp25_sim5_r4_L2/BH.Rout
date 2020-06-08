@@ -127,7 +127,7 @@ $nickname
 +     })
 + })
    user  system elapsed 
-  2.372   0.060   2.434 
+  3.112   0.076   3.205 
 > 
 > 
 > save(loc.bh_0.01, loc.bh_0.05, loc.bh_0.1, file = outRDat)
@@ -222,4 +222,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
- 16.800   0.904  17.736 
+ 19.060   1.088  20.229 

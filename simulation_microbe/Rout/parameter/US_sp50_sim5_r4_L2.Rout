@@ -98,4 +98,4 @@ $nickname
 > 
 > proc.time()
    user  system elapsed 
-  0.232   0.044   0.269 
+  0.240   0.048   0.279 

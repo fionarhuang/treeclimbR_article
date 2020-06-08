@@ -17,8 +17,6 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-During startup - Warning message:
-Setting LC_CTYPE failed, using "C" 
 > # === tool ========
 > .libPaths(c(Sys.getenv('R_LIBS_1'), 
 +             Sys.getenv('R_LIBS_2'),
@@ -182,8 +180,8 @@ $nickname
 3 out of  5 has been done 
 4 out of  5 has been done 
 5 out of  5 has been done 
-    user   system  elapsed 
-4034.528   49.864  800.768 
+   user  system elapsed 
+487.288   1.052 488.689 
 > 
 > # two - part analysis
 > system.time({
@@ -202,8 +200,8 @@ $nickname
 3 out of  5 has been done 
 4 out of  5 has been done 
 5 out of  5 has been done 
-    user   system  elapsed 
-4981.408   68.436 1201.118 
+   user  system elapsed 
+707.392   1.288 709.205 
 > 
 > # ------------------0.01 -------------------------------------------
 > system.time({
@@ -222,8 +220,8 @@ $nickname
 3 out of  5 has been done 
 4 out of  5 has been done 
 5 out of  5 has been done 
-    user   system  elapsed 
-5049.768   70.356 1000.824 
+   user  system elapsed 
+488.628   0.940 489.925 
 > 
 > # two - part analysis
 > system.time({
@@ -242,8 +240,8 @@ $nickname
 3 out of  5 has been done 
 4 out of  5 has been done 
 5 out of  5 has been done 
-    user   system  elapsed 
-3677.520   47.828 1033.158 
+   user  system elapsed 
+710.232   1.432 712.213 
 > 
 > # ------------------0.1 -------------------------------------------
 > system.time({
@@ -262,8 +260,8 @@ $nickname
 3 out of  5 has been done 
 4 out of  5 has been done 
 5 out of  5 has been done 
-    user   system  elapsed 
-1151.464    8.084  532.661 
+   user  system elapsed 
+487.136   1.064 488.550 
 > 
 > # two - part analysis
 > system.time({
@@ -283,7 +281,7 @@ $nickname
 4 out of  5 has been done 
 5 out of  5 has been done 
    user  system elapsed 
-872.628   2.688 725.766 
+713.436   1.212 715.208 
 > 
 > 
 > 
@@ -303,12 +301,12 @@ BLAS:   /usr/local/R/R-3.6.1/lib/libRblas.so
 LAPACK: /usr/local/R/R-3.6.1/lib/libRlapack.so
 
 locale:
- [1] LC_CTYPE=C                 LC_NUMERIC=C              
- [3] LC_TIME=en_CA.UTF-8        LC_COLLATE=en_CA.UTF-8    
- [5] LC_MONETARY=en_CA.UTF-8    LC_MESSAGES=en_CA.UTF-8   
- [7] LC_PAPER=en_CA.UTF-8       LC_NAME=C                 
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
-[11] LC_MEASUREMENT=en_CA.UTF-8 LC_IDENTIFICATION=C       
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
 
 attached base packages:
 [1] parallel  stats4    stats     graphics  grDevices utils     datasets 
@@ -339,5 +337,5 @@ loaded via a namespace (and not attached):
 [31] RCurl_1.95-4.12        broom_0.5.2            crayon_1.3.4          
 > 
 > proc.time()
-     user    system   elapsed 
-19781.212   248.692  5309.658 
+    user   system  elapsed 
+3606.852    7.836 3617.402 
