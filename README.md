@@ -3,7 +3,7 @@
 
 This repository provides toy examples to understand treeclimbR and codes to reproduce figures in treeclimbR article.
 
-### Installation
+## Installation
 
 * Data container: [TreeSummarizedExperiment](https://github.com/fionarhuang/TreeSummarizedExperiment)
 * Algorithm: [treeclimbR](https://github.com/fionarhuang/treeclimbR)
@@ -15,7 +15,7 @@ BiocManager::install("fionarhuang/treeclimbR")
 BiocManager::install("fionarhuang/TreeHeatmap")
 ```
 
-### Toy examples ([click here](https://fionarhuang.github.io/treeclimbR_toy_example/))
+## Toy examples ([click here](https://fionarhuang.github.io/treeclimbR_toy_example/))
 
 Below are results of one toy dataset. 
 
@@ -33,45 +33,43 @@ Heatmap shows counts of entities (rows) in samples (columns) split by groups. Br
 </p>
 
 
-### Reproduce figures in the manuscript of treeclimbR
-1. Parametric synthetical microbial data (in **folder** [simulation_microbe](https://github.com/fionarhuang/treeclimbR_article/tree/master/simulation_microbe))
-      - install snakemake
-      - Set directory to `simulation_microbe/`
-      - Update paths to input and output files specified in the configuration file ([config.yaml](https://github.com/fionarhuang/treeclimbR_article/blob/master/simulation_microbe/config.yaml))
-      - Specify paths to your R libraries in the [.Renviron](https://github.com/fionarhuang/treeclimbR_article/blob/master/simulation_microbe/.Renviron). If there is less or more than 3 library paths, then files in `code/` folder with code below should be updated correspondingly.
-      ```
-      .libPaths(c(
-            Sys.getenv('R_LIBS_1'), 
-            Sys.getenv('R_LIBS_2'),
-            Sys.getenv('R_LIBS_3')))
-      ```            
-      - dry run the pipeline using `snakemake -npr` 
-      - run the pipeline using `snakemake --cores n` (n is the number of cores to be used)
-      - After the pipeline is done with `snakemake`, all figures could be generated using [all_figure.R](https://github.com/fionarhuang/treeclimbR_article/tree/master/simulation_microbe/summary) under the folder `simulation_microbe/summary/`.
+## Reproduce figures in the manuscript of treeclimbR
+
+### 1. Parametric synthetical microbial data (in **folder** [simulation_microbe](https://github.com/fionarhuang/treeclimbR_article/tree/master/simulation_microbe))
+
+ - install [snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) & [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/)
+ - Clone this repository and set directory to `simulation_microbe/`
+ - Modify the configuration file ([config.yaml](https://github.com/fionarhuang/treeclimbR_article/blob/master/simulation_microbe/config.yaml)) to specify paths of input and output files.
+   - `Rbin`: the path to the system R
+   - `condaR`: the path to conda R 
+     - run `create an environment: conda env create -f envs/lefse.yml`
+     - run `conda activate lefse`
+     - run `which R` to get path to conda R    
+ - Specify the R library paths in the [.Renviron](https://github.com/fionarhuang/treeclimbR_article/blob/master/simulation_microbe/.Renviron). If there is less than 3 library paths, then set `R_LIBS_3 = ""` to remove the third library path. 
+ - dry run the pipeline using `snakemake --use-conda -npr` 
+ - run the pipeline using `snakemake --use-conda --cores n` (n is the number of cores to be used)
+ - Once the pipeline is run successfully, all figures could be generated using [all_figure.R](https://github.com/fionarhuang/treeclimbR_article/tree/master/simulation_microbe/summary) under the folder `simulation_microbe/summary/`.
       
-2. Non-parametric synthetical microbial data ([see here](https://github.com/fionarhuang/correlationtree_analysis))
+### 2. Non-parametric synthetical microbial data ([see here](https://github.com/fionarhuang/correlationtree_analysis))
 
-3. AML-sim and BCR-XL-sim (in **folder** [cytof](https://github.com/fionarhuang/treeclimbR_article/tree/master/cytof))
+### 3. AML-sim and BCR-XL-sim (in **folder** [cytof](https://github.com/fionarhuang/treeclimbR_article/tree/master/cytof))
 
- The semi-simulated data are firstly downloaded in the `cytof/data/` folder from `HDCytoData` using [Download.R](https://github.com/fionarhuang/treeclimbR_article/tree/master/cytof/data) 
-   - AML-sim (DA folder)
-      - install snakemake
-      - Set directory to `DA/`
-      - Update paths to input and output files specified in the configuration file ([config.yaml](https://github.com/fionarhuang/treeclimbR_article/blob/master/cytof/DA/config.yaml))
-      - Specify paths to your R libraries in the [.Renviron](https://github.com/fionarhuang/treeclimbR_article/blob/master/cytof/DA/.Renviron). If there is less or more than 3 library paths, then files in `analysis/` folder that have the code below also need to be updated correspondingly.
-      ```
-      .libPaths(c(
-            Sys.getenv('R_LIBS_1'), 
-            Sys.getenv('R_LIBS_2'),
-            Sys.getenv('R_LIBS_3')))
-      ```            
-      - dry run the pipeline using `snakemake -npr` 
-      - run the pipeline using `snakemake --cores n` (n is the number of cores to be used)
-   - BCR-XL-sim (DS folder). Similar to run AML-sim pipeline.
+ The semi-simulated data should be downloaded in the `cytof/data/` folder from `HDCytoData` using [Download.R](https://github.com/fionarhuang/treeclimbR_article/tree/master/cytof/data) before running the pipeline
+ - AML-sim (DA folder)
+   - install [snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) 
+   - Set directory to `DA/`
+   - Specify paths to input and output files in the configuration file ([config.yaml](https://github.com/fionarhuang/treeclimbR_article/blob/master/cytof/DA/config.yaml))
+   - Specify R library paths in the [.Renviron](https://github.com/fionarhuang/treeclimbR_article/blob/master/cytof/DA/.Renviron). If there is less than 3 library paths, then set `R_LIBS_3 = ""` to remove the third library path. 
+   - dry run the pipeline using `snakemake -npr` 
+   - run the pipeline using `snakemake --cores n` (n is the number of cores to be used)
+   
+ - BCR-XL-sim (DS folder). Similarly to run AML-sim
+ 
  [Figues 3]() is generated using [all_figure.R](https://github.com/fionarhuang/treeclimbR_article/blob/master/cytof/summary/all_figure.R)
    
-4. Infant gut microbial data (in **folder** [microbe](https://htmlpreview.github.io/?https://github.com/fionarhuang/treeclimbR_article/blob/master/microbe/docs/index.html))
+### 4. Infant gut microbial data (in **folder** [microbe](https://htmlpreview.github.io/?https://github.com/fionarhuang/treeclimbR_article/blob/master/microbe/docs/index.html))
 
-5. Mouse miRNA data (in **folder** [miRNA](https://htmlpreview.github.io/?https://github.com/fionarhuang/treeclimbR_article/blob/master/miRNA/docs/index.html))
-6. Mouse cortex scRNAseq data(in **folder** [LPS](https://htmlpreview.github.io/?https://raw.githubusercontent.com/fionarhuang/treeclimbR_article/master/LPS/docs/index.html))
+### 5. Mouse miRNA data (in **folder** [miRNA](https://htmlpreview.github.io/?https://github.com/fionarhuang/treeclimbR_article/blob/master/miRNA/docs/index.html))
+
+### 6. Mouse cortex scRNAseq data(in **folder** [LPS](https://htmlpreview.github.io/?https://raw.githubusercontent.com/fionarhuang/treeclimbR_article/master/LPS/docs/index.html))
 

@@ -1,22 +1,21 @@
 ## Input files
 ##---------------------------------------------------------------------------------------------
 ## Path to code
-codeP: /home/fiona/phd/treeclimbR_article/simulation_microbe/code
+codeP: code/
 
 ## Output files
 ##---------------------------------------------------------------------------------------------
 ## Path to output (data, figures)
-outPD: /home/fiona/phd/treeclimbR_article/simulation_microbe/output/RData
-outPF: /home/fiona/phd/treeclimbR_article/simulation_microbe/output/Figure
+outPD: output/RData/
+outPF: output/Figure/
 
 ## Path to log files
-RoutP: /home/fiona/phd/treeclimbR_article/simulation_microbe/Rout
+RoutP: Rout/
 
 ## R setup
 ##---------------------------------------------------------------------------------------------
-## Specify your own R installation (then you have to set the path to your library in the .Renviron file)
-useConda: True
-condaR: /home/fiona/miniconda3/envs/lefse/bin/R
-Rbin: /usr/local/R/R-3.6.1/bin/R
+## Specify system R installation (then you have to set the path to your library in the .Renviron file)
+Rbin: /usr/local/bin/R
 ##---------------------------------------------------------------------------------------------
-
+## Specify conda R (use in the rule lefseResult) 
+condaR: /Users/ruizhu/ls/envs/lefse/bin/R
