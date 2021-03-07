@@ -1,0 +1,106 @@
+
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+During startup - Warning message:
+Setting LC_CTYPE failed, using "C" 
+> # === tool ========
+> R.Version()
+$platform
+[1] "x86_64-pc-linux-gnu"
+
+$arch
+[1] "x86_64"
+
+$os
+[1] "linux-gnu"
+
+$system
+[1] "x86_64, linux-gnu"
+
+$status
+[1] ""
+
+$major
+[1] "3"
+
+$minor
+[1] "6.1"
+
+$year
+[1] "2019"
+
+$month
+[1] "07"
+
+$day
+[1] "05"
+
+$`svn rev`
+[1] "76782"
+
+$language
+[1] "R"
+
+$version.string
+[1] "R version 3.6.1 (2019-07-05)"
+
+$nickname
+[1] "Action of the Toes"
+
+> 
+> # =================== arguments from batch R=============
+> argsList <- (commandArgs(trailingOnly = TRUE))
+> argsList
+[1] "outRDat='output/RData/parameter/SS_100_sp50.RData'"
+[2] "scriptP='code/parameter/SS_100_sp50.R'"            
+> for (i in seq_along(argsList)) {
++     if(length(argsList[[i]])>1){
++         assign(names(argsList)[i],argsList[[i]])
++     }else{eval(parse(text = argsList[[i]]))}
++ }
+> 
+> # ======================== parameters ===================
+> ls.before <- ls()
+> 
+> 
+> nSam <- c(50, 50)
+> nSIM <- 100
+> limFDR <- 0.05
+> ratio <- 4
+> scene <- "SS"
+> pr <- c(0.01, 0.05)
+> numTip1 <- c(11, 15)
+> erp <- 0.01
+> numTip2 <- c(0, 40)
+> 
+> # 40% leaves in branch A has differential abundance
+> pct <- 0.4
+> 
+> ls.after <- ls()
+> ls.save <- setdiff(ls.after, c(ls.before, "ls.before"))
+> 
+> # if the file doesn't exist or was modified earlier than the R script
+> 
+> if((!file.exists(outRDat)) | (file.mtime(outRDat) < file.mtime(scriptP))){
++     save(list = ls.save, file = outRDat)
++ }
+> 
+> proc.time()
+   user  system elapsed 
+  0.228   0.064   0.283 

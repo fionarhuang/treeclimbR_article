@@ -1,0 +1,451 @@
+
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+During startup - Warning message:
+Setting LC_CTYPE failed, using "C" 
+> # === tool ========
+> .libPaths(c(Sys.getenv('R_LIBS_1'), 
++             Sys.getenv('R_LIBS_2'),
++             Sys.getenv('R_LIBS_3')))
+> .libPaths()
+[1] "/home/Shared/Rlib/release-3.10-lib" "/usr/local/R/R-3.6.1/library"      
+[3] "/home/fiona/tmp/R310_lib"          
+> 
+> suppressPackageStartupMessages({
++     library(TreeSummarizedExperiment)
++     library(treeclimbR)
++     library(dplyr)
++     library(structSSI)
++     library(ape)
++     library(igraph)
++ })
+Warning message:
+In .getGeneric(f, where, package) :
+  strings not representable in native encoding will be translated to UTF-8
+> 
+> R.Version()
+$platform
+[1] "x86_64-pc-linux-gnu"
+
+$arch
+[1] "x86_64"
+
+$os
+[1] "linux-gnu"
+
+$system
+[1] "x86_64, linux-gnu"
+
+$status
+[1] ""
+
+$major
+[1] "3"
+
+$minor
+[1] "6.1"
+
+$year
+[1] "2019"
+
+$month
+[1] "07"
+
+$day
+[1] "05"
+
+$`svn rev`
+[1] "76782"
+
+$language
+[1] "R"
+
+$version.string
+[1] "R version 3.6.1 (2019-07-05)"
+
+$nickname
+[1] "Action of the Toes"
+
+> # ==== arguments from batch R=====================
+> argsList <- (commandArgs(trailingOnly = TRUE))
+> argsList
+[1] "inRDat='output/RData/DataPrep/US_100_sp25.RData'"      
+[2] "outRDat='output/RData/Analysis/US_100_sp25/HFDR.RData'"
+> for (i in seq_along(argsList)) {
++     if(length(argsList[[i]])>1){
++         assign(names(argsList)[i],argsList[[i]])
++     }else{eval(parse(text = argsList[[i]]))}
++ }
+> 
+> ## === load data from data preparation step ======
+> load(inRDat)
+> 
+> ## === differential abundance test using edgeR ===
+> (nSIM <- length(assays(tse)))
+[1] 100
+> rejLimit <- 0.05
+> 
+> treeR <- rowTree(tse)
+> ed <- treeR$edge
+> system.time({
++     
++     # data analysis: get p value
++     out <- lapply(seq_len(nSIM), FUN = function(x) {
++         cat(x, "out of ", nSIM, "has been done", "\n")
++         res <- runDA(TSE = tse, feature_on_row = TRUE, 
++                      assay = x, option = "glm", 
++                      filter_min_count = 0,  # turn off filtering; otherwise HFDR gets error due to NA value
++                      normalize = TRUE, group_column = "group",
++                      design_terms = "group")
++         out <- nodeResult(res, n = Inf)
++         return(out)
++     })
++     
++     loc.HFDR_0.05 <- loc.HFDR_0.01 <- loc.HFDR_0.1 <- vector("list", nSIM)
++     
++     # edges
++     chl.tree <- apply(ed, 2, FUN = function(x) {
++         transNode(tree = treeR, node = x, use.alias = TRUE)})
++     
++     for (i in seq_len(nSIM)) {
++         cat(i, "\n")
++         chl.pval <- out[[i]]$PValue
++         names(chl.pval) <- transNode(tree = treeR, node = out[[i]]$node, 
++                                 use.alias = TRUE)
++         chl.hfdr_0.05 <- hFDR.adjust(chl.pval, chl.tree, alpha = 0.05)
++         chl.hfdr_0.01 <- hFDR.adjust(chl.pval, chl.tree, alpha = 0.01)
++         chl.hfdr_0.1 <- hFDR.adjust(chl.pval, chl.tree, alpha = 0.1)
++         
++         find_0.05 <- rownames(chl.hfdr_0.05@p.vals)[chl.hfdr_0.05@p.vals$adjp <= 0.05]
++         find_0.05 <- find_0.05[!is.na(find_0.05)]
++         find_0.05 <- transNode(tree = treeR, node = find_0.05)
++         loc.HFDR_0.05[[i]] <- find_0.05[isLeaf(tree = treeR, node = find_0.05)]
++         
++         find_0.01 <- rownames(chl.hfdr_0.01@p.vals)[chl.hfdr_0.01@p.vals$adjp <= 0.01]
++         find_0.01 <- find_0.01[!is.na(find_0.01)]
++         find_0.01 <- transNode(tree = treeR, node = find_0.01)
++         loc.HFDR_0.01[[i]] <- find_0.01[isLeaf(tree = treeR, node = find_0.01)]
++         
++         find_0.1 <- rownames(chl.hfdr_0.1@p.vals)[chl.hfdr_0.1@p.vals$adjp <= 0.1]
++         find_0.1 <- find_0.1[!is.na(find_0.1)]
++         find_0.1 <- transNode(tree = treeR, node = find_0.1)
++         loc.HFDR_0.1[[i]] <- find_0.1[isLeaf(tree = treeR, node = find_0.1)]
++         
++         
++     }
++     
++ })
+1 out of  100 has been done 
+2 out of  100 has been done 
+3 out of  100 has been done 
+4 out of  100 has been done 
+5 out of  100 has been done 
+6 out of  100 has been done 
+7 out of  100 has been done 
+8 out of  100 has been done 
+9 out of  100 has been done 
+10 out of  100 has been done 
+11 out of  100 has been done 
+12 out of  100 has been done 
+13 out of  100 has been done 
+14 out of  100 has been done 
+15 out of  100 has been done 
+16 out of  100 has been done 
+17 out of  100 has been done 
+18 out of  100 has been done 
+19 out of  100 has been done 
+20 out of  100 has been done 
+21 out of  100 has been done 
+22 out of  100 has been done 
+23 out of  100 has been done 
+24 out of  100 has been done 
+25 out of  100 has been done 
+26 out of  100 has been done 
+27 out of  100 has been done 
+28 out of  100 has been done 
+29 out of  100 has been done 
+30 out of  100 has been done 
+31 out of  100 has been done 
+32 out of  100 has been done 
+33 out of  100 has been done 
+34 out of  100 has been done 
+35 out of  100 has been done 
+36 out of  100 has been done 
+37 out of  100 has been done 
+38 out of  100 has been done 
+39 out of  100 has been done 
+40 out of  100 has been done 
+41 out of  100 has been done 
+42 out of  100 has been done 
+43 out of  100 has been done 
+44 out of  100 has been done 
+45 out of  100 has been done 
+46 out of  100 has been done 
+47 out of  100 has been done 
+48 out of  100 has been done 
+49 out of  100 has been done 
+50 out of  100 has been done 
+51 out of  100 has been done 
+52 out of  100 has been done 
+53 out of  100 has been done 
+54 out of  100 has been done 
+55 out of  100 has been done 
+56 out of  100 has been done 
+57 out of  100 has been done 
+58 out of  100 has been done 
+59 out of  100 has been done 
+60 out of  100 has been done 
+61 out of  100 has been done 
+62 out of  100 has been done 
+63 out of  100 has been done 
+64 out of  100 has been done 
+65 out of  100 has been done 
+66 out of  100 has been done 
+67 out of  100 has been done 
+68 out of  100 has been done 
+69 out of  100 has been done 
+70 out of  100 has been done 
+71 out of  100 has been done 
+72 out of  100 has been done 
+73 out of  100 has been done 
+74 out of  100 has been done 
+75 out of  100 has been done 
+76 out of  100 has been done 
+77 out of  100 has been done 
+78 out of  100 has been done 
+79 out of  100 has been done 
+80 out of  100 has been done 
+81 out of  100 has been done 
+82 out of  100 has been done 
+83 out of  100 has been done 
+84 out of  100 has been done 
+85 out of  100 has been done 
+86 out of  100 has been done 
+87 out of  100 has been done 
+88 out of  100 has been done 
+89 out of  100 has been done 
+90 out of  100 has been done 
+91 out of  100 has been done 
+92 out of  100 has been done 
+93 out of  100 has been done 
+94 out of  100 has been done 
+95 out of  100 has been done 
+96 out of  100 has been done 
+97 out of  100 has been done 
+98 out of  100 has been done 
+99 out of  100 has been done 
+100 out of  100 has been done 
+1 
+2 
+3 
+4 
+5 
+6 
+7 
+8 
+9 
+10 
+11 
+12 
+13 
+14 
+15 
+16 
+17 
+18 
+19 
+20 
+21 
+22 
+23 
+24 
+25 
+26 
+27 
+28 
+29 
+30 
+31 
+32 
+33 
+34 
+35 
+36 
+37 
+38 
+39 
+40 
+41 
+42 
+43 
+44 
+45 
+46 
+47 
+48 
+49 
+50 
+51 
+52 
+53 
+54 
+55 
+56 
+57 
+58 
+59 
+60 
+61 
+62 
+63 
+64 
+65 
+66 
+67 
+68 
+69 
+70 
+71 
+72 
+73 
+74 
+75 
+76 
+77 
+78 
+79 
+80 
+81 
+82 
+83 
+84 
+85 
+86 
+87 
+88 
+89 
+90 
+91 
+92 
+93 
+94 
+95 
+96 
+97 
+98 
+99 
+100 
+   user  system elapsed 
+337.204   3.660 341.569 
+There were 50 or more warnings (use warnings() to see the first 50)
+> 
+> save(loc.HFDR_0.05, loc.HFDR_0.01, loc.HFDR_0.1, file = outRDat)
+> 
+> 
+> sessionInfo()
+R version 3.6.1 (2019-07-05)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: Ubuntu 16.04.6 LTS
+
+Matrix products: default
+BLAS:   /usr/local/R/R-3.6.1/lib/libRblas.so
+LAPACK: /usr/local/R/R-3.6.1/lib/libRlapack.so
+
+locale:
+ [1] LC_CTYPE=C                 LC_NUMERIC=C              
+ [3] LC_TIME=en_CA.UTF-8        LC_COLLATE=en_CA.UTF-8    
+ [5] LC_MONETARY=en_CA.UTF-8    LC_MESSAGES=en_CA.UTF-8   
+ [7] LC_PAPER=en_CA.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_CA.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+[1] parallel  stats4    stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+ [1] igraph_1.2.4.1                 ape_5.3                       
+ [3] structSSI_1.1.1                dplyr_0.8.3                   
+ [5] treeclimbR_0.1.1               TreeSummarizedExperiment_1.3.1
+ [7] SingleCellExperiment_1.8.0     SummarizedExperiment_1.16.0   
+ [9] DelayedArray_0.12.0            BiocParallel_1.20.0           
+[11] matrixStats_0.55.0             Biobase_2.46.0                
+[13] GenomicRanges_1.38.0           GenomeInfoDb_1.22.0           
+[15] IRanges_2.20.0                 S4Vectors_0.24.0              
+[17] BiocGenerics_0.32.0           
+
+loaded via a namespace (and not attached):
+  [1] TH.data_1.0-10              minqa_1.2.4                
+  [3] colorspace_1.4-1            rjson_0.2.20               
+  [5] dirmult_0.1.3-4             mclust_5.4.5               
+  [7] circlize_0.4.8              corpcor_1.6.9              
+  [9] XVector_0.26.0              GlobalOptions_0.1.1        
+ [11] base64enc_0.1-3             clue_0.3-57                
+ [13] hexbin_1.27.3               IDPmisc_1.1.19             
+ [15] CytoML_1.12.0               mvtnorm_1.0-11             
+ [17] codetools_0.2-16            splines_3.6.1              
+ [19] R.methodsS3_1.7.1           mnormt_1.5-5               
+ [21] robustbase_0.93-5           zeallot_0.1.0              
+ [23] jsonlite_1.6                nloptr_1.2.1               
+ [25] cluster_2.1.0               png_0.1-7                  
+ [27] R.oo_1.23.0                 graph_1.64.0               
+ [29] rrcov_1.4-7                 compiler_3.6.1             
+ [31] backports_1.1.5             assertthat_0.2.1           
+ [33] Matrix_1.2-17               lazyeval_0.2.2             
+ [35] limma_3.42.0                tools_3.6.1                
+ [37] ncdfFlow_2.32.0             gtable_0.3.0               
+ [39] glue_1.3.1                  GenomeInfoDbData_1.2.2     
+ [41] flowWorkspace_3.34.0        reshape2_1.4.3             
+ [43] ggcyto_1.14.0               Rcpp_1.0.2                 
+ [45] vctrs_0.2.0                 multtest_2.42.0            
+ [47] nlme_3.1-140                stringr_1.4.0              
+ [49] lme4_1.1-21                 lifecycle_0.1.0            
+ [51] gtools_3.8.1                XML_3.98-1.20              
+ [53] edgeR_3.28.0                DEoptimR_1.0-8             
+ [55] zlibbioc_1.32.0             MASS_7.3-51.4              
+ [57] zoo_1.8-6                   scales_1.0.0               
+ [59] RBGL_1.62.1                 sandwich_2.5-1             
+ [61] RColorBrewer_1.1-2          ComplexHeatmap_2.2.0       
+ [63] yaml_2.2.0                  gridExtra_2.3              
+ [65] ggplot2_3.2.1               latticeExtra_0.6-28        
+ [67] stringi_1.4.3               pcaPP_1.9-73               
+ [69] flowClust_3.24.0            flowCore_1.52.0            
+ [71] boot_1.3-22                 shape_1.4.4                
+ [73] flowViz_1.50.0              rlang_0.4.1                
+ [75] pkgconfig_2.0.3             bitops_1.0-6               
+ [77] fda_2.4.8                   lattice_0.20-38            
+ [79] purrr_0.3.3                 ks_1.11.6                  
+ [81] tidyselect_0.2.5            plyr_1.8.4                 
+ [83] magrittr_1.5                R6_2.4.0                   
+ [85] multcomp_1.4-10             pillar_1.4.2               
+ [87] survival_2.44-1.1           RCurl_1.95-4.12            
+ [89] FlowSOM_1.18.0              tibble_2.1.3               
+ [91] tsne_0.1-3                  crayon_1.3.4               
+ [93] KernSmooth_2.23-15          ellipse_0.4.1              
+ [95] GetoptLong_0.1.7            locfit_1.5-9.1             
+ [97] grid_3.6.1                  diffcyt_1.6.0              
+ [99] data.table_1.12.6           Rgraphviz_2.30.0           
+[101] ConsensusClusterPlus_1.50.0 digest_0.6.22              
+[103] tidyr_1.0.0                 R.utils_2.9.0              
+[105] flowStats_3.44.0            RcppParallel_4.4.4         
+[107] munsell_0.5.0               openCyto_1.24.0            
+> 
+> proc.time()
+   user  system elapsed 
+359.704   5.804 366.304 

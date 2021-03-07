@@ -1,0 +1,110 @@
+configfile: "config.yaml"
+
+textFiles,  =  glob_wildcards(config["codeP"]+"parameter/{par}.R")
+method = glob_wildcards(config["codeP"]+"Analysis/{file}.R").file
+sim = [1,2,3,4,5]
+
+## Define the R binary
+Rbin = config["Rbin"]
+condaR = config["condaR"]
+## ------------------------------------------------------------------------------------ ##
+## Target definitions
+## ------------------------------------------------------------------------------------ ##
+## Run all analyses
+rule all:
+	input:
+		expand(config["outPD"]+"DataPrep/{parFile}.RData", parFile=textFiles),
+		expand(config["outPD"]+"Analysis/{parFile}/{analyFile}.RData", parFile=textFiles,analyFile=method),
+ 		expand(config["outPD"]+"lefse/{parFile}/make_txt.txt", parFile=textFiles),
+		expand(config["outPD"]+"lefse/{parFile}/run_lefse.txt", parFile=textFiles),
+		config["outPD"]+"lefse/out_lefse.RData"
+
+
+## ------------------------------------------------------------------------------------ ##
+## Data preparation
+## ------------------------------------------------------------------------------------ ##
+rule getPr:
+	input:
+	    script = config["codeP"]+"parameter/{par}.R"
+	output:
+		config["outPD"]+"parameter/{par}.RData"
+	log:
+		config["RoutP"]+"parameter/{par}.Rout"
+	shell:
+		'''{Rbin} CMD BATCH --no-restore --no-save "--args outRDat='{output}' scriptP='{input.script}'" {input.script} {log}'''
+
+
+rule dataPrep:
+	input:
+	    parSet = config["outPD"]+"parameter/{par}.RData",
+	    script = config["codeP"]+"Preparation/DataPrep.R"
+	output:
+		config["outPD"]+"DataPrep/{par}.RData"
+	log:
+		config["RoutP"]+"DataPrep/{par}.Rout"
+	shell:
+		'''{Rbin} CMD BATCH --no-restore --no-save "--args inRDat='{input.parSet}' scriptP='{input.script}' parSet='{input.parSet}' outRDat='{output}'" {input.script} {log}'''
+
+## ------------------------------------------------------------------------------------ ##
+## Data analysis
+## ------------------------------------------------------------------------------------ ##
+rule analyStep:
+	input:
+	    script = config["codeP"]+"Analysis/{analyFile}.R",
+		data = config["outPD"]+"DataPrep/{par}.RData"
+	output:
+		config["outPD"]+"Analysis/{par}/{analyFile}.RData"
+	log:
+		config["RoutP"]+"Analysis/{par}/{analyFile}.Rout"
+	shell:
+		'''{Rbin} CMD BATCH --no-restore --no-save "--args inRDat='{input.data}' outRDat='{output}'" {input.script} {log}'''
+
+## ------------------------------------------------------------------------------------ ##
+## run LEfSe
+## ------------------------------------------------------------------------------------ ##
+rule outTXT:
+    input:
+        data = config["outPD"]+"DataPrep/{par}.RData",
+        script = config["codeP"]+"lefse/make_txt.R"
+    output:
+        txt = config["outPD"]+"lefse/{par}/make_txt.txt",
+        outTree = config["outPD"]+"lefse/{par}/tree.RData"
+    params:
+        inPath = config["outPD"]+"DataPrep",
+        txtPath = config["outPD"]+"lefse/{par}/txt"
+    log:
+        config["RoutP"]+"Analysis/{par}/make_txt.Rout"
+    shell:
+        '''{Rbin} CMD BATCH --no-restore --no-save "--args txtFile='{output.txt}' dataFile='{input.data}' txtPath='{params.txtPath}' outTree='{output.outTree}'" {input.script} {log}'''
+
+rule lefse:
+    input:
+        data = config["outPD"]+"lefse/{par}/make_txt.txt",
+        script = config["codeP"]+"lefse/run_lefse.R"
+    output:
+        config["outPD"]+"lefse/{par}/run_lefse.txt"
+    params:
+        txtPath = config["outPD"]+"lefse/{par}/txt",
+        inPath = config["outPD"]+"lefse/{par}/in",
+        resPath = config["outPD"]+"lefse/res"
+    #	conda:
+    #	    "envs/lefse.yml"
+    log:
+        config["RoutP"]+"Analysis/{par}/run_lefse.Rout"
+    shell:
+        '''{condaR} CMD BATCH --no-restore --no-save "--args outFile='{output}' txtPath='{params.txtPath}' inPath='{params.inPath}' resPath='{params.resPath}'" {input.script} {log}'''
+
+rule lefseResult:
+    input:
+        data = expand(config["outPD"]+"lefse/{par}/tree.RData", par=textFiles),
+        txt = expand(config["outPD"]+"lefse/{par}/run_lefse.txt", par=textFiles),
+        script = config["codeP"]+"lefse/identify_node.R"
+    output:
+        config["outPD"]+"lefse/out_lefse.RData"
+    params:
+        resPath = config["outPD"]+"lefse/res",
+        data = expand(config["outPD"]+"lefse/{par}/tree.RData", par=textFiles)[0]
+    log:
+        config["RoutP"]+"lefse/identify_node.Rout"
+    shell:
+        '''{Rbin} CMD BATCH --no-restore --no-save "--args resPath='{params.resPath}' outDat='{output}' inDat='{params.data}'" {input.script} {log}'''
