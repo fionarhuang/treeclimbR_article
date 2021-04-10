@@ -1,7 +1,7 @@
 
 # treeclimbR_article
 
-This repository provides toy examples to understand treeclimbR and codes to reproduce figures in treeclimbR article.
+This repository provides toy examples to understand treeclimbR and codes to reproduce figures in treeclimbR article. The used R version was 3.6.1 (2019-07-05)
 
 ## Installation
 
@@ -10,9 +10,12 @@ This repository provides toy examples to understand treeclimbR and codes to repr
 * Data visualization: [TreeHeatmap](https://github.com/fionarhuang/TreeHeatmap). 
 
 ```
-BiocManager::install("fionarhuang/TreeSummarizedExperiment")
-BiocManager::install("fionarhuang/treeclimbR")
-BiocManager::install("fionarhuang/TreeHeatmap")
+
+# TreeSummarizedExperiment: version (1.3.1)
+remotes::install_github(“fionarhuang/TreeSummarizedExperiment@dfa2097c61f900c3b2989a4f045f864b992fc8c5")
+# treeclimbR: version (0.1.1)
+remotes::install_github("fionarhuang/treeclimbR@treeclimbR_article")
+BiocManager::install("fionarhuang/TreeHeatmap_old")
 ```
 
 ## Toy examples ([click here](https://fionarhuang.github.io/treeclimbR_toy_example/))
