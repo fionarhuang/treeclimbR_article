@@ -1,0 +1,303 @@
+
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+During startup - Warning message:
+Setting LC_CTYPE failed, using "C" 
+> # === tool ========
+> .libPaths(c(Sys.getenv('R_LIBS_1'), 
++             Sys.getenv('R_LIBS_2'),
++             Sys.getenv('R_LIBS_3')))
+> .libPaths()
+[1] "/home/Shared/Rlib/release-3.10-lib" "/usr/local/R/R-3.6.1/library"      
+[3] "/home/fiona/tmp/R310_lib"          
+> 
+> suppressPackageStartupMessages({
++     library(ape)
++     library(dplyr)
++     library(TreeSummarizedExperiment)
++     library(stringr)
++ })
+> 
+> R.Version()
+$platform
+[1] "x86_64-pc-linux-gnu"
+
+$arch
+[1] "x86_64"
+
+$os
+[1] "linux-gnu"
+
+$system
+[1] "x86_64, linux-gnu"
+
+$status
+[1] ""
+
+$major
+[1] "3"
+
+$minor
+[1] "6.1"
+
+$year
+[1] "2019"
+
+$month
+[1] "07"
+
+$day
+[1] "05"
+
+$`svn rev`
+[1] "76782"
+
+$language
+[1] "R"
+
+$version.string
+[1] "R version 3.6.1 (2019-07-05)"
+
+$nickname
+[1] "Action of the Toes"
+
+> # ==== arguments from batch R=====================
+> argsList <- (commandArgs(trailingOnly = TRUE))
+> argsList
+[1] "txtFile='output/RData/lefse/BS_100_sp153/make_txt.txt'"
+[2] "dataFile='output/RData/DataPrep/BS_100_sp153.RData'"   
+[3] "txtPath='output/RData/lefse/BS_100_sp153/txt'"         
+[4] "outTree='output/RData/lefse/BS_100_sp153/tree.RData'"  
+> for (i in seq_along(argsList)) {
++     if(length(argsList[[i]])>1){
++         assign(names(argsList)[i],argsList[[i]])
++     }else{eval(parse(text = argsList[[i]]))}
++ }
+> 
+> ## ===============================================
+> print(dataFile)
+[1] "output/RData/DataPrep/BS_100_sp153.RData"
+> print(txtFile)
+[1] "output/RData/lefse/BS_100_sp153/make_txt.txt"
+> print(txtPath)
+[1] "output/RData/lefse/BS_100_sp153/txt"
+> print(outTree)
+[1] "output/RData/lefse/BS_100_sp153/tree.RData"
+> 
+> 
+> if (!file.exists(txtPath)) {
++     dir.create(txtPath)
++ }
+> 
+> ss <- gsub(pattern = ".*/", "", dataFile)
+> scene <- gsub("[.]RData", "", ss)
+> 
+> 
+> outFile <- file.path(txtPath, paste0(scene, ".txt"))
+>  
+> 
+> load(dataFile)
+> # ------------------------------- data format ---------------------------------
+> # tree is the same in 100 repetitions
+> tree <- rowTree(tse_list[[1]])
+> save(tree, file = outTree)
+> 
+> path <- matTree(tree = tree)
+> pathL <- lapply(seq_len(nrow(path)), FUN = function(x) {
++     xx <- path[x, ]
++     xx <- xx[!is.na(xx)]
++     tx <- transNode(tree = tree, node = xx, use.alias = TRUE)
++     paste(rev(tx), collapse = "|")
++ })
+> 
+> # tabular data required by lefse
+> oo <- transNode(tree = tree, node = path[, 1], use.alias = TRUE)
+> lse_list <- lapply(tse_list, FUN = function(x) {
++     x[rowLinks(x)$isLeaf, ]
++ })
+> 
+> # repetitions
+> count <- lapply(lse_list, FUN = function(x) {assays(x)[[1]]})
+> class <- colData(lse_list[[1]])$group
+> for (j in seq_along(count)) {
++     count_j <- count[[j]][oo, ]
++     rownames(count_j) <- unlist(pathL)
++     
++     df <- rbind.data.frame(
++         class,
++         colnames(count_j),
++         count_j)
++     rownames(df) <- c("class", "sample_id", rownames(count_j))
++     
++     # output
++     file_j <- gsub(pattern = "\\.txt", paste0("_rep", j, ".txt"), outFile)
++     message(file_j)
++     write.table(x = df, file = file_j, sep = "\t",
++                 row.names = TRUE, col.names = FALSE, quote = FALSE)
++ }
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep1.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep2.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep3.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep4.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep5.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep6.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep7.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep8.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep9.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep10.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep11.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep12.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep13.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep14.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep15.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep16.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep17.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep18.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep19.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep20.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep21.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep22.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep23.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep24.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep25.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep26.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep27.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep28.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep29.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep30.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep31.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep32.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep33.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep34.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep35.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep36.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep37.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep38.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep39.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep40.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep41.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep42.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep43.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep44.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep45.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep46.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep47.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep48.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep49.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep50.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep51.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep52.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep53.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep54.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep55.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep56.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep57.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep58.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep59.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep60.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep61.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep62.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep63.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep64.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep65.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep66.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep67.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep68.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep69.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep70.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep71.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep72.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep73.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep74.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep75.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep76.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep77.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep78.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep79.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep80.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep81.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep82.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep83.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep84.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep85.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep86.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep87.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep88.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep89.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep90.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep91.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep92.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep93.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep94.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep95.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep96.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep97.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep98.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep99.txt
+output/RData/lefse/BS_100_sp153/txt/BS_100_sp153_rep100.txt
+> 
+> 
+> sink(txtFile)
+> cat("successfully export txt files... ")
+> sink()
+> 
+> sessionInfo()
+R version 3.6.1 (2019-07-05)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: Ubuntu 16.04.6 LTS
+
+Matrix products: default
+BLAS:   /usr/local/R/R-3.6.1/lib/libRblas.so
+LAPACK: /usr/local/R/R-3.6.1/lib/libRlapack.so
+
+locale:
+ [1] LC_CTYPE=C                 LC_NUMERIC=C              
+ [3] LC_TIME=en_CA.UTF-8        LC_COLLATE=en_CA.UTF-8    
+ [5] LC_MONETARY=en_CA.UTF-8    LC_MESSAGES=en_CA.UTF-8   
+ [7] LC_PAPER=en_CA.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_CA.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+[1] parallel  stats4    stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+ [1] stringr_1.4.0                  TreeSummarizedExperiment_1.3.1
+ [3] SingleCellExperiment_1.8.0     SummarizedExperiment_1.16.0   
+ [5] DelayedArray_0.12.0            BiocParallel_1.20.0           
+ [7] matrixStats_0.55.0             Biobase_2.46.0                
+ [9] GenomicRanges_1.38.0           GenomeInfoDb_1.22.0           
+[11] IRanges_2.20.0                 S4Vectors_0.24.0              
+[13] BiocGenerics_0.32.0            dplyr_0.8.3                   
+[15] ape_5.3                       
+
+loaded via a namespace (and not attached):
+ [1] Rcpp_1.0.2             XVector_0.26.0         magrittr_1.5          
+ [4] zlibbioc_1.32.0        tidyselect_0.2.5       lattice_0.20-38       
+ [7] R6_2.4.0               rlang_0.4.1            tools_3.6.1           
+[10] grid_3.6.1             nlme_3.1-140           assertthat_0.2.1      
+[13] tibble_2.1.3           crayon_1.3.4           Matrix_1.2-17         
+[16] GenomeInfoDbData_1.2.2 purrr_0.3.3            bitops_1.0-6          
+[19] RCurl_1.95-4.12        glue_1.3.1             stringi_1.4.3         
+[22] compiler_3.6.1         pillar_1.4.2           pkgconfig_2.0.3       
+> 
+> proc.time()
+   user  system elapsed 
+ 90.960   1.756  92.822 
