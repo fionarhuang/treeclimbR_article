@@ -1,0 +1,102 @@
+configfile: "config.yaml"
+
+textFiles,  =  glob_wildcards(config["codeP"]+"parameter/{par}.R")
+method = glob_wildcards(config["codeP"]+"Analysis/{file}.R").file
+sim = [1,2,3,4,5]
+
+## Define the R binary
+Rbin = config["Rbin"]
+condaR = config["condaR"]
+## ------------------------------------------------------------------------------------ ##
+## Target definitions
+## ------------------------------------------------------------------------------------ ##
+## Run all analyses
+rule all:
+	input:
+		config["outPD"]+"DataPrep/DataPrep.RData",
+		expand(config["outPD"]+"Analysis/{analyFile}.RData", analyFile=method),
+		config["outPD"]+"figure/runTime.eps",
+		config["outPD"]+"Analysis/lefse.RData"
+#		config["outPD"]+"lefse/make_txt.txt",
+#		config["outPD"]+"lefse/run_lefse.txt",
+#		config["outPD"]+"lefse/out_lefse.RData"
+#		config["outPD"]+"Analysis/{analyFile}.RData"
+		
+## ------------------------------------------------------------------------------------ ##
+## Data preparation
+## ------------------------------------------------------------------------------------ 
+rule dataPrep:
+	input:
+	    script = config["codeP"]+"Preparation/DataPrep.R"
+	output:
+		config["outPD"]+"DataPrep/DataPrep.RData"
+	log:
+		config["RoutP"]+"DataPrep/DataPrep.Rout"
+	shell:
+		'''{Rbin} CMD BATCH --no-restore --no-save "--args scriptP='{input.script}' outRDat='{output}'" {input.script} {log}'''
+
+## ------------------------------------------------------------------------------------ ##
+## Data analysis
+## ------------------------------------------------------------------------------------ ##
+rule analyStep:
+	input:
+	    script = config["codeP"]+"Analysis/{analyFile}.R",
+		data = config["outPD"]+"DataPrep/DataPrep.RData"
+	output:
+		config["outPD"]+"Analysis/{analyFile}.RData"
+	log:
+		config["RoutP"]+"Analysis/{analyFile}.Rout"
+	shell:
+		'''{Rbin} CMD BATCH --no-restore --no-save "--args inRDat='{input.data}' outRDat='{output}'" {input.script} {log}'''
+
+## ------------------------------------------------------------------------------------ ##
+## run LEfSe
+## ------------------------------------------------------------------------------------ ##
+rule outTXT:
+	input:
+	    data = config["outPD"]+"DataPrep/DataPrep.RData",
+	    script = config["codeP"]+"lefse/make_txt.R"
+	output:
+		config["outPD"]+"lefse/makeTXT.RData"
+	params:
+	    txtPath = config["outPD"]+"lefse/txt"
+	log:
+		config["RoutP"]+"lefse/make_txt.Rout"
+	shell:
+		'''{Rbin} CMD BATCH --no-restore --no-save "--args dataPath='{input.data}' txtPath='{params.txtPath}' outDat='{output}'" {input.script} {log}'''
+		
+rule lefse:
+	input:
+	    data = config["outPD"]+"DataPrep/DataPrep.RData",
+	    script = config["codeP"]+"lefse/run_lefse.R",
+	    txtdata = config["outPD"]+"lefse/makeTXT.RData"
+	output:
+		config["outPD"]+"Analysis/lefse.RData"
+	params:
+	    txtPath = config["outPD"]+"lefse/txt",
+	    inPath = config["outPD"]+"lefse/in",
+	    resPath = config["outPD"]+"lefse/res"
+#	conda:
+#	    "envs/lefse.yml"
+	log:
+		config["RoutP"]+"lefse/run_lefse.Rout"
+	shell:
+		'''{condaR} CMD BATCH --no-restore --no-save "--args dataPath='{input.data}' outFile='{output}' txtPath='{params.txtPath}' inPath='{params.inPath}' resPath='{params.resPath}'" {input.script} {log}'''
+
+## ------------------------------------------------------------------------------------ ##
+## Create the figure
+## ------------------------------------------------------------------------------------
+rule createFigure:
+	input:
+	    script = config["codeP"]+"figure/plot.R",
+	    data = config["outPD"]+"DataPrep/DataPrep.RData",
+		data2 = config["outPD"]+"Analysis/lefse.RData",
+		data3 = expand(config["outPD"]+"Analysis/{analyFile}.RData", analyFile=method)
+	output:
+		config["outPD"]+"figure/runTime.eps"
+	params:
+	    path = config["outPD"]+"Analysis"
+	log:
+		config["RoutP"]+"figure/plot.Rout"
+	shell:
+		'''{Rbin} CMD BATCH --no-restore --no-save "--args dataPath='{input.data}' inPath='{params.path}' outPath='{output}'" {input.script} {log}'''
