@@ -199,10 +199,10 @@ p_DA <- ggplot(Dat_DA) +
                size = 0.2) +
     # geom_jitter(aes(x = fdr, y = tpr, color = method),
     #             size = 1, height = 0.025, width = 0) +
-    geom_point(aes(x = fdr, y = tpr + rf, color = method, 
+    geom_point(aes(x = fdr, y = tpr, color = method, 
                    shape = method, size = method),
                stroke = 0.5) +
-    geom_path(aes(x = fdr, y = tpr + rf,
+    geom_path(aes(x = fdr, y = tpr,
                   color = method, group = method), 
               size = 0.3, show.legend = FALSE) +
     #    facet_wrap(~output) +

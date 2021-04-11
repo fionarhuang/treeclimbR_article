@@ -1,13 +1,13 @@
 ## Input files
 ##---------------------------------------------------------------------------------------------
 ## Path to codes (the code folder)
-codeP: /home/fiona/treeclimbR_article/cytof/DA/code
+codeP: code
 
 ## Output files
 ##---------------------------------------------------------------------------------------------
 ## Path to output (data, figures)
-outPD: /home/fiona/treeclimbR_article/cytof/DA/output/RData
-outPF: /home/fiona/treeclimbR_article/cytof/DA/output/Figure
+outPD: output/RData
+outPF: output/Figure
 
 ## Path to log files
 RoutP: /home/fiona/treeclimbR_article/cytof/DA/Rout
