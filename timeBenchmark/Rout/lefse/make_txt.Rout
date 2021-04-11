@@ -1,0 +1,168 @@
+
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+During startup - Warning message:
+Setting LC_CTYPE failed, using "C" 
+> # === tool ========
+> .libPaths(c(Sys.getenv('R_LIBS_1'), 
++             Sys.getenv('R_LIBS_2'),
++             Sys.getenv('R_LIBS_3')))
+> .libPaths()
+[1] "/home/Shared/Rlib/release-3.10-lib" "/usr/local/R/R-3.6.1/library"      
+[3] "/home/fiona/tmp/R310_lib"          
+> 
+> suppressPackageStartupMessages({
++     library(ape)
++     library(dplyr)
++     library(TreeSummarizedExperiment)
++     library(stringr)
++ })
+> 
+> R.Version()
+$platform
+[1] "x86_64-pc-linux-gnu"
+
+$arch
+[1] "x86_64"
+
+$os
+[1] "linux-gnu"
+
+$system
+[1] "x86_64, linux-gnu"
+
+$status
+[1] ""
+
+$major
+[1] "3"
+
+$minor
+[1] "6.1"
+
+$year
+[1] "2019"
+
+$month
+[1] "07"
+
+$day
+[1] "05"
+
+$`svn rev`
+[1] "76782"
+
+$language
+[1] "R"
+
+$version.string
+[1] "R version 3.6.1 (2019-07-05)"
+
+$nickname
+[1] "Action of the Toes"
+
+> # ==== arguments from batch R=====================
+> argsList <- (commandArgs(trailingOnly = TRUE))
+> argsList
+[1] "dataPath='output/RData/DataPrep/DataPrep.RData'"
+[2] "txtPath='output/RData/lefse/txt'"               
+[3] "outDat='output/RData/lefse/makeTXT.RData'"      
+> for (i in seq_along(argsList)) {
++     if(length(argsList[[i]])>1){
++         assign(names(argsList)[i],argsList[[i]])
++     }else{eval(parse(text = argsList[[i]]))}
++ }
+> 
+> ## ===============================================
+> print(dataPath)
+[1] "output/RData/DataPrep/DataPrep.RData"
+> print(txtPath)
+[1] "output/RData/lefse/txt"
+> print(outDat)
+[1] "output/RData/lefse/makeTXT.RData"
+> 
+> if (!dir.exists(txtPath)) {
++     dir.create(txtPath)  
++ }
+> 
+> 
+> # load data
+> load(dataPath)
+> 
+> # trees
+> treeX <- lapply(lse, rowTree)
+> 
+> 
+> # the time to create text files
+> txtTime <- vector("list", length(lse))
+> names(txtTime) <- names(lse)
+> 
+> for (i in seq_along(lse)) {
++     txtTime[[i]] <- system.time({
++         # hierarchy
++         tree <- rowTree(lse[[i]])
++         path <- matTree(tree = tree)
++         pathL <- lapply(seq_len(nrow(path)), FUN = function(x) {
++             xx <- path[x, ]
++             xx <- xx[!is.na(xx)]
++             tx <- transNode(tree = tree, node = xx, use.alias = TRUE)
++             paste(rev(tx),collapse = "|")
++         })
++         
++         # tabular data required by lefse
++         oo <- transNode(tree = tree, node = path[, 1], use.alias = FALSE)
++         count <- assays(lse[[i]])[[1]]
++         class <- colData(lse[[i]])$group
++         
++         count_i <- count[oo, ]
++         rownames(count_i) <- unlist(pathL)
++         
++         df <- rbind.data.frame(
++             class,
++             colnames(count_i),
++             count_i)
++         rownames(df) <- c("class", "sample_id", rownames(count_i))
++         
++         # output
++         file_i <- file.path(txtPath, paste0(names(lse)[i], ".txt"))
++         message(file_i)
++         write.table(x = df, file = file_i, sep = "\t",
++                     row.names = TRUE, col.names = FALSE, quote = FALSE)
++     })
++ }
+output/RData/lefse/txt/sample50_leaf100.txt
+output/RData/lefse/txt/sample50_leaf500.txt
+output/RData/lefse/txt/sample50_leaf1000.txt
+output/RData/lefse/txt/sample50_leaf3000.txt
+output/RData/lefse/txt/sample50_leaf6000.txt
+output/RData/lefse/txt/sample50_leaf10000.txt
+output/RData/lefse/txt/sample250_leaf100.txt
+output/RData/lefse/txt/sample250_leaf500.txt
+output/RData/lefse/txt/sample250_leaf1000.txt
+output/RData/lefse/txt/sample250_leaf3000.txt
+output/RData/lefse/txt/sample250_leaf6000.txt
+output/RData/lefse/txt/sample250_leaf10000.txt
+> 
+> 
+> save(treeX, txtTime, file = outDat)
+> 
+> 
+> proc.time()
+    user   system  elapsed 
+1088.068   13.552 1252.589 

@@ -1,0 +1,333 @@
+
+R version 3.5.1 (2018-07-02) -- "Feather Spray"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-conda_cos6-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+During startup - Warning message:
+Setting LC_CTYPE failed, using "C" 
+> # === tool ========
+> # .libPaths(c(Sys.getenv('R_LIBS_1'), 
+> #             Sys.getenv('R_LIBS_2'),
+> #             Sys.getenv('R_LIBS_3')))
+> # .libPaths()
+> .libPaths()
+[1] "/home/fiona/miniconda3/envs/lefse/lib/R/library"
+> 
+> R.Version()
+$platform
+[1] "x86_64-conda_cos6-linux-gnu"
+
+$arch
+[1] "x86_64"
+
+$os
+[1] "linux-gnu"
+
+$system
+[1] "x86_64, linux-gnu"
+
+$status
+[1] ""
+
+$major
+[1] "3"
+
+$minor
+[1] "5.1"
+
+$year
+[1] "2018"
+
+$month
+[1] "07"
+
+$day
+[1] "02"
+
+$`svn rev`
+[1] "74947"
+
+$language
+[1] "R"
+
+$version.string
+[1] "R version 3.5.1 (2018-07-02)"
+
+$nickname
+[1] "Feather Spray"
+
+> # ==== arguments from batch R=====================
+> argsList <- (commandArgs(trailingOnly = TRUE))
+> argsList
+[1] "dataPath='output/RData/DataPrep/DataPrep.RData'"
+[2] "outFile='output/RData/Analysis/lefse.RData'"    
+[3] "txtPath='output/RData/lefse/txt'"               
+[4] "inPath='output/RData/lefse/in'"                 
+[5] "resPath='output/RData/lefse/res'"               
+> for (i in seq_along(argsList)) {
++     if(length(argsList[[i]])>1){
++         assign(names(argsList)[i],argsList[[i]])
++     }else{eval(parse(text = argsList[[i]]))}
++ }
+> 
+> ## ===============================================
+> print(inPath)
+[1] "output/RData/lefse/in"
+> print(txtPath)
+[1] "output/RData/lefse/txt"
+> print(resPath)
+[1] "output/RData/lefse/res"
+> print(outFile)
+[1] "output/RData/Analysis/lefse.RData"
+> print(dataPath)
+[1] "output/RData/DataPrep/DataPrep.RData"
+> 
+> load(dataPath)
+> 
+> nam <- names(lse)
+> if (!dir.exists(inPath)) {
++     dir.create(inPath)
++ }
+> if (!dir.exists(resPath)) {
++     dir.create(resPath)
++ }
+> 
+> 
+> # text files
+> txts <- list.files(txtPath)
+> 
+> # parameters
+> anova.alpha <- 0.05
+> lda.cutoff <- 2
+> 
+> lefse <- vector("list", length(lse))
+> names(lefse) <- nam
+> 
+> for (i in seq_along(nam)) {
++     message(i, " out of ", length(lse), " have been done.")
++     lefse[[i]] <- system.time({
++         fi <- txts[grep(pattern = nam[i], x = txts)]
++         
++         txtFile <- file.path(txtPath, fi)
++         formatFile <- file.path(inPath, 
++                                 gsub(pattern = ".txt", ".in", fi))
++         
++         # step 1: format input
++         format_command <- paste("format_input.py", txtFile, 
++                                 formatFile,
++                                 "-c 1 -u 2 -o 1000000")
++         system(format_command)
++         
++         # step 2: run lefse analysis
++         resFile <- gsub(pattern = "\\.txt", ".res", fi)
++         resFile <- file.path(resPath, resFile)
++         lefse_command <- paste("run_lefse.py", formatFile, resFile, 
++                                "-a", anova.alpha) 
++         system(lefse_command)
++     })
++ }
+1 out of 12 have been done.
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: During startup - 
+  warnings.warn(x, RRuntimeWarning)
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: Warning message:
+
+  warnings.warn(x, RRuntimeWarning)
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: Setting LC_CTYPE failed, using "C" 
+
+  warnings.warn(x, RRuntimeWarning)
+Number of significantly discriminative features: 197 ( 197 ) before internal wilcoxon
+Number of discriminative features with abs LDA score > 2.0 : 197
+2 out of 12 have been done.
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: During startup - 
+  warnings.warn(x, RRuntimeWarning)
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: Warning message:
+
+  warnings.warn(x, RRuntimeWarning)
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: Setting LC_CTYPE failed, using "C" 
+
+  warnings.warn(x, RRuntimeWarning)
+Number of significantly discriminative features: 997 ( 997 ) before internal wilcoxon
+Number of discriminative features with abs LDA score > 2.0 : 997
+3 out of 12 have been done.
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: During startup - 
+  warnings.warn(x, RRuntimeWarning)
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: Warning message:
+
+  warnings.warn(x, RRuntimeWarning)
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: Setting LC_CTYPE failed, using "C" 
+
+  warnings.warn(x, RRuntimeWarning)
+Number of significantly discriminative features: 1995 ( 1995 ) before internal wilcoxon
+Number of discriminative features with abs LDA score > 2.0 : 1995
+4 out of 12 have been done.
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: During startup - 
+  warnings.warn(x, RRuntimeWarning)
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: Warning message:
+
+  warnings.warn(x, RRuntimeWarning)
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: Setting LC_CTYPE failed, using "C" 
+
+  warnings.warn(x, RRuntimeWarning)
+Number of significantly discriminative features: 5990 ( 5990 ) before internal wilcoxon
+Number of discriminative features with abs LDA score > 2.0 : 5849
+5 out of 12 have been done.
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: During startup - 
+  warnings.warn(x, RRuntimeWarning)
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: Warning message:
+
+  warnings.warn(x, RRuntimeWarning)
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: Setting LC_CTYPE failed, using "C" 
+
+  warnings.warn(x, RRuntimeWarning)
+Number of significantly discriminative features: 11991 ( 11991 ) before internal wilcoxon
+Number of discriminative features with abs LDA score > 2.0 : 8084
+6 out of 12 have been done.
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: During startup - 
+  warnings.warn(x, RRuntimeWarning)
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: Warning message:
+
+  warnings.warn(x, RRuntimeWarning)
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: Setting LC_CTYPE failed, using "C" 
+
+  warnings.warn(x, RRuntimeWarning)
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: Error: protect(): protection stack overflow
+
+  warnings.warn(x, RRuntimeWarning)
+Number of significantly discriminative features: 19982 ( 19982 ) before internal wilcoxon
+Traceback (most recent call last):
+  File "/home/fiona/miniconda3/envs/lefse/bin/run_lefse.py", line 90, in <module>
+    if params['rank_tec'] == 'lda': lda_res,lda_res_th = test_lda_r(cls,feats,class_sl,params['n_boots'],params['f_boots'],params['lda_abs_th'],0.0000000001,params['nlogs'])
+  File "/home/fiona/miniconda3/envs/lefse/bin/lefse.py", line 206, in test_lda_r
+    z = robjects.r('z <- suppressWarnings(lda(as.formula('+f+'),data=sub_d,tol='+str(tol_min)+'))')
+  File "/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/robjects/__init__.py", line 363, in __call__
+    res = self.eval(p)
+  File "/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/robjects/functions.py", line 178, in __call__
+    return super(SignatureTranslatedFunction, self).__call__(*args, **kwargs)
+  File "/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/robjects/functions.py", line 106, in __call__
+    res = super(Function, self).__call__(*new_args, **new_kwargs)
+rpy2.rinterface.RRuntimeError: Error: protect(): protection stack overflow
+
+7 out of 12 have been done.
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: During startup - 
+  warnings.warn(x, RRuntimeWarning)
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: Warning message:
+
+  warnings.warn(x, RRuntimeWarning)
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: Setting LC_CTYPE failed, using "C" 
+
+  warnings.warn(x, RRuntimeWarning)
+Number of significantly discriminative features: 198 ( 198 ) before internal wilcoxon
+Number of discriminative features with abs LDA score > 2.0 : 198
+8 out of 12 have been done.
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: During startup - 
+  warnings.warn(x, RRuntimeWarning)
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: Warning message:
+
+  warnings.warn(x, RRuntimeWarning)
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: Setting LC_CTYPE failed, using "C" 
+
+  warnings.warn(x, RRuntimeWarning)
+Number of significantly discriminative features: 997 ( 997 ) before internal wilcoxon
+Number of discriminative features with abs LDA score > 2.0 : 997
+9 out of 12 have been done.
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: During startup - 
+  warnings.warn(x, RRuntimeWarning)
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: Warning message:
+
+  warnings.warn(x, RRuntimeWarning)
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: Setting LC_CTYPE failed, using "C" 
+
+  warnings.warn(x, RRuntimeWarning)
+Number of significantly discriminative features: 1997 ( 1997 ) before internal wilcoxon
+Number of discriminative features with abs LDA score > 2.0 : 1997
+10 out of 12 have been done.
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: During startup - 
+  warnings.warn(x, RRuntimeWarning)
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: Warning message:
+
+  warnings.warn(x, RRuntimeWarning)
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: Setting LC_CTYPE failed, using "C" 
+
+  warnings.warn(x, RRuntimeWarning)
+Number of significantly discriminative features: 5996 ( 5996 ) before internal wilcoxon
+Number of discriminative features with abs LDA score > 2.0 : 5971
+11 out of 12 have been done.
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: During startup - 
+  warnings.warn(x, RRuntimeWarning)
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: Warning message:
+
+  warnings.warn(x, RRuntimeWarning)
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: Setting LC_CTYPE failed, using "C" 
+
+  warnings.warn(x, RRuntimeWarning)
+Number of significantly discriminative features: 11996 ( 11996 ) before internal wilcoxon
+Number of discriminative features with abs LDA score > 2.0 : 7742
+12 out of 12 have been done.
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: During startup - 
+  warnings.warn(x, RRuntimeWarning)
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: Warning message:
+
+  warnings.warn(x, RRuntimeWarning)
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: Setting LC_CTYPE failed, using "C" 
+
+  warnings.warn(x, RRuntimeWarning)
+/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/rinterface/__init__.py:186: RRuntimeWarning: Error: protect(): protection stack overflow
+
+  warnings.warn(x, RRuntimeWarning)
+Number of significantly discriminative features: 19995 ( 19995 ) before internal wilcoxon
+Traceback (most recent call last):
+  File "/home/fiona/miniconda3/envs/lefse/bin/run_lefse.py", line 90, in <module>
+    if params['rank_tec'] == 'lda': lda_res,lda_res_th = test_lda_r(cls,feats,class_sl,params['n_boots'],params['f_boots'],params['lda_abs_th'],0.0000000001,params['nlogs'])
+  File "/home/fiona/miniconda3/envs/lefse/bin/lefse.py", line 206, in test_lda_r
+    z = robjects.r('z <- suppressWarnings(lda(as.formula('+f+'),data=sub_d,tol='+str(tol_min)+'))')
+  File "/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/robjects/__init__.py", line 363, in __call__
+    res = self.eval(p)
+  File "/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/robjects/functions.py", line 178, in __call__
+    return super(SignatureTranslatedFunction, self).__call__(*args, **kwargs)
+  File "/home/fiona/miniconda3/envs/lefse/lib/python2.7/site-packages/rpy2/robjects/functions.py", line 106, in __call__
+    res = super(Function, self).__call__(*new_args, **new_kwargs)
+rpy2.rinterface.RRuntimeError: Error: protect(): protection stack overflow
+
+> 
+> save(lefse, file = outFile)
+> 
+> 
+> sessionInfo()
+R version 3.5.1 (2018-07-02)
+Platform: x86_64-conda_cos6-linux-gnu (64-bit)
+Running under: Ubuntu 16.04.6 LTS
+
+Matrix products: default
+BLAS/LAPACK: /home/fiona/miniconda3/envs/lefse/lib/R/lib/libRlapack.so
+
+locale:
+ [1] LC_CTYPE=C                 LC_NUMERIC=C              
+ [3] LC_TIME=en_CA.UTF-8        LC_COLLATE=en_CA.UTF-8    
+ [5] LC_MONETARY=en_CA.UTF-8    LC_MESSAGES=en_CA.UTF-8   
+ [7] LC_PAPER=en_CA.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_CA.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+loaded via a namespace (and not attached):
+[1] compiler_3.5.1
+> 
+> proc.time()
+    user   system  elapsed 
+52132.52 13370.97 21052.03 
