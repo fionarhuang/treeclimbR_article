@@ -1,0 +1,304 @@
+
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+During startup - Warning message:
+Setting LC_CTYPE failed, using "C" 
+> # === tool ========
+> .libPaths(c(Sys.getenv('R_LIBS_1'), 
++             Sys.getenv('R_LIBS_2'),
++             Sys.getenv('R_LIBS_3')))
+> .libPaths()
+[1] "/home/Shared/Rlib/release-3.10-lib" "/usr/local/R/R-3.6.1/library"      
+[3] "/home/fiona/tmp/R310_lib"          
+> 
+> suppressPackageStartupMessages({
++     library(TreeSummarizedExperiment)
++     library(glmnet)
++ })
+> 
+> R.Version()
+$platform
+[1] "x86_64-pc-linux-gnu"
+
+$arch
+[1] "x86_64"
+
+$os
+[1] "linux-gnu"
+
+$system
+[1] "x86_64, linux-gnu"
+
+$status
+[1] ""
+
+$major
+[1] "3"
+
+$minor
+[1] "6.1"
+
+$year
+[1] "2019"
+
+$month
+[1] "07"
+
+$day
+[1] "05"
+
+$`svn rev`
+[1] "76782"
+
+$language
+[1] "R"
+
+$version.string
+[1] "R version 3.6.1 (2019-07-05)"
+
+$nickname
+[1] "Action of the Toes"
+
+> # ==== arguments from batch R=====================
+> argsList <- (commandArgs(trailingOnly = TRUE))
+> argsList
+[1] "inRDat='output/RData/DataPrep/DataPrep.RData'" 
+[2] "outRDat='output/RData/Analysis/LassoGLM.RData'"
+> for (i in seq_along(argsList)) {
++     if(length(argsList[[i]])>1){
++         assign(names(argsList)[i],argsList[[i]])
++     }else{eval(parse(text = argsList[[i]]))}
++ }
+> 
+> ## === load data from data preparation step ===
+> print(inRDat)
+[1] "output/RData/DataPrep/DataPrep.RData"
+> load(inRDat)
+> 
+> # ------------------------------- data ---------------------------------
+> X <- lapply(tse, FUN = function(x) {
++     assays(x)[[1]]
++ })
+> Y <- lapply(tse, FUN = function(x) {
++     gr <- as.factor(colData(x)$group)
++     as.numeric(gr) - 1 
++ })
+> treeX <- lapply(tse, rowTree)
+> 
+> ## ================ functions =================
+> 
+> glmnet <- function(countTab, y, cv.fit = TRUE, ...){
++ 
++     # define y response, site 1 as 0; site 2 as 1.
++     countTab <- as.matrix(countTab)
++     mat <- t(countTab)
++     
++ 
++     # lasso regularisation
++     if(cv.fit){
++         cv.mod <- glmnet::cv.glmnet(x = mat, y = y,
++                                     family="binomial",...)
++         return(cv.mod)
++     }else{
++         mod <- glmnet::glmnet(x = mat, y = y, family="binomial",
++                               ...)
++         return(mod)
++     }
++ }
+> 
+> 
+> outLasso <- function(cvfit, fit){
++ 
++     lambda <- cvfit$lambda.min
++     coefs <- glmnet::coef.glmnet(fit, s = lambda)
++ 
++     vSig <- rownames(coefs)[coefs[,1] != 0]
++     vSig1 <- setdiff(vSig, "(Intercept)")
++     return(vSig1)
++ 
++ }
+> # -------------- Data analysis -----------------
+> 
+> Lasso <- vector("list", length(tse))
+> names(Lasso) <- names(tse)
+> 
+> 
+> for (i in seq_along(tse)) {
++     Lasso[[i]] <- system.time({
++         cv.mod <- glmnet(countTab = X[[i]], y = Y[[i]], cv.fit = TRUE)
++         mod <- glmnet(countTab = X[[i]], y = Y[[i]], cv.fit = FALSE)
++         vv <- outLasso(cvfit = cv.mod, fit = mod)
++         transNode(tree = treeX[[i]], node = vv)
++     })
++     
++ }
+> 
+> 
+> Lasso_all <- mapply(FUN = function(x, y) {
++     x + y
++ }, Time_agg, Lasso, SIMPLIFY = FALSE)
+> 
+> # print out the run time
+> Lasso
+$sample50_leaf100
+   user  system elapsed 
+  0.372   0.028   0.397 
+
+$sample50_leaf500
+   user  system elapsed 
+  0.728   0.024   0.749 
+
+$sample50_leaf1000
+   user  system elapsed 
+  1.248   0.092   1.341 
+
+$sample50_leaf3000
+   user  system elapsed 
+  4.000   0.088   4.094 
+
+$sample50_leaf6000
+   user  system elapsed 
+  8.984   0.276   9.272 
+
+$sample50_leaf10000
+   user  system elapsed 
+ 16.276   0.416  16.726 
+
+$sample250_leaf100
+   user  system elapsed 
+  0.720   0.004   0.728 
+
+$sample250_leaf500
+   user  system elapsed 
+  2.768   0.132   2.908 
+
+$sample250_leaf1000
+   user  system elapsed 
+  5.944   0.116   6.068 
+
+$sample250_leaf3000
+   user  system elapsed 
+ 21.392   0.080  21.508 
+
+$sample250_leaf6000
+   user  system elapsed 
+ 51.184   0.968  52.220 
+
+$sample250_leaf10000
+   user  system elapsed 
+ 86.484   1.804  88.407 
+
+> 
+> Lasso_all
+$sample50_leaf100
+   user  system elapsed 
+  0.720   0.032   0.751 
+
+$sample50_leaf500
+   user  system elapsed 
+  1.752   0.076   1.825 
+
+$sample50_leaf1000
+   user  system elapsed 
+  3.132   0.148   3.281 
+
+$sample50_leaf3000
+   user  system elapsed 
+ 10.300   0.128  10.441 
+
+$sample50_leaf6000
+   user  system elapsed 
+ 23.836   0.376  24.244 
+
+$sample50_leaf10000
+   user  system elapsed 
+ 46.864   0.632  47.566 
+
+$sample250_leaf100
+   user  system elapsed 
+  1.284   0.008   1.297 
+
+$sample250_leaf500
+   user  system elapsed 
+  4.992   0.140   5.141 
+
+$sample250_leaf1000
+   user  system elapsed 
+ 10.356   0.192  10.560 
+
+$sample250_leaf3000
+   user  system elapsed 
+ 35.364   0.184  35.600 
+
+$sample250_leaf6000
+   user  system elapsed 
+ 81.472   1.276  82.853 
+
+$sample250_leaf10000
+   user  system elapsed 
+142.316   2.332 144.836 
+
+> 
+> save(Lasso, Lasso_all, file=outRDat)
+> 
+> sessionInfo()
+R version 3.6.1 (2019-07-05)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: Ubuntu 16.04.6 LTS
+
+Matrix products: default
+BLAS:   /usr/local/R/R-3.6.1/lib/libRblas.so
+LAPACK: /usr/local/R/R-3.6.1/lib/libRlapack.so
+
+locale:
+ [1] LC_CTYPE=C                 LC_NUMERIC=C              
+ [3] LC_TIME=en_CA.UTF-8        LC_COLLATE=en_CA.UTF-8    
+ [5] LC_MONETARY=en_CA.UTF-8    LC_MESSAGES=en_CA.UTF-8   
+ [7] LC_PAPER=en_CA.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_CA.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+[1] parallel  stats4    stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+ [1] glmnet_2.0-18                  foreach_1.4.7                 
+ [3] Matrix_1.2-17                  TreeSummarizedExperiment_1.3.1
+ [5] SingleCellExperiment_1.8.0     SummarizedExperiment_1.16.0   
+ [7] DelayedArray_0.12.0            BiocParallel_1.20.0           
+ [9] matrixStats_0.55.0             Biobase_2.46.0                
+[11] GenomicRanges_1.38.0           GenomeInfoDb_1.22.0           
+[13] IRanges_2.20.0                 S4Vectors_0.24.0              
+[15] BiocGenerics_0.32.0           
+
+loaded via a namespace (and not attached):
+ [1] Rcpp_1.0.2             magrittr_1.5           XVector_0.26.0        
+ [4] zlibbioc_1.32.0        tidyselect_0.2.5       lattice_0.20-38       
+ [7] ape_5.3                R6_2.4.0               rlang_0.4.1           
+[10] dplyr_0.8.3            tools_3.6.1            grid_3.6.1            
+[13] nlme_3.1-140           iterators_1.0.12       assertthat_0.2.1      
+[16] tibble_2.1.3           crayon_1.3.4           GenomeInfoDbData_1.2.2
+[19] purrr_0.3.3            codetools_0.2-16       bitops_1.0-6          
+[22] RCurl_1.95-4.12        glue_1.3.1             pillar_1.4.2          
+[25] compiler_3.6.1         pkgconfig_2.0.3       
+> 
+> proc.time()
+   user  system elapsed 
+221.068   5.508 226.910 

@@ -1,0 +1,419 @@
+
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+During startup - Warning message:
+Setting LC_CTYPE failed, using "C" 
+> # === tool ========
+> .libPaths(c(Sys.getenv('R_LIBS_1'), 
++             Sys.getenv('R_LIBS_2'),
++             Sys.getenv('R_LIBS_3')))
+> .libPaths()
+[1] "/home/Shared/Rlib/release-3.10-lib" "/usr/local/R/R-3.6.1/library"      
+[3] "/home/fiona/tmp/R310_lib"          
+> 
+> suppressPackageStartupMessages({
++     library(TreeSummarizedExperiment)
++     library(miLineage)
++ })
+> 
+> R.Version()
+$platform
+[1] "x86_64-pc-linux-gnu"
+
+$arch
+[1] "x86_64"
+
+$os
+[1] "linux-gnu"
+
+$system
+[1] "x86_64, linux-gnu"
+
+$status
+[1] ""
+
+$major
+[1] "3"
+
+$minor
+[1] "6.1"
+
+$year
+[1] "2019"
+
+$month
+[1] "07"
+
+$day
+[1] "05"
+
+$`svn rev`
+[1] "76782"
+
+$language
+[1] "R"
+
+$version.string
+[1] "R version 3.6.1 (2019-07-05)"
+
+$nickname
+[1] "Action of the Toes"
+
+> # ==== arguments from batch R=====================
+> argsList <- (commandArgs(trailingOnly = TRUE))
+> argsList
+[1] "inRDat='output/RData/DataPrep/DataPrep.RData'"  
+[2] "outRDat='output/RData/Analysis/miLineage.RData'"
+> for (i in seq_along(argsList)) {
++     if(length(argsList[[i]])>1){
++         assign(names(argsList)[i],argsList[[i]])
++     }else{eval(parse(text = argsList[[i]]))}
++ }
+> 
+> 
+> 
+> 
+> ## === load data from data preparation step ===
+> print(inRDat)
+[1] "output/RData/DataPrep/DataPrep.RData"
+> load(inRDat)
+> 
+> # ------------------------------- data ---------------------------------
+> # tree
+> treeX <- lapply(lse, rowTree)
+> taxTree <- lapply(seq_along(treeX), FUN = function(i) {
++     message(i, " out of ", length(treeX), " is done")
++     
++     y <- treeX[[i]]
++     xx <- matTree(tree = y)
++     rownames(xx) <- transNode(tree = y, node = xx[, 1],
++                               use.alias = TRUE)
++     rmTree <- apply(xx, 1, FUN = function(x){
++         lx <- length(x)
++         lv <- rev(x[!is.na(x)])
++         la <- transNode(tree = y, node = lv, use.alias = TRUE,
++                         message = FALSE)
++         fv <- c(la, rep("Unclassified", lx - length(lv)))
++         fv
++     })
++     taxTree <- t(rmTree)
++     colnames(taxTree) <- paste("Rank", seq_len(ncol(taxTree)), sep = "")
++     return(taxTree)
++     })
+1 out of 12 is done
+2 out of 12 is done
+3 out of 12 is done
+4 out of 12 is done
+5 out of 12 is done
+6 out of 12 is done
+7 out of 12 is done
+8 out of 12 is done
+9 out of 12 is done
+10 out of 12 is done
+11 out of 12 is done
+12 out of 12 is done
+> 
+> 
+> # count table
+> taxCount <- lapply(seq_along(lse), FUN = function(i) {
++     message(i, " out of ", length(lse), " is done")
++     x <- lse[[i]]
++     xx <- assays(x)[[1]]
++     rownames(xx) <- rowLinks(x)$nodeLab
++     
++     xt <-t(xx)
++     cn <- transNode(tree = rowTree(x), node = colnames(xt))
++     colnames(xt) <- transNode(tree = rowTree(x), 
++                               node = cn,
++                               use.alias = TRUE)
++     xt <- xt[, rownames(taxTree[[i]])]
++     return(xt)
++ })
+1 out of 12 is done
+2 out of 12 is done
+3 out of 12 is done
+4 out of 12 is done
+5 out of 12 is done
+6 out of 12 is done
+7 out of 12 is done
+8 out of 12 is done
+9 out of 12 is done
+10 out of 12 is done
+11 out of 12 is done
+12 out of 12 is done
+> 
+> 
+> # case
+> case <- lapply(seq_along(lse), FUN = function(i) {
++     message(i, " out of ", length(lse), " is done")
++     x <- lse[[i]]
++     gr <- as.factor(colData(x)$group)
++     matrix(as.numeric(gr), ncol = 1,
++            dimnames = list(rownames(taxCount[[i]]), "case"))
++ })
+1 out of 12 is done
+2 out of 12 is done
+3 out of 12 is done
+4 out of 12 is done
+5 out of 12 is done
+6 out of 12 is done
+7 out of 12 is done
+8 out of 12 is done
+9 out of 12 is done
+10 out of 12 is done
+11 out of 12 is done
+12 out of 12 is done
+> 
+> 
+> # check OTU order
+> f1 <- function(x, y) {all(rownames(x) == colnames(y))}
+> f2 <- function(x, y) {all(rownames(x) == rownames(y))}
+> all(mapply(FUN = f1, taxTree, taxCount))
+[1] TRUE
+> 
+> # check sample order
+> all(mapply(FUN = f2, case, taxCount))
+[1] TRUE
+> 
+> 
+> # analysis 
+> # one-part analysis
+> miLineage1 <- vector("list", length(lse))
+> names(miLineage1) <- names(lse)
+> miLineage2 <- miLineage1
+> 
+> for (i in seq_along(taxCount)) {
++     message(i, "out of ", length(taxCount), "has been done", "\n")
++     miLineage1[[i]] <- system.time({
++         res <- QCAT(taxCount[[i]], case[[i]], 1, taxTree[[i]],
++                     fdr.alpha = 0.05)
++         vres <- res$sig.lineage
++         ures <- unique(unlist(vres))
++     })
++ }
+1out of 12has been done
+
+2out of 12has been done
+
+3out of 12has been done
+
+4out of 12has been done
+
+5out of 12has been done
+
+6out of 12has been done
+
+7out of 12has been done
+
+8out of 12has been done
+
+9out of 12has been done
+
+10out of 12has been done
+
+11out of 12has been done
+
+12out of 12has been done
+
+> 
+> # two - part analysis
+> 
+> for (i in seq_along(taxCount)) {
++     message(i, "out of ", length(taxCount), "has been done", "\n")
++     miLineage2[[i]] <- system.time({
++         res <- QCAT_GEE(taxCount[[i]], case[[i]], 1, case[[i]], 1, taxTree[[i]],
++                         fdr.alpha = 0.05)
++         vres <- res$sig.lineage
++         ures <- unique(unlist(vres))
++     })
++ }
+1out of 12has been done
+
+2out of 12has been done
+
+3out of 12has been done
+
+4out of 12has been done
+
+5out of 12has been done
+
+6out of 12has been done
+
+7out of 12has been done
+
+8out of 12has been done
+
+9out of 12has been done
+
+10out of 12has been done
+
+11out of 12has been done
+
+12out of 12has been done
+
+> 
+> # print out the run time
+> miLineage1
+$sample50_leaf100
+   user  system elapsed 
+  9.960   0.016   9.987 
+
+$sample50_leaf500
+   user  system elapsed 
+ 50.308   0.060  50.429 
+
+$sample50_leaf1000
+   user  system elapsed 
+ 99.436   0.232  99.791 
+
+$sample50_leaf3000
+   user  system elapsed 
+296.688   0.776 297.815 
+
+$sample50_leaf6000
+   user  system elapsed 
+590.544   1.484 592.768 
+
+$sample50_leaf10000
+   user  system elapsed 
+980.912   2.644 984.710 
+
+$sample250_leaf100
+   user  system elapsed 
+ 50.576   0.112  50.744 
+
+$sample250_leaf500
+   user  system elapsed 
+256.844   0.680 257.827 
+
+$sample250_leaf1000
+   user  system elapsed 
+507.400   1.048 509.023 
+
+$sample250_leaf3000
+    user   system  elapsed 
+1517.240    3.748 1522.749 
+
+$sample250_leaf6000
+    user   system  elapsed 
+3004.952    6.728 3014.053 
+
+$sample250_leaf10000
+    user   system  elapsed 
+5020.188   11.636 5034.646 
+
+> miLineage2
+$sample50_leaf100
+   user  system elapsed 
+ 12.212   0.068  12.289 
+
+$sample50_leaf500
+   user  system elapsed 
+ 62.052   0.112  62.197 
+
+$sample50_leaf1000
+   user  system elapsed 
+122.444   0.228 122.748 
+
+$sample50_leaf3000
+   user  system elapsed 
+367.800   0.776 368.802 
+
+$sample50_leaf6000
+   user  system elapsed 
+730.172   1.724 732.341 
+
+$sample50_leaf10000
+    user   system  elapsed 
+1219.812    2.852 1223.394 
+
+$sample250_leaf100
+   user  system elapsed 
+ 63.588   0.072  63.699 
+
+$sample250_leaf500
+   user  system elapsed 
+327.896   0.720 328.810 
+
+$sample250_leaf1000
+   user  system elapsed 
+642.872   1.560 644.803 
+
+$sample250_leaf3000
+    user   system  elapsed 
+1928.812    4.356 1934.283 
+
+$sample250_leaf6000
+    user   system  elapsed 
+3822.496    8.580 3833.287 
+
+$sample250_leaf10000
+    user   system  elapsed 
+6391.764   14.728 6410.226 
+
+> 
+> save(miLineage1, miLineage2, file=outRDat)
+> 
+> sessionInfo()
+R version 3.6.1 (2019-07-05)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: Ubuntu 16.04.6 LTS
+
+Matrix products: default
+BLAS:   /usr/local/R/R-3.6.1/lib/libRblas.so
+LAPACK: /usr/local/R/R-3.6.1/lib/libRlapack.so
+
+locale:
+ [1] LC_CTYPE=C                 LC_NUMERIC=C              
+ [3] LC_TIME=en_CA.UTF-8        LC_COLLATE=en_CA.UTF-8    
+ [5] LC_MONETARY=en_CA.UTF-8    LC_MESSAGES=en_CA.UTF-8   
+ [7] LC_PAPER=en_CA.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_CA.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+[1] parallel  stats4    stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+ [1] miLineage_2.1                  geepack_1.3-1                 
+ [3] data.table_1.12.6              MASS_7.3-51.4                 
+ [5] TreeSummarizedExperiment_1.3.1 SingleCellExperiment_1.8.0    
+ [7] SummarizedExperiment_1.16.0    DelayedArray_0.12.0           
+ [9] BiocParallel_1.20.0            matrixStats_0.55.0            
+[11] Biobase_2.46.0                 GenomicRanges_1.38.0          
+[13] GenomeInfoDb_1.22.0            IRanges_2.20.0                
+[15] S4Vectors_0.24.0               BiocGenerics_0.32.0           
+
+loaded via a namespace (and not attached):
+ [1] Rcpp_1.0.2             compiler_3.6.1         pillar_1.4.2          
+ [4] XVector_0.26.0         bitops_1.0-6           tools_3.6.1           
+ [7] zlibbioc_1.32.0        zeallot_0.1.0          lifecycle_0.1.0       
+[10] tibble_2.1.3           nlme_3.1-140           lattice_0.20-38       
+[13] pkgconfig_2.0.3        rlang_0.4.1            Matrix_1.2-17         
+[16] GenomeInfoDbData_1.2.2 dplyr_0.8.3            vctrs_0.2.0           
+[19] generics_0.0.2         grid_3.6.1             tidyselect_0.2.5      
+[22] glue_1.3.1             R6_2.4.0               tidyr_1.0.0           
+[25] purrr_0.3.3            magrittr_1.5           backports_1.1.5       
+[28] assertthat_0.2.1       ape_5.3                RCurl_1.95-4.12       
+[31] broom_0.5.2            crayon_1.3.4          
+> 
+> proc.time()
+     user    system   elapsed 
+28720.144    68.568 28809.004 
