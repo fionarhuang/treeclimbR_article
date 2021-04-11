@@ -17,6 +17,5 @@ RoutP: Rout/
 ## Specify system R installation (then you have to set the path to your library in the .Renviron file)
 Rbin: /usr/local/R/R-3.6.1/bin/R
 ##---------------------------------------------------------------------------------------------
-## Specify conda R (use in the rule lefseResult) 
+## Specify conda R (use in the rule lefseResult)
 condaR: /home/fiona/miniconda3/envs/lefse/bin/R
-
