@@ -32,6 +32,7 @@ thr_spikein <- 0.5
 
 scene <- "CN, 1%"
 
+seedN <- 2233
 ls.after <- ls()
 ls.save <- setdiff(ls.after, c(ls.before, "ls.before"))
 

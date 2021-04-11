@@ -29,7 +29,7 @@ load(inRDat)
 system.time({
     res_agg <- runDA(TSE = tse, 
                      feature_on_row = TRUE, assay = 1,
-                     option = "glm", group_column = "group_id",
+                     option = "glmQL", group_column = "group_id",
                      design_terms = c("patient_id", "group_id"))
     out_tree <-  nodeResult(object = res_agg, n = Inf)
     

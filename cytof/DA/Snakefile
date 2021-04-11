@@ -13,6 +13,7 @@ Rbin = config["Rbin"]
 rule all:
 	input:
 		expand(config["outPD"]+"/DataPrep/{parFile}.RData", parFile=textFiles),
+		expand(config["outPD"]+"/parameter/{parFile}.RData", parFile=textFiles),
 		expand(config["outPD"]+"/Analysis/{parFile}/{analyFile}.RData", parFile=textFiles,analyFile=method)
 
 		

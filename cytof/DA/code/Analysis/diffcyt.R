@@ -53,7 +53,7 @@ top_DA <- diffcyt::topTable(out_DA, format_vals = TRUE, top_n = nrow(d_counts))
 
 # number of significant DA clusters at 10% FDR
 loc.diffcyt <- lapply(c(0.01, 0.05, 0.1), FUN = function(x) {
-    xx <- top_DA$cluster_id[top_DA$p_adj <= 0.01]
+    xx <- top_DA$cluster_id[top_DA$p_adj <= x]
     xx <- xx[!is.na(xx)]
     xx <- as.character(xx)
     transNode(tree = rowTree(tse), node = xx)
